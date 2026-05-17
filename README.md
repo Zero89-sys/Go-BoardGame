@@ -43,7 +43,7 @@ This repository currently serves mainly as an archive
 ## ⚙️ How to start a project
 1. Clone the repository.
  ```bash
-
+git clone https://github.com/Zero89-sys/Go-BoardGame
 ```
 2. **Important step for playing against bot:** Due to GitHub's file size limits, the trained neural network for KataGo is not included in the repository.
     * Download any network model (`.bin.gz` file) from the official KataGo website.
