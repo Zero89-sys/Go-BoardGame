@@ -1,0 +1,17 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Gogame.Views.LoadingScreen"
+             Background="#1a1a1a"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+    
+    <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="GOGAME" FontSize="48" Foreground="White" 
+                       HorizontalAlignment="Center" FontWeight="Bold"/>
+            <ProgressBar IsIndeterminate="True" Width="250" Margin="0,30" Foreground="#3498db"/>
+            <TextBlock Text="Loading..." Foreground="#888888" 
+                       HorizontalAlignment="Center" FontSize="12"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:Gogame.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:Gogame.ViewModels"
+             x:Class="Gogame.Views.MenuView"
+             x:DataType="vm:MainViewModel">
+
+  <StackPanel Spacing="20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+        <TextBlock Text="GO GAME"
+                   FontSize="42"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"/>
+
+        <Button Content="Player vs Player"
+                Width="200"
+                Click="OnPlayervsPlayer"/>
+
+        <Button Content="Player vs Bot"
+                Width="200"
+                Click="OnPlayerVsBotClick"/>
+
+        <Button Content="Exit"
+                Width="200"
+                Click="OnExit"/>
+    </StackPanel>
+</UserControl>

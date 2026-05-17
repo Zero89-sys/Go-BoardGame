@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Gogame.Browser/Gogame.Browser.csproj" />
+  <Project Path="Gogame.Desktop/Gogame.Desktop.csproj" />
+  <Project Path="Gogame/Gogame.csproj" />
+</Solution>

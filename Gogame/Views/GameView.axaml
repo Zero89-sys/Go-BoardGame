@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Gogame.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="Gogame.Views.GameView"
+             x:DataType="vm:MainViewModel"
+             Background="AntiqueWhite">
+
+    <UserControl.Styles>
+        <Style Selector="Button.end-button">
+            <Setter Property="Background" Value="#CCCCCC"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.end-button:enabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style Selector="Button.end-button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#F0F0F0"/> 
+            <Setter Property="Foreground" Value="#AAAAAA"/> 
+            <Setter Property="Opacity" Value="1.0"/>
+        </Style>
+        <Style Selector="Button.end-button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="LightBlue"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+    </UserControl.Styles>
+
+
+<Grid x:Name="GameContentGrid"> 
+    <Viewbox Stretch="Uniform" Margin="20">
+        <StackPanel Orientation="Horizontal" Spacing="40" VerticalAlignment="Center" HorizontalAlignment="Center">
+            
+            <StackPanel Width="900" Spacing="10">
+                <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
+                        Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
+
+                <TextBlock x:Name="TurnText" Foreground="Black" FontSize="24" FontWeight="Bold"
+                           HorizontalAlignment="Center" Margin="0,0,0,10" IsVisible="False"/>
+
+                <Grid x:Name="WhiteInfoRow" ColumnDefinitions="*, Auto" Margin="50, 0" IsVisible="False">
+                    <TextBlock Grid.Column="0" x:Name="WhiteCaptureText" Foreground="DimGray"
+                               FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                        <Button x:Name="PassButtonW" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
+                        <Button x:Name="WhiteResignButton" Content="Resign" Classes="end-button" Width="100" Click="OnWhiteResign"/>
+                    </StackPanel>
+                </Grid>
+
+                <Border BoxShadow="5 5 20 2 #60000000"
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Canvas x:Name="BoardCanvas" Width="800" Height="800" Background="BurlyWood"
+                        HorizontalAlignment="Center" PointerPressed="OnPointerPressed"
+                        PointerMoved="OnPointerMoved" PointerExited="OnPointerLeave">
+                    <Canvas.Background>
+                        <ImageBrush Stretch="Fill"
+                                    Source="C:\Users\filip\source\repos\Gogame\Textures\bamboo.png"
+                                    Opacity="0.8"/>
+                    </Canvas.Background>
+                </Canvas>
+                </Border>
+
+                <Grid x:Name="BlackInfoRow" ColumnDefinitions="Auto, *" Margin="50, 0" IsVisible="False">
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                        <Button x:Name="PassButtonB" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
+                        <Button x:Name="BlackResignButton" Content="Resign" Classes="end-button" Width="100" Click="OnBlackResign"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" x:Name="BlackCaptureText" Foreground="Black"
+                               FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Grid>
+            </StackPanel>
+
+            <Border x:Name="SetupPanel" Width="280" Background="LightGray" VerticalAlignment="Center"
+                    Padding="20" IsVisible="True" CornerRadius="15" BoxShadow="5 5 20 0 #40000000">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Game Setup" FontSize="22" FontWeight="Bold" Foreground="Black"/>
+                    <TextBlock Text="Board Size" Foreground="Black"/>
+                    <ComboBox x:Name="BoardSizeCombo" SelectionChanged="OnBoardSizeChanged" SelectedIndex="0" HorizontalAlignment="Stretch">
+                        <ComboBoxItem Content="19 x 19"/>
+                        <ComboBoxItem Content="13 x 13"/>
+                        <ComboBoxItem Content="9 x 9"/>
+                    </ComboBox>
+                    
+                    <StackPanel x:Name="BotOnlyPanel" Spacing="12" IsVisible="False">
+                        <TextBlock Text="Your Color" Foreground="Black"/>
+                        <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
+                            <RadioButton Content="Black" IsChecked="True" Checked="OnColorChanged" Foreground="Black"/>
+                            <RadioButton Content="White" Checked="OnColorChanged" Foreground="Black"/>
+                        </StackPanel>
+                        
+                        <TextBlock Text="Difficulty" FontSize="18" HorizontalAlignment="Center" Foreground="Black" Margin="0,10,0,0"/>
+                        <Slider x:Name="DifficultySlider" Minimum="1" Maximum="11" Value="1" 
+                                TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnDifficultyChanged"/>
+                        <TextBlock x:Name="DifficultyText" Text="30 kyu" FontSize="16" Foreground="Black" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <Button Content="Start Game" Margin="0, 20, 0, 0" Click="OnStartGame" 
+                            Classes="end-button" Width="200" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Viewbox>
+
+    <Border x:Name="BotLoadingOverlay" Background="#EE000000" IsVisible="False" ZIndex="100">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="Loading..." Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <ProgressBar IsIndeterminate="True" Width="300" Height="12" Margin="0,25,0,0" Foreground="White"/>
+        </StackPanel>
+    </Border>
+</Grid>
+
+</UserControl>
