@@ -52,4 +52,4 @@ git clone https://github.com/Zero89-sys/Go-BoardGame
 3. Otevřete projekt v IDE a spusťte aplikaci.
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the GPL-3.0 license. See `LICENSE` for more information.
