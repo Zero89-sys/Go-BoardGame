@@ -49,7 +49,7 @@ git clone https://github.com/Zero89-sys/Go-BoardGame
     * Download any network model (`.bin.gz` file) from the official KataGo website.
     * Name the downloaded file exactly `KataGo.bin.gz`.
     * Put it in the `Engine/` folder next to the executable program.
-3. Otevřete projekt v IDE a spusťte aplikaci.
+3. Open the project in the IDE and run the application.
 
 ## 📄 License
 Distributed under the GPL-3.0 license. See `LICENSE` for more information.
