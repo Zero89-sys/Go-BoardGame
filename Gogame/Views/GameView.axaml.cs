@@ -1169,25 +1169,6 @@ public partial class GameView : UserControl
         DrawBoard();
     }
 
-    // Score display
-    //public async Task ShowFinalAnalysis()
-    //{
-    //    string deadStonesResponse = await _botService.SendCommand("final_status_list dead");
-
-    //    string finalScore = await _botService.SendCommand("final_score");
-
-    //    await Dispatcher.UIThread.InvokeAsync(async () =>
-    //    {
-    //        HighlightDeadStones(deadStonesResponse);
-
-
-    //        ShowWinnerDialog(finalScore);
-    //        await RunFinalAnalysisAsync();
-    //    });
-
-    //    var info = await _botService.SendCommand("kata-analyze interval 10");
-    //}
-
     // Mrtvé kameny
     private void HighlightDeadStones(string deadStonesResponse)
     {
@@ -1240,7 +1221,7 @@ public partial class GameView : UserControl
         {
             if (_botService.LastOwnership != null)
             {
-                Debug.WriteLine("Data získána!");
+                Debug.WriteLine("Data retrieved!");
                 break;
             }
 
@@ -1255,11 +1236,11 @@ public partial class GameView : UserControl
             {
                 DrawBoard();
                 DrawTerritoryOverlay(_botService.LastOwnership);
-                Debug.WriteLine("Overlay byl vykreslen!");
+                Debug.WriteLine("The overlay has been rendered!");
             }
             else
             {
-                Debug.WriteLine("Chyba: Nepodařilo se získat data o vlastnictví (LastOwnership je null).");
+                Debug.WriteLine("Error: Failed to get ownership data (LastOwnership is null).");
             }
         });
     }
