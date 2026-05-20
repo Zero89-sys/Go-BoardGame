@@ -28,8 +28,8 @@ The application is currently in the state of **fully functional prototype**.
 
 ## ⚠️ Current Project Status & Notice
 
-**The current application is only a prototype and development of this project is currently suspended.**
-Since this is a development version, there are some bugs, inconsistencies, and technical debt in the application. The project was created within the framework of a C# studio and was primarily used to test more complex game logic and integration with an external engine.
+**The current application is only a prototype**
+Since this is a development version, there are some bugs, inconsistencies, and technical debt in the application. The project was created within the framework of a C# and was primarily used to test more complex game logic and integration with an external engine.
 ### For developers and contributors:
 I am open to any modifications, forks, or optimizations to this code. However, please note the following:
 * **All modifications and execution of the code are at your own risk.**
