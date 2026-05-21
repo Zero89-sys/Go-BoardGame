@@ -36,7 +36,7 @@ I am open to any modifications, forks, or optimizations to this code. However, p
 * Due to the bugs present, I recommend **first thoroughly checking and testing** the code before any deployment or modification.
 
 
-This repository currently serves mainly as an archive
+This repository currently serves mainly as an archive.
 
 ---
  
