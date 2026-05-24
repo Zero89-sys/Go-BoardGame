@@ -1169,30 +1169,6 @@ public partial class GameView : UserControl
         DrawBoard();
     }
 
-    // Mrtvé kameny
-    private void HighlightDeadStones(string deadStonesResponse)
-    {
-        if (string.IsNullOrEmpty(deadStonesResponse)) return;
-
-        string cleanedResponse = deadStonesResponse.Replace("=", "").Trim();
-        if (string.IsNullOrEmpty(cleanedResponse)) return;
-        string[] coords = cleanedResponse.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-        foreach(string coord in coords)
-        {
-            var pos = ConvertFromGtpCoords(coord);
-
-            if(pos.x >= 0 && pos.y >= 0)
-            {
-                var stoneUI = FindStoneUIAt(pos.x, pos.y);
-                if (stoneUI != null)
-                {
-                    stoneUI.Opacity = 0.3;
-                }
-            }
-        }
-    }
-
     // The resulting table
     private async void ShowWinnerDialog(string finalScore)
     {
