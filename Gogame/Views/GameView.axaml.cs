@@ -1169,26 +1169,6 @@ public partial class GameView : UserControl
         DrawBoard();
     }
 
-    // The resulting table
-    private async void ShowWinnerDialog(string finalScore)
-    {
-        await RunFinalAnalysisAsync();
-        ShowGameResult(null, finalScore);
-    }
-
-    private Ellipse? FindStoneUIAt(int x, int y)
-    {
-        string targetTag = $"stone_{x}_{y}";
-        foreach(var child in BoardCanvas.Children)
-        {
-            if(child is Ellipse el && el.Tag?.ToString() == targetTag)
-            {
-                return el; 
-            }
-        }
-        return null;
-    }
-
     private async Task RunFinalAnalysisAsync()
     {
         await _botService.StartOwnershipAnalysisAsync(board.Size);
