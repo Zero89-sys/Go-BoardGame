@@ -1129,16 +1129,6 @@ public partial class GameView : UserControl
     private bool IsPvP => _currentMode == GameMode.PlayerVsPlayer;
     private bool IsPvBot => _currentMode == GameMode.PlayerVsBot;
 
-    private bool IsHumanTurn
-    {
-        get
-        {
-            if(IsPvP)
-                return true;
-
-            return board.CurrentPlayer == _playerColor;
-        }
-    }
     // Stones when setting
     private void DrawSetupStones()
     {
