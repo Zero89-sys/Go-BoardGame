@@ -15,13 +15,16 @@ using Avalonia.VisualTree;
 using Gogame.Models;
 using Gogame.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Reflection.Emit;
 using System.Threading.Tasks;
-using System.Globalization;
 using static Gogame.Models.GoGame;
+using static Gogame.Views.GameView;
 using FilePath = System.IO.Path;
 
 namespace Gogame.Views;
@@ -69,6 +72,7 @@ public partial class GameView : UserControl
         PlayerVsBot
     }
     private GameMode _currentMode = GameMode.PlayerVsPlayer;
+
     public GameView()
     {
         InitializeComponent();
@@ -995,7 +999,7 @@ public partial class GameView : UserControl
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Chyba při startu bota: {ex.Message}");
+                    Debug.WriteLine($"Error when starting the bot: {ex.Message}");
                 }
                 finally
                 {
@@ -1003,7 +1007,7 @@ public partial class GameView : UserControl
                     {
                         if (BotLoadingOverlay != null)
                             BotLoadingOverlay.IsVisible = false;
-                        Debug.WriteLine("Bot je připraven ke hře!");
+                        Debug.WriteLine("The bot is ready to play!");
                     });
                 }
             });
@@ -1021,23 +1025,61 @@ public partial class GameView : UserControl
     {
         int visits = level switch
         {
-            1 => 1,
-            2 => 5,
-            3 => 10,
-            4 => 30,
-            5 => 50,
-            6 => 150,
-            7 => 200,
-            8 => 500,
-            9 => 800,
-            10 => 1300,
-            11 => 2000,
-            _ => 1
+            1 => 1, 2 => 5, 3 => 10, 4 => 30, 5 => 50, 6 => 150, 7 => 200,
+            8 => 500, 9 => 800, 10 => 1300, 11 => 2000, _ => 1
         };
+
+        double entropy = level <= 5 ? 0.8 : 0.1;
+        double exploration = level <= 5 ? 5.0 : 1.0;
+
+        double temperature = level switch
+        {
+            1 => 4.0, 2 => 3.8, 3 => 3.5, 4 => 3.0, 5 => 2.8, 6 => 2.3, 7 => 2, 
+            8 => 1.5, 9 => 1.3, 10 => 1.1, 11 => 1.0, _=> 3.0
+        };
+
+        bool enableNoise = level <= 7;
+        double noise = level switch
+        {
+            1 => 0.4,
+            2 => 0.35,
+            3 => 0.3,
+            4 => 0.25,
+            5 => 0.2,
+            6 => 0.15,
+            7 => 0.1,
+            8 => 0.05,
+            9 => 0.03,
+            10 => 0.01,
+            11 => 0.0,
+            _ => 0.4
+        };
+
+        if (level <= 3)
+        {
+            await _botService.SendCommand("kata-set-param ignoreAllHistory true");
+            await _botService.SendCommand("kata-set-param ignorePreRootHistory true");
+            await _botService.SendCommand("kata-set-param fpuParentWeight 0.0");
+            await _botService.SendCommand("kata-set-param fpuLossProp 0.0");
+        }
+
         await _botService.SendCommand($"kata-set-param maxVisits {visits}");
+        await _botService.SendCommand($"kata-set-param rootPolicyTemperature {temperature}");
+        await _botService.SendCommand($"kata-set-param rootNoiseEnabled {enableNoise.ToString().ToLower()}");
+        await _botService.SendCommand($"kata-set-param rootNoiseWeight {noise}"); ;
+        await _botService.SendCommand("kata-set-param rootFpuReductionMax 5.0");
+        await _botService.SendCommand($"kata-set-param obviousMovesPolicyEntropyTolerance {entropy}");
+        await _botService.SendCommand($"kata-set-param cpuctExploration {exploration}");
 
         string check = await _botService.SendCommand("kata-get-param maxVisits");
-        Debug.WriteLine($"POTVRZENO: Bot má nastaveno: {check}");
+        string check_temperature = await _botService.SendCommand("kata-get-param rootPolicyTemperature");
+        string check_ex = await _botService.SendCommand("kata-get-param cpuctExploration");
+        string check_tol = await _botService.SendCommand("kata-get-param obviousMovesPolicyEntropyTolerance");
+
+        Debug.WriteLine($"CONFIRMED: Bot is set: {check}");
+        Debug.WriteLine($"CONFIRMED: Bot's temp is set: {check_temperature}");
+        Debug.WriteLine($"Bot's exploration: {check_ex}");
+        Debug.WriteLine($"Bot's tolerance: {check_tol}");
     }
 
     // Difficulty text

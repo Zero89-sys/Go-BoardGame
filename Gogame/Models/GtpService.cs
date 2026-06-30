@@ -140,7 +140,7 @@ namespace Gogame.Models
             int expectedLength = size * size;
             if (parts.Length < expectedLength)
             {
-                Debug.WriteLine($"[GTP] Ownership data příliš krátká: {parts.Length}/{expectedLength}");
+                Debug.WriteLine($"[GTP] Ownership data too short: {parts.Length}/{expectedLength}");
                 return;
             }
 
@@ -151,11 +151,11 @@ namespace Gogame.Models
                     .Select(p => double.Parse(p, CultureInfo.InvariantCulture))
                     .ToArray();
 
-                Debug.WriteLine($"Ownership COMPLETE ({expectedLength} polí)");
+                Debug.WriteLine($"Ownership COMPLETE ({expectedLength} fields)");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Chyba při parsování ownership: {ex.Message}");
+                Debug.WriteLine($"Error parsing ownership: {ex.Message}");
             }
         }
 
@@ -208,7 +208,7 @@ namespace Gogame.Models
             {
                 _ioLock.Release();
             }
-            Debug.WriteLine("GTP Service byl resetován");
+            Debug.WriteLine("GTP Service was reset");
         }
 
         public void ClearAnalysisState()
