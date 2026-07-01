@@ -6,45 +6,115 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="Gogame.Views.GameView"
              x:DataType="vm:MainViewModel"
-             Background="AntiqueWhite">
+             Background="#22262B">
 
     <UserControl.Styles>
+
+        <!-- ===================== Buttons ===================== -->
         <Style Selector="Button.end-button">
-            <Setter Property="Background" Value="#CCCCCC"/>
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E3E7EA"/>
+            <Setter Property="BorderBrush" Value="#454C54"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FontFamily" Value="Georgia, 'Noto Serif', serif"/>
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Button.end-button:enabled /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="#454C54"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
         </Style>
         <Style Selector="Button.end-button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#F0F0F0"/> 
-            <Setter Property="Foreground" Value="#AAAAAA"/> 
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#5B564A"/>
+            <Setter Property="BorderBrush" Value="#33302A"/>
             <Setter Property="Opacity" Value="1.0"/>
         </Style>
         <Style Selector="Button.end-button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="LightBlue"/>
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#455252"/>
+            <Setter Property="BorderBrush" Value="#6FA89E"/>
+            <Setter Property="Foreground" Value="#F5F0E6"/>
         </Style>
+
+        <!-- ===================== Slider (Zen jade accent) ===================== -->
+        <Style Selector="Slider">
+            <Setter Property="Foreground" Value="#6FA89E"/>
+            <Setter Property="Background" Value="#3A4149"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+        <Style Selector="Slider /template/ Track#PART_Track">
+            <Setter Property="Height" Value="4"/>
+        </Style>
+        <Style Selector="Slider /template/ RepeatButton">
+            <Setter Property="Background" Value="#3A4149"/>
+            <Setter Property="Height" Value="4"/>
+        </Style>
+        <Style Selector="Slider Thumb">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Background" Value="#6FA89E"/>
+            <Setter Property="BorderBrush" Value="#8A6E12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="Slider Thumb:pointerover">
+            <Setter Property="Background" Value="#E0BB3C"/>
+        </Style>
+
+        <!-- ===================== ComboBox ===================== -->
+        <Style Selector="ComboBox">
+            <Setter Property="Background" Value="#262B31"/>
+            <Setter Property="Foreground" Value="#E3E7EA"/>
+            <Setter Property="BorderBrush" Value="#454C54"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,6"/>
+        </Style>
+        <Style Selector="ComboBoxItem">
+            <Setter Property="Background" Value="#262B31"/>
+            <Setter Property="Foreground" Value="#E3E7EA"/>
+        </Style>
+        <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3A4149"/>
+        </Style>
+
+        <!-- ===================== RadioButton ===================== -->
+        <Style Selector="RadioButton">
+            <Setter Property="Foreground" Value="#E3E7EA"/>
+        </Style>
+
+        <!-- ===================== ProgressBar ===================== -->
+        <Style Selector="ProgressBar">
+            <Setter Property="Foreground" Value="#6FA89E"/>
+            <Setter Property="Background" Value="#3A4149"/>
+        </Style>
+
     </UserControl.Styles>
 
 
-<Grid x:Name="GameContentGrid"> 
+<Grid x:Name="GameContentGrid">
     <Viewbox Stretch="Uniform" Margin="20">
         <StackPanel Orientation="Horizontal" Spacing="40" VerticalAlignment="Center" HorizontalAlignment="Center">
-            
+
             <StackPanel Width="900" Spacing="10">
                 <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
                         Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
 
-                <TextBlock x:Name="TurnText" Foreground="Black" FontSize="24" FontWeight="Bold"
+                <TextBlock x:Name="TurnText" Foreground="#E3E7EA" FontSize="24" FontWeight="Light"
+                           FontFamily="Georgia, 'Noto Serif', serif"
                            HorizontalAlignment="Center" Margin="0,0,0,10" IsVisible="False"/>
 
                 <Grid x:Name="WhiteInfoRow" ColumnDefinitions="*, Auto" Margin="50, 0" IsVisible="False">
-                    <TextBlock Grid.Column="0" x:Name="WhiteCaptureText" Foreground="DimGray"
+                    <TextBlock Grid.Column="0" x:Name="WhiteCaptureText" Foreground="#8B94A0"
                                FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
                         <Button x:Name="PassButtonW" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
@@ -52,17 +122,20 @@
                     </StackPanel>
                 </Grid>
 
-                <Border BoxShadow="5 5 20 2 #60000000"
+                <Border BoxShadow="0 8 30 4 #90000000"
                         Margin="10"
+                        CornerRadius="4"
+                        BorderBrush="#454C54"
+                        BorderThickness="2"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
-                <Canvas x:Name="BoardCanvas" Width="800" Height="800" Background="BurlyWood"
+                <Canvas x:Name="BoardCanvas" Width="800" Height="800" Background="#54514C"
                         HorizontalAlignment="Center" PointerPressed="OnPointerPressed"
                         PointerMoved="OnPointerMoved" PointerExited="OnPointerLeave">
                     <Canvas.Background>
                         <ImageBrush Stretch="Fill"
                                     Source="avares://Gogame/Assets/Textures/bamboo.png"
-                                    Opacity="0.8"/>
+                                    Opacity="0.5"/>
                     </Canvas.Background>
                 </Canvas>
                 </Border>
@@ -72,46 +145,55 @@
                         <Button x:Name="PassButtonB" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
                         <Button x:Name="BlackResignButton" Content="Resign" Classes="end-button" Width="100" Click="OnBlackResign"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" x:Name="BlackCaptureText" Foreground="Black"
+                    <TextBlock Grid.Column="1" x:Name="BlackCaptureText" Foreground="#E3E7EA"
                                FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 </Grid>
             </StackPanel>
 
-            <Border x:Name="SetupPanel" Width="280" Background="LightGray" VerticalAlignment="Center"
-                    Padding="20" IsVisible="True" CornerRadius="15" BoxShadow="5 5 20 0 #40000000">
-                <StackPanel Spacing="12">
-                    <TextBlock Text="Game Setup" FontSize="22" FontWeight="Bold" Foreground="Black"/>
-                    <TextBlock Text="Board Size" Foreground="Black"/>
+            <Border x:Name="SetupPanel" Width="280" Background="#262B31" VerticalAlignment="Center"
+                    Padding="24" IsVisible="True" CornerRadius="12"
+                    BorderBrush="#3A4149" BorderThickness="1"
+                    BoxShadow="0 6 24 0 #80000000">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Game Setup" FontSize="22" FontWeight="Light"
+                               FontFamily="Georgia, 'Noto Serif', serif" Foreground="#E3E7EA"/>
+                    <Rectangle Height="1" Fill="#3A4149" Margin="0,0,0,4"/>
+
+                    <TextBlock Text="Board Size" Foreground="#8B94A0" FontSize="13"/>
                     <ComboBox x:Name="BoardSizeCombo" SelectionChanged="OnBoardSizeChanged" SelectedIndex="0" HorizontalAlignment="Stretch">
                         <ComboBoxItem Content="19 x 19"/>
                         <ComboBoxItem Content="13 x 13"/>
                         <ComboBoxItem Content="9 x 9"/>
                     </ComboBox>
-                    
+
                     <StackPanel x:Name="BotOnlyPanel" Spacing="12" IsVisible="False">
-                        <TextBlock Text="Your Color" Foreground="Black"/>
+                        <Rectangle Height="1" Fill="#3A4149" Margin="0,4"/>
+                        <TextBlock Text="Your Color" Foreground="#8B94A0" FontSize="13"/>
                         <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
-                            <RadioButton Content="Black" IsChecked="True" Checked="OnColorChanged" Foreground="Black"/>
-                            <RadioButton Content="White" Checked="OnColorChanged" Foreground="Black"/>
+                            <RadioButton Content="Black" IsChecked="True" Checked="OnColorChanged"/>
+                            <RadioButton Content="White" Checked="OnColorChanged"/>
                         </StackPanel>
-                        
-                        <TextBlock Text="Difficulty" FontSize="18" HorizontalAlignment="Center" Foreground="Black" Margin="0,10,0,0"/>
-                        <Slider x:Name="DifficultySlider" Minimum="1" Maximum="11" Value="1" 
+
+                        <TextBlock Text="Difficulty" FontSize="15" HorizontalAlignment="Center"
+                                    Foreground="#8B94A0" Margin="0,10,0,0"/>
+                        <Slider x:Name="DifficultySlider" Minimum="1" Maximum="11" Value="1"
                                 TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnDifficultyChanged"/>
-                        <TextBlock x:Name="DifficultyText" Text="30 kyu" FontSize="16" Foreground="Black" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="DifficultyText" Text="30 kyu" FontSize="16" Foreground="#6FA89E"
+                                    FontFamily="Georgia, 'Noto Serif', serif" HorizontalAlignment="Center"/>
                     </StackPanel>
-                    
-                    <Button Content="Start Game" Margin="0, 20, 0, 0" Click="OnStartGame" 
-                            Classes="end-button" Width="200" HorizontalAlignment="Center"/>
+
+                    <Button Content="Start Game" Margin="0, 16, 0, 0" Click="OnStartGame"
+                            Classes="end-button" Width="220" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
         </StackPanel>
     </Viewbox>
 
-    <Border x:Name="BotLoadingOverlay" Background="#EE000000" IsVisible="False" ZIndex="100">
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="Loading..." Foreground="White" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"/>
-            <ProgressBar IsIndeterminate="True" Width="300" Height="12" Margin="0,25,0,0" Foreground="White"/>
+    <Border x:Name="BotLoadingOverlay" Background="#14171B" IsVisible="False" ZIndex="100">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+            <TextBlock Text="Loading..." Foreground="#E3E7EA" FontSize="34" FontWeight="Light"
+                        FontFamily="Georgia, 'Noto Serif', serif" HorizontalAlignment="Center"/>
+            <ProgressBar IsIndeterminate="True" Width="300" Height="6" Margin="0,15,0,0"/>
         </StackPanel>
     </Border>
 </Grid>
