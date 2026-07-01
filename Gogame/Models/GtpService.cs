@@ -115,7 +115,7 @@ namespace Gogame.Models
             LastOwnership = null;
 
             await SendCommand($"boardsize {boardSize}");
-            await SendRawCommand("kata-analyze ownership true interval 50");
+            await SendRawCommand("kata-analyze B interval 50 ownership true");
         }
 
         public async Task SetBoardSize(int size)

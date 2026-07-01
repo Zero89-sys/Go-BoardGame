@@ -61,7 +61,7 @@
                         PointerMoved="OnPointerMoved" PointerExited="OnPointerLeave">
                     <Canvas.Background>
                         <ImageBrush Stretch="Fill"
-                                    Source="C:\Users\filip\source\repos\Gogame\Textures\bamboo.png"
+                                    Source="avares://Gogame/Assets/Textures/bamboo.png"
                                     Opacity="0.8"/>
                     </Canvas.Background>
                 </Canvas>
