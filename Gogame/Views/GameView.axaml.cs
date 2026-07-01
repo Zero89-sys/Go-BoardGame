@@ -73,6 +73,10 @@ public partial class GameView : UserControl
     }
     private GameMode _currentMode = GameMode.PlayerVsPlayer;
 
+    private int _currentLevel = 1;
+
+    private static readonly Random _rnd = new Random();
+
     public GameView()
     {
         InitializeComponent();
@@ -140,8 +144,26 @@ public partial class GameView : UserControl
             try
             {
                 string botColorStr = _botColor == Stone.Black ? "B" : "W";
-                string response = await _botService.SendCommand($"genmove {botColorStr}");
-                ApplyBotMove(response);
+                string move;
+
+                if (_currentLevel <= 3 && _rnd.Next(0, 100) < 20)
+                {
+                    move = GetRandomLegalMove();
+
+                    string blunderResponse = await _botService.SendCommand($"play {botColorStr} {move}");
+                    if (blunderResponse == null || !blunderResponse.Trim().StartsWith("="))
+                    {
+                        string response = await _botService.SendCommand($"genmove {botColorStr}");
+                        move = response.Replace("=", "").Trim().ToLower();
+                    }
+                }
+                else
+                {
+                    string response = await _botService.SendCommand($"genmove {botColorStr}");
+                    move = response.Replace("=", "").Trim().ToLower();
+                }
+
+                ApplyBotMove($"= {move}");
             }
             finally
             {
@@ -938,22 +960,22 @@ public partial class GameView : UserControl
     // Coordinates for Engine
     private string ConvertToGtpCoords(int x, int y)
     {
-        char col = (char)('A' + x);
-        if (col >= 'I') col++;
+        char col = (char)('a' + x);
+        if (col >= 'i') col++;
         int row = board.Size - y;
         return $"{col}{row}";
     }
 
     private (int x, int y) ConvertFromGtpCoords(string gtp)
     {
-        gtp = gtp.Replace("=", "").Trim().ToUpper();
+        gtp = gtp.Replace("=", "").Trim().ToLower();
 
-        if (string.IsNullOrEmpty(gtp) || gtp == "PASS" || gtp == "RESIGN") 
+        if (string.IsNullOrEmpty(gtp) || gtp == "pass" || gtp == "resign") 
             return(-1, -1);
 
         char colChar = gtp[0];
-        int targetX = colChar - 'A';
-        if (colChar > 'I') targetX--;
+        int targetX = colChar - 'a';
+        if (colChar > 'i') targetX--;
 
         if (int.TryParse(gtp.Substring(1), out int row))
         {
@@ -1023,6 +1045,8 @@ public partial class GameView : UserControl
     // Difficulty
     public async Task SetBotDifficulty (int level)
     {
+        _currentLevel = level;
+
         int visits = level switch
         {
             1 => 1, 2 => 5, 3 => 10, 4 => 30, 5 => 50, 6 => 150, 7 => 200,
@@ -1061,6 +1085,8 @@ public partial class GameView : UserControl
             await _botService.SendCommand("kata-set-param ignorePreRootHistory true");
             await _botService.SendCommand("kata-set-param fpuParentWeight 0.0");
             await _botService.SendCommand("kata-set-param fpuLossProp 0.0");
+            await _botService.SendCommand("kata-set-param rootPruneUselessMoves true");
+            await _botService.SendCommand("kata-set-param rootPolicyOptimism 0.0");
         }
 
         await _botService.SendCommand($"kata-set-param maxVisits {visits}");
@@ -1070,6 +1096,9 @@ public partial class GameView : UserControl
         await _botService.SendCommand("kata-set-param rootFpuReductionMax 5.0");
         await _botService.SendCommand($"kata-set-param obviousMovesPolicyEntropyTolerance {entropy}");
         await _botService.SendCommand($"kata-set-param cpuctExploration {exploration}");
+        await _botService.SendCommand($"kata-set-param enablePassingHacks true");
+        await _botService.SendCommand($"kata-set-param allowResignation true");
+
 
         string check = await _botService.SendCommand("kata-get-param maxVisits");
         string check_temperature = await _botService.SendCommand("kata-get-param rootPolicyTemperature");
@@ -1130,41 +1159,63 @@ public partial class GameView : UserControl
     // Bot's movement
     private void ApplyBotMove(string response)
     {
-        if (string.IsNullOrEmpty(response)) 
-            return;
+        if (string.IsNullOrEmpty(response)) return;
 
         response = response.Trim();
 
-        if (!response.StartsWith("="))
-            return;
+        if (!response.StartsWith("=")) return;
 
-        string move = response.Substring(1).Trim().ToLower();
+        string move = response.Replace("=", "").Trim().ToLower();
+
+        if(move == "resign")
+        {
+            Debug.WriteLine("Bot resigned");
+            ShowGameResult(_playerColor);
+            _gameState = GameState.GameOver;
+            return;
+        }
 
         if (move == "pass")
         {
             board.Pass(_botColor);
-            board.SwitchTurnAfterMove();
-        }
-        else if(move == "resign")
-        {
-            ShowGameResult(_playerColor);
-            return;
+
         }
         else
         {
-            var(x,y)=ConvertFromGtpCoords(move);
-
+            var (x, y) = ConvertFromGtpCoords(move);
             if (x >= 0 && y >= 0)
             {
-                if(board.PlaceStone(x,y, _botColor))
+                if (!board.PlaceStone(x, y, _botColor))
                 {
-                    board.SwitchTurnAfterMove();
+                    Debug.WriteLine($"WARNING: local board rejected engine move {move} at ({x},{y}) — board desync!");
+                    SyncAndRefreshUI();
+                    return;
                 }
             }
         }
+
+        board.SwitchTurnAfterMove();
         SyncAndRefreshUI();
-        if (board.IsGameOver)
-            CheckGameOver();
+        if (board.IsGameOver) CheckGameOver();
+    }
+
+    // Randomizer for engine's moves
+    private string GetRandomLegalMove()
+    {
+        var legalPoints = new List<string>();
+
+        for (int x = 0; x < board.Size; x++)
+        {
+            for(int y = 0; y < board.Size; y++)
+            {
+                if(board.IsLegalMove(x, y, _botColor))
+                {
+                    legalPoints.Add(ConvertToGtpCoords(x, y));
+                }
+            }
+        }
+        if (legalPoints.Count == 0) return "pass";
+        return legalPoints[_rnd.Next(legalPoints.Count)];
     }
 
     // Helper

@@ -409,6 +409,43 @@ namespace Gogame.Models
                 }
                 return map;
             }
+
+            // Empty places check
+            public bool IsPointEmpty(int x, int y)
+            {
+                return IsOnBoard(x, y) && Board[x, y] == Stone.Empty;
+            }
+
+            // Legal Move check
+            public bool IsLegalMove(int x, int y, Stone stone)
+            {
+                if (!IsOnBoard(x, y) || Board[x, y] != Stone.Empty)
+                    return false;
+
+                Board[x, y] = stone;
+
+                bool capturedSomething = false;
+                foreach (var (nx, ny) in GetNeighbors(x, y))
+                {
+                    if (Board[nx, ny] == Opponent(stone))
+                    {
+                        var group = GetGroup(nx, ny);
+                        if (CountLiberties(group) == 0)
+                            capturedSomething = true;
+                    }
+                }
+
+                bool legal = true;
+                if (!capturedSomething)
+                {
+                    var ownGroup = GetGroup(x, y);
+                    if (CountLiberties(ownGroup) == 0)
+                        legal = false; 
+                }
+
+                Board[x, y] = Stone.Empty;
+                return legal;
+            }
         }
     }
 }
