@@ -6,7 +6,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:Gogame.ViewModels"
              x:Class="Gogame.Views.MenuView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:MainViewModel"
+             Background="#22262B">
 
   <StackPanel Spacing="20"
                 HorizontalAlignment="Center"
@@ -24,6 +25,14 @@
         <Button Content="Player vs Bot"
                 Width="200"
                 Click="OnPlayerVsBotClick"/>
+
+        <Button Content="Puzzles"
+                Width="200"
+                Click=""/>
+
+        <Button Content="Tutorial"
+                Width="200"
+                Click=""/>
 
         <Button Content="Exit"
                 Width="200"
