@@ -33,9 +33,9 @@ public partial class App : Application
                 DataContext = new MainViewModel()
             };
 
+            mainWindow.MainContent.Content = new LoadingScreen();
             desktop.MainWindow = mainWindow;
             mainWindow.Show();
-            mainWindow.MainContent.Content = new LoadingScreen();
 
             Task.Run(async () =>
             {
@@ -76,6 +76,6 @@ public partial class App : Application
             await Task.Delay(500);
         }
 
-        throw new Exception("KataGo se nepodařilo spustit");
+        throw new Exception("Failed to start KataGo");
     }
 }

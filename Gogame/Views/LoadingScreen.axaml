@@ -7,7 +7,7 @@
     
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="GOGAME" FontSize="48" Foreground="White" 
+            <TextBlock Text="GO GAME" FontSize="48" Foreground="White" 
                        HorizontalAlignment="Center" FontWeight="Bold"/>
             <ProgressBar IsIndeterminate="True" Width="250" Margin="0,30" Foreground="#3498db"/>
             <TextBlock Text="Loading..." Foreground="#888888" 

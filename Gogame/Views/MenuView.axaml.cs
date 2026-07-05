@@ -2,8 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using Gogame.ViewModels;
+using System;
 using System.Threading.Tasks;
 
 namespace Gogame.Views;
@@ -14,6 +16,8 @@ public partial class MenuView : UserControl
     public MenuView()
     {
         InitializeComponent();
+
+        
     }
 
     //New Player vs Player game
