@@ -7,4 +7,8 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+
+    <Application.Resources>
+		<FontFamily x:Key="OutfitFont">avares://Gogame/Assets/Fonts/Outfit#Outfit</FontFamily>
+    </Application.Resources>
 </Application>

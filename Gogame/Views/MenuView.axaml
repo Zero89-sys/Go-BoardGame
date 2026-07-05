@@ -6,36 +6,86 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:Gogame.ViewModels"
              x:Class="Gogame.Views.MenuView"
-             x:DataType="vm:MainViewModel"
-             Background="#22262B">
+             x:DataType="vm:MainViewModel">
+    <UserControl.Styles>
+        <!-- ===================== Button styles ===================== -->
+		<Style Selector="Button">
+            <Setter Property="FontFamily" Value="{StaticResource OutfitFont}"/>
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Background" Value="#22262B"/>
+            <Setter Property="Foreground" Value="#D1D1D1"/>
+            <Setter Property="BorderBrush" Value="#40D1D1D1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="50" />
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="RenderTransform" Value="scale(1)"/>
+            <Setter Property="Transitions">
 
-  <StackPanel Spacing="20"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
+			<Transitions>
+				<TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+            </Transitions>
+            </Setter>
+        </Style>
 
-        <TextBlock Text="GO GAME"
-                   FontSize="42"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"/>
+        <Style Selector="Button:pointerover">
+			<Setter Property="RenderTransform" Value="scale(1.05)"/>
+        </Style>
 
-        <Button Content="Player vs Player"
-                Width="200"
-                Click="OnPlayervsPlayer"/>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#22262B"/>
+            <Setter Property="BorderBrush" Value="#40D1D1D1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="50"/>
+        </Style>
 
-        <Button Content="Player vs Bot"
-                Width="200"
-                Click="OnPlayerVsBotClick"/>
+        <Style Selector="Grid.main-menu">
+			<Style.Animations>
+				<Animation Duration="0:0:1.2" FillMode="Forward" Easing="CubicEaseOut">
+					<KeyFrame Cue="0%">
+						<Setter Property="Opacity" Value="0"/>
+                        <Setter Property="TranslateTransform.Y" Value="30"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+						<Setter Property="Opacity" Value="1"/>
+                        <Setter Property="TranslateTransform.Y" Value="0"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
 
-        <Button Content="Puzzles"
-                Width="200"
-                Click=""/>
 
-        <Button Content="Tutorial"
-                Width="200"
-                Click=""/>
+    <Grid Classes="main-menu">
+        <Grid.Background>
+			<ImageBrush Source="avares://Gogame/Assets/Wallpapers/forest.jpg" Stretch="UniformToFill" Opacity="0.6"/>
+        </Grid.Background>
 
-        <Button Content="Exit"
-                Width="200"
-                Click="OnExit"/>
+        <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" /> <RowDefinition Height="*" />    </Grid.RowDefinitions>
+
+    <TextBlock Grid.Row="0" 
+               Text="G O   G A M E" 
+               FontSize="120" FontFamily="{StaticResource OutfitFont}" FontWeight="Light" 
+               Foreground="#E0E0E0" 
+               HorizontalAlignment="Center" 
+               Margin="0,120,0,0">
+        <TextBlock.Effect>
+			<DropShadowEffect BlurRadius="10" OffsetX="2" OffsetY="2" Color="Black" Opacity="0.3"/>
+        </TextBlock.Effect>
+    </TextBlock>
+
+    <StackPanel Grid.Row="1" 
+                Spacing="15" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Margin="0,-90,0,0">
+        <Button Content="Player vs Player" Click="OnPlayervsPlayer"/>
+        <Button Content="Player vs Bot" Click="OnPlayerVsBotClick"/>
+        <Button Content="Puzzles" />
+        <Button Content="Tutorial" />
+        <Button Content="Exit" Click="OnExit"/>
     </StackPanel>
+      </Grid>
 </UserControl>
