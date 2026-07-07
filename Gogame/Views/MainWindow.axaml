@@ -14,13 +14,19 @@
         <vm:MainViewModel/>
     </Window.DataContext>
 
-    <TransitioningContentControl x:Name="MainContent" 
-                             Content="{Binding CurrentView}">
-    <TransitioningContentControl.PageTransition>
-        <CrossFade Duration="0:0:0.8"/>
-    </TransitioningContentControl.PageTransition>
-    </TransitioningContentControl>
+    <Grid>
+        <TransitioningContentControl x:Name="MainContent" Content="{Binding CurrentView}" PageTransition="{x:Null}">
+            <TransitioningContentControl.PageTransition>
+                <CrossFade Duration="0:0:0.4"/>
+            </TransitioningContentControl.PageTransition>
+        </TransitioningContentControl>
 
-
-
+        <Rectangle x:Name="FadeOverlay" Fill="Black" Opacity="0" IsHitTestVisible="False" ZIndex="999">
+            <Rectangle.Transitions>
+				<Transitions>
+					<DoubleTransition Property="Opacity" Duration="0:0:0.4"/>
+                </Transitions>
+            </Rectangle.Transitions>
+        </Rectangle>
+    </Grid>
 </Window>

@@ -25,6 +25,7 @@ public partial class MainViewModel : ObservableObject
     }
     public MainViewModel()
     {
+        // Loading screen from start
         CurrentView = new LoadingScreen();
     }
 
@@ -33,6 +34,7 @@ public partial class MainViewModel : ObservableObject
         _ = RunInitAsync(startBot);
     }
 
+    // Starting KataGo
     private async Task RunInitAsync(Func<Task> startBot)
     {
         try

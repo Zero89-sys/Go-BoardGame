@@ -10,5 +10,6 @@
 
     <Application.Resources>
 		<FontFamily x:Key="OutfitFont">avares://Gogame/Assets/Fonts/Outfit#Outfit</FontFamily>
+        <FontFamily x:Key="MaShanZhengFont">avares://Gogame/Assets/Fonts/Klee_One#Klee One</FontFamily>
     </Application.Resources>
 </Application>

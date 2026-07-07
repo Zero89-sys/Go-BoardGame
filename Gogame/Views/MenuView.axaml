@@ -8,30 +8,42 @@
              x:DataType="vm:MainViewModel">
 
     <UserControl.Resources>
-        <!-- Cool zen accent — a muted cyan-grey, not a bright "tech" cyan -->
-        <SolidColorBrush x:Key="AccentBrush" Color="#7FA8A0"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#3D4A48" />
         <SolidColorBrush x:Key="TextBrush" Color="#D8DCDC"/>
         <SolidColorBrush x:Key="MutedBrush" Color="#8A9494"/>
+        <SolidColorBrush x:Key="Void" Color="#141310"/>
+        <SolidColorBrush x:Key="stone-white" Color="#EDE6D6"/>
+        <SolidColorBrush x:Key="kaya-gold" Color="#B08D57"/>
+        <SolidColorBrush x:Key="muted-kaya" Color="#8A7A5C"/>
+        <SolidColorBrush x:Key="hanko-red" Color="#8E3B2F"/>
 
-        <DrawingBrush x:Key="GobanLinesBrush" 
-              TileMode="Tile" 
-              SourceRect="0,0,40,40" 
-              DestinationRect="0,0,40,40"
-              Opacity="0.06">
+<DrawingBrush x:Key="GobanLinesBrush"
+      TileMode="Tile"
+      SourceRect="0,0,80,80"
+      DestinationRect="0,0,80,80"
+      Opacity="0.1">
     <DrawingBrush.Drawing>
-        <GeometryDrawing>
-            <GeometryDrawing.Pen>
-                <Pen Brush="{StaticResource AccentBrush}" Thickness="1"/>
-            </GeometryDrawing.Pen>
-            <GeometryDrawing.Geometry>
-                <GeometryGroup>
-                    <LineGeometry StartPoint="0,0" EndPoint="40,0"/>
-                    <LineGeometry StartPoint="0,0" EndPoint="0,40"/>
-                </GeometryGroup>
-            </GeometryDrawing.Geometry>
-        </GeometryDrawing>
+        <DrawingGroup>
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="{StaticResource kaya-gold}" Thickness="1"/>
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <GeometryGroup>
+                        <LineGeometry StartPoint="0,0" EndPoint="80,0"/>
+                        <LineGeometry StartPoint="0,0" EndPoint="0,80"/>
+                    </GeometryGroup>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="{StaticResource kaya-gold}">
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry Center="0,0" RadiusX="2.5" RadiusY="2.5"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
     </DrawingBrush.Drawing>
 </DrawingBrush>
+
     </UserControl.Resources>
 
     <UserControl.Styles>
@@ -40,11 +52,10 @@
             <Setter Property="FontFamily" Value="{StaticResource OutfitFont}"/>
             <Setter Property="Width" Value="280"/>
             <Setter Property="FontSize" Value="17"/>
-            <Setter Property="Background" Value="#1A1D20"/>
+            <Setter Property="Background" Value="#0D0D0D"/>
             <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
             <Setter Property="BorderBrush" Value="#332F3438"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -64,17 +75,16 @@
         </Style>
 
         <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource kaya-gold}"/>
+            <Setter Property="Background" Value="#1E1A14"/>
+        </Style>
+
+        <Style Selector="Button:focus-visible /template/ ContentPresenter">
+            <Setter Property="BorderBrush" Value="{StaticResource kaya-gold}"/>
         </Style>
 
         <Style Selector="Button:pressed">
             <Setter Property="RenderTransform" Value="translateY(0px) scale(0.98)"/>
-        </Style>
-
-        <!-- Corner radius -->
-        <Style Selector="Button:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#1A1D20"/>
-            <Setter Property="CornerRadius" Value="4"/>
         </Style>
 
         <!-- ===================== Entrance animations ===================== -->
@@ -106,8 +116,7 @@
             </Style.Animations>
         </Style>
 
-        <!-- Stagger each menu button individually -->
-
+    <!-- Stagger each menu button individually -->
     <Style Selector="Button.menu-item-1">
         <Style.Animations>
              <Animation Duration="0:0:0.5" Delay="0:0:0.07" FillMode="Forward" Easing="CubicEaseOut">
@@ -148,29 +157,74 @@
             </Animation>
         </Style.Animations>
     </Style>
+
+    <!-- Animation for putting stone -->
+    <Style Selector="Ellipse.ripple">
+		<Style.Animations>
+			<Animation Duration="0:0:3.5" IterationCount="Infinite" Easing="SineEaseOut">
+                <KeyFrame Cue="0%">
+					<Setter Property="Width" Value="16"/>
+                    <Setter Property="Height" Value="16"/>
+                    <Setter Property="Opacity" Value="0.5"/>
+                </KeyFrame>
+				<KeyFrame Cue="100%">
+					<Setter Property="Width" Value="140"/>
+                    <Setter Property="Height" Value="140"/>
+                    <Setter Property="Opacity" Value="0"/>
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
     </UserControl.Styles>
 
     <Grid>
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-                <GradientStop Color="#12151A" Offset="0"/>
-                <GradientStop Color="#0C0E11" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-
-        <Rectangle Grid.RowSpan="2" Fill="{StaticResource GobanLinesBrush}" IsHitTestVisible="False"/>
-
-        <Grid.RowDefinitions>
+         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <Grid.Background>
+            <RadialGradientBrush Center="15%, 0%" GradientOrigin="85%, 100%" Radius="0.9">
+				<GradientStop Color="#2C2519" Offset="0"/>
+                <GradientStop Color="#1C1712" Offset="0.45"/>
+                <GradientStop Color="#120F0A" Offset="1"/>
+            </RadialGradientBrush>
+        </Grid.Background>
+
+        <Viewbox Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0, -60, -60" MaxWidth="600" MaxHeight="600">
+        <Canvas Width="420" Height="420"
+                RenderTransform="rotate(-7deg)"
+                IsHitTestVisible="False"
+                Margin="20">
+			
+            <!-- Board grid -->
+            <Canvas.Resources/>
+            <Path Stroke="{StaticResource kaya-gold}" StrokeThickness="1" Opacity="0.3"
+                  Data="M20,20 L20,340 M60,20 L60,340 M100,20 L100,340 M140,20 L140,340
+                        M180,20 L180,340 M220,20 L220,340 M260,20 L260,340 M300,20 L300,340 M340,20 L340,340
+                        M20,20 L340,20 M20,60 L340,60 M20,100 L340,100 M20,140 L340,140
+                        M20,180 L340,180 M20,220 L340,220 M20,260 L340,260 M20,300 L340,300 M20,340 L340,340"/>
+
+            <Ellipse Canvas.Left="12" Canvas.Top="52" Width="16" Height="16" Fill="{StaticResource stone-white}"/>
+            <Ellipse Canvas.Left="52" Canvas.Top="52" Width="16" Height="16" Fill="#000000" Stroke="{StaticResource kaya-gold}" StrokeThickness="0.6"/>
+            <Ellipse Canvas.Left="92" Canvas.Top="92" Width="16" Height="16" Fill="#000000" Stroke="{StaticResource kaya-gold}" StrokeThickness="0.6"/>
+            <Ellipse Canvas.Left="132" Canvas.Top="52" Width="16" Height="16" Fill="{StaticResource stone-white}"/>
+            <Ellipse Canvas.Left="172" Canvas.Top="132" Width="16" Height="16" Fill="{StaticResource stone-white}" x:Name="RippleOrigin"/>
+            <Ellipse Canvas.Left="212" Canvas.Top="172" Width="16" Height="16" Fill="#000000" Stroke="{StaticResource kaya-gold}" StrokeThickness="0.6"/>
+            <Ellipse Classes="ripple" Canvas.Left="172" Canvas.Top="132" Stroke="{StaticResource kaya-gold}" StrokeThickness="1" Fill="Transparent"/>
+            
+        </Canvas>
+      </Viewbox>
         <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,120,0,0">
             <Border Classes="title-wrap">
                 <TextBlock Text="囲碁"
-                           FontSize="38" FontFamily="{StaticResource OutfitFont}"
+                           FontSize="38" FontFamily="{StaticResource MaShanZhengFont}"
                            Foreground="{StaticResource MutedBrush}"
-                           HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                           HorizontalAlignment="Center" Margin="0,0,0,6">
+                    <TextBlock.Effect>
+						<DropShadowEffect Color="#000000" BlurRadius="24" OffsetX="0" OffsetY="4" Opacity="0.35"/>
+                    </TextBlock.Effect>
+                 </TextBlock>
             </Border>
             <Border Classes="title-wrap">
                 <TextBlock Text="GO"
@@ -181,17 +235,20 @@
             <Rectangle Classes="title-rule" Height="1" Width="140" Fill="{StaticResource AccentBrush}"
                        HorizontalAlignment="Center" Margin="0,18,0,0" Opacity="0.5"
                        RenderTransformOrigin="60%,60%"/>
+            <Ellipse Width="6" Height="6" Fill="#8E3B2F" HorizontalAlignment="Center" Margin="0,4,0,0" Opacity="0.85"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Classes="menu-list"
             Spacing="14"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Margin="0,-50,0,0">
+            Margin="0,-80,0,0">
     <Button Classes="menu-item menu-item-1" Content="Player vs Player" Click="OnPlayervsPlayer"/>
     <Button Classes="menu-item menu-item-2" Content="Player vs Bot" Click="OnPlayerVsBotClick"/>
     <Button Classes="menu-item menu-item-3" Content="Puzzles"/>
     <Button Classes="menu-item menu-item-4" Content="Tutorial"/>
     <Button Classes="menu-item menu-item-5" Content="Exit" Click="OnExit"/>
 </StackPanel>
+        <TextBlock Text="v0.1" FontSize="18" Foreground="{StaticResource muted-kaya}"
+                   Opacity="0.5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16"/>
     </Grid>
 </UserControl>
