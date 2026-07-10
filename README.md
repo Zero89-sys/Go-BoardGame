@@ -14,7 +14,7 @@ The application is currently in the state of **fully functional prototype**.
 ## 🛠️ Technologies used
 * **Language:** C#
 * **GUI Framework:** [Avalonia UI](https://avaloniaui.net/) (XAML / MVVM)
-* **AI Engine:** [KataGo](https://github.com/lightvector/KataGo)
+* **Engine:** [KataGo](https://github.com/lightvector/KataGo)
 
 ---
 ## 📸 Screenshots
