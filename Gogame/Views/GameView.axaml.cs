@@ -17,6 +17,7 @@ using Gogame.ViewModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -531,16 +532,33 @@ public partial class GameView : UserControl
         ShowGameResult(winner);
     }
 
-    // Counting territory
     public (double blackTerritory, double whiteTerritory) CalculateTerritory(double[] ownership)
     {
         double black = 0;
         double white = 0;
 
-        foreach (var val in ownership)
+        for (int x = 0; x < board.Size; x++)
         {
-            if (val > 0.5) black++;
-            else if (val < -0.5) white++;
+            for (int y = 0; y < board.Size; y++)
+            {
+                int idx = y * board.Size + x;
+                var val = ownership[idx];
+                Stone stone = board.Board[x, y];
+
+                if (stone == Stone.Empty)
+                {
+                    if (val > 0.5) black++;
+                    else if (val < -0.5) white++;
+                }
+                else if (stone == Stone.Black && val < -0.5)
+                {
+                    white++;
+                }
+                else if (stone == Stone.White && val > 0.5)
+                {
+                    black++;
+                }
+            }
         }
         return (black, white);
     }
@@ -566,15 +584,26 @@ public partial class GameView : UserControl
             whiteTerritory = result.whiteTerritory;
         }
         double komi = 6.5;
-        double blackFinal = blackTerritory + board.WhiteCaptures;
-        double whiteFinal = whiteTerritory + board.BlackCaptures + komi;
+        double blackFinal = blackTerritory + board.BlackCaptures;
+        double whiteFinal = whiteTerritory + board.WhiteCaptures + komi;
 
         Stone winningColor;
         string reason = "";
         if (resignWinner.HasValue)
         {
             winningColor = resignWinner.Value;
-            reason = "by resignation";
+            reason =
+                "by resignation\n" +
+                "Stats:\n" +
+                $"BLACK:\n" +
+                $"Territory: {blackTerritory}\n" +
+                $"Captures: {board.BlackCaptures}" +
+                $"Total: {blackFinal}\n\n" +
+                $"WHITE:\n" +
+                $"Territory: {whiteTerritory} " +
+                $"Captures: {board.WhiteCaptures} " +
+                $"Komi: {komi}\n" +
+                $"Total: {whiteFinal}"; ;
         }
         else
         {
@@ -604,11 +633,11 @@ public partial class GameView : UserControl
         string details =
                 $"BLACK:\n" +
                 $"Territory: {blackTerritory}\n" +
-                $"Captures: {board.WhiteCaptures}" +
+                $"Captures: {board.BlackCaptures}" +
                 $"Total: {blackFinal}\n\n" +
                 $"WHITE:\n" +
-                $"Territory: {whiteTerritory}" +
-                $"Captures: {board.BlackCaptures}" +
+                $"Territory: {whiteTerritory} " +
+                $"Captures: {board.WhiteCaptures} " +
                 $"Komi: {komi}\n" +
                 $"Total: {whiteFinal}";
 
@@ -658,7 +687,7 @@ public partial class GameView : UserControl
 
         restartButton.PointerEntered += (s, e) => restartButton.Background = Brushes.DarkGray;
         restartButton.PointerExited += (s, e) => restartButton.Background = Brushes.LightGray;
-        
+
 
         restartButton.PointerPressed += async (s, e) =>
         {
@@ -681,17 +710,17 @@ public partial class GameView : UserControl
             Margin = new Thickness(20),
             VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
             Children =
+        {
+            new TextBlock
             {
-                new TextBlock
-                {
-                    Text = resultText,
-                    TextAlignment = TextAlignment.Center,
-                    FontSize = 18,
-                    Foreground = Brushes.Black,
-                    TextWrapping = TextWrapping.Wrap
-                },
-                buttonPanel
-            }
+                Text = resultText,
+                TextAlignment = TextAlignment.Center,
+                FontSize = 18,
+                Foreground = Brushes.Black,
+                TextWrapping = TextWrapping.Wrap
+            },
+            buttonPanel
+        }
         };
         var topLevel = TopLevel.GetTopLevel(this);
         if (this.VisualRoot is Window owner)
@@ -936,6 +965,7 @@ public partial class GameView : UserControl
         var blackRow = this.FindControl<Grid>("BlackInfoRow");
         if (whiteRow != null) whiteRow.IsVisible = true;
         if (blackRow != null) blackRow.IsVisible = true;
+        var container = WhiteInfoRow.Parent as StackPanel;
 
         DrawBoard();
 
@@ -945,12 +975,24 @@ public partial class GameView : UserControl
             await _botService.SendCommand("clear_board");
             await _botService.SendCommand("komi 6.5");
 
+            container.Children.Remove(WhiteInfoRow);
+            container.Children.Remove(BlackInfoRow);
+
             if (_botColor == Stone.Black)
             {
                 _isBotThinking = true;
                 string response = await _botService.SendCommand("genmove B");
                 ApplyBotMove(response);
                 _isBotThinking = false;
+                container.Children.Insert(2, BlackInfoRow);
+                container.Children.Add(WhiteInfoRow);
+                WhiteInfoRow.FlowDirection = FlowDirection.RightToLeft;
+                BlackInfoRow.FlowDirection = FlowDirection.RightToLeft;
+            }
+            else
+            {
+                container.Children.Insert(2, WhiteInfoRow);
+                container.Children.Add(BlackInfoRow);
             }
         }
         SyncAndRefreshUI();

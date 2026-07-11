@@ -124,6 +124,7 @@ namespace Gogame.Models
             await SendCommand($"boardsize {size}");
         }
 
+
         public async Task StopAnalysisAsync()
         {
             await SendRawCommand("stop");

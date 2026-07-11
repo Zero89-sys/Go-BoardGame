@@ -133,8 +133,8 @@
                     <TextBlock Grid.Column="0" x:Name="WhiteCaptureText" Foreground="#E3E7EA"
                                FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                        <Button x:Name="PassButtonW" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
                         <Button x:Name="WhiteResignButton" Content="Resign" Classes="end-button" Width="100" Click="OnWhiteResign"/>
+                        <Button x:Name="PassButtonW" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
                     </StackPanel>
                 </Grid>
 
@@ -156,7 +156,7 @@
                 </Canvas>
                 </Border>
 
-                <Grid x:Name="BlackInfoRow" ColumnDefinitions="Auto, *" Margin="50, 0" IsVisible="False">
+                <Grid x:Name="BlackInfoRow"  ColumnDefinitions="Auto, *" Margin="50, 0" IsVisible="False">
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
                         <Button x:Name="PassButtonB" Content="Pass" Classes="end-button" Width="100" Click="OnPassClicked"/>
                         <Button x:Name="BlackResignButton" Content="Resign" Classes="end-button" Width="100" Click="OnBlackResign"/>
