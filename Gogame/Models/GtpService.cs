@@ -183,14 +183,6 @@ namespace Gogame.Models
             }
         }
 
-        private void ParseAnalysisLine(string line)
-        {
-            if (line.Contains("ownership"))
-            {
-                ParseOwnership(line, _currentBoardSize);
-            }
-        }
-
         public async Task SendRawCommand(string command)
         {
             if (_process == null || _process.HasExited) return;
