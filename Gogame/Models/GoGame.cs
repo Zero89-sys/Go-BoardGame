@@ -221,7 +221,7 @@ namespace Gogame.Models
                     }
                 }
             }
-
+            
             private Stone Opponent (Stone stone)
             {
                 return stone switch
@@ -230,22 +230,6 @@ namespace Gogame.Models
                     Stone.White => Stone.Black,
                     _ => Stone.Empty
                 };
-            }
-
-            // PASS method
-            public void Pass()
-            {
-                if (IsGameOver)
-                {
-                    return;
-                }
-                ConsecutivePasses++;
-                SwitchPlayer();
-
-                if (ConsecutivePasses >= 2)
-                {
-                    IsGameOver = true;
-                }
             }
 
             // RESIGN method
@@ -273,13 +257,6 @@ namespace Gogame.Models
                 {
                     CurrentPlayer = Stone.Black;
                 }
-            }
-
-            public string GetScoreFromBot(string finalScoreResponse)
-            {
-                if (finalScoreResponse.StartsWith("="))
-                    return finalScoreResponse.Substring(1).Trim();
-                return finalScoreResponse;
             }
 
             //PASS for the given player
@@ -350,70 +327,6 @@ namespace Gogame.Models
                 None,
                 Black,
                 White,
-            }
-
-            public TerritoryOwner[,] GetTerritoryMap(Stone[,] boardForScoring = null)
-            {
-                var map = new TerritoryOwner[Size, Size];
-                var visited = new bool[Size, Size];
-
-                for (int x = 0; x < Size; x++)
-                {
-                    for (int y = 0; y < Size; y++)
-                    {
-                        if (visited[x, y] || Board[x,y] != Stone.Empty)
-                            continue;
-
-                        var region = new List<(int x, int y)>();
-                        var borders = new HashSet<Stone>();
-                        var stack = new Stack<(int x, int y)>();
-
-                        stack.Push((x, y));
-                        visited[x,y] = true;
-
-                        while (stack.Count > 0)
-                        {
-                            var (cx, cy) = stack.Pop();
-                            region.Add((cx, cy));
-
-                            foreach (var (nx, ny) in GetNeighbors(cx, cy))
-                            {
-                                if (Board[nx,ny] == Stone.Empty)
-                                {
-                                    if (!visited[nx, ny])
-                                    {
-                                        visited[nx, ny] = true;
-                                        stack.Push((nx, ny));
-                                    }
-                                }
-                                else
-                                {
-                                    borders.Add(Board[nx, ny]);
-                                }
-                            }
-                        }
-
-                        if (borders.Count == 1)
-                        {
-                            var owner = borders.First()==Stone.Black
-                                ? TerritoryOwner.Black
-                                : TerritoryOwner.White;
-
-                            foreach (var (rx, ry) in region)
-                            {
-                                map[rx,ry]= owner;
-                            }       
-
-                        }
-                    }
-                }
-                return map;
-            }
-
-            // Empty places check
-            public bool IsPointEmpty(int x, int y)
-            {
-                return IsOnBoard(x, y) && Board[x, y] == Stone.Empty;
             }
 
             // Legal Move check
