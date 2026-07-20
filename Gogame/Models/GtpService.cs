@@ -87,11 +87,6 @@ namespace Gogame.Models
             }
         }
 
-        public async Task<string> GetScoreEstimation()
-        {
-            return await SendCommand("kata-score-est");
-        }
-
         public void StopEngine()
         {
             if (_process != null && !_process.HasExited)
@@ -99,14 +94,6 @@ namespace Gogame.Models
                 _input?.WriteLine("quit");
                 _process.Kill();
             }
-        }
-
-
-        // Analysis
-        public async Task<string> GetKataScoreEstimate()
-        {
-            var response = await SendCommand("kata-get-score");
-            return response;
         }
 
         public async Task StartOwnershipAnalysisAsync(int boardSize)

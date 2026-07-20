@@ -42,7 +42,6 @@ public partial class GameView : UserControl
     private int ghostY = -1;
 
     private TextBlock? Turn_Text;
-    private TextBlock? Capture_Text;
     private TextBlock? WhiteCapture_Text;
     private TextBlock? BlackCapture_Text;
 
@@ -52,9 +51,6 @@ public partial class GameView : UserControl
     private GtpService _botService = GtpService.Instance;
     private bool _isBotThinking = false;
     private bool _isBotReady = false;
-    private bool _botInitializing = false;
-    private string? _finalOwnershipData;
-    private HashSet<(int x, int y)> _deadStones = new();
 
     enum GameState
     {
@@ -474,8 +470,6 @@ public partial class GameView : UserControl
 
         if (board.IsGameOver)
         {
-            await RunFinalAnalysisAsync();
-
             string? botScore = null;
             if (_currentMode == GameMode.PlayerVsBot)
             {
@@ -528,8 +522,8 @@ public partial class GameView : UserControl
     // Resign click
     private void OnResignClicked(object? sender, RoutedEventArgs e)
     {
-        var winner = board.Resign();
-        ShowGameResult(winner);
+        var winner = board.Resign(board.CurrentPlayer);
+        if(winner.HasValue) ShowGameResult(winner.Value);
     }
 
     public (double blackTerritory, double whiteTerritory) CalculateTerritory(double[] ownership)
@@ -572,7 +566,6 @@ public partial class GameView : UserControl
         _gameState = GameState.GameOver;
         BoardCanvas.IsHitTestVisible = false;
         await RunFinalAnalysisAsync();
-        string text;
 
         double blackTerritory = 0;
         double whiteTerritory = 0;
@@ -628,18 +621,6 @@ public partial class GameView : UserControl
                 resultText = $"Bot wins {reason}";
             }
         }
-
-        // Details
-        string details =
-                $"BLACK:\n" +
-                $"Territory: {blackTerritory}\n" +
-                $"Captures: {board.BlackCaptures}" +
-                $"Total: {blackFinal}\n\n" +
-                $"WHITE:\n" +
-                $"Territory: {whiteTerritory} " +
-                $"Captures: {board.WhiteCaptures} " +
-                $"Komi: {komi}\n" +
-                $"Total: {whiteFinal}";
 
         var dialog = new Window
         {
@@ -778,8 +759,6 @@ public partial class GameView : UserControl
     {
         if (board.IsGameOver)
         {
-            await RunFinalAnalysisAsync();
-
             string? score = null;
             if (_currentMode == GameMode.PlayerVsBot)
             {
@@ -1261,7 +1240,6 @@ public partial class GameView : UserControl
     }
 
     // Helper
-    private bool IsPvP => _currentMode == GameMode.PlayerVsPlayer;
     private bool IsPvBot => _currentMode == GameMode.PlayerVsBot;
 
     // Stones when setting
