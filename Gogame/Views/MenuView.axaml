@@ -212,8 +212,8 @@
             <Ellipse Canvas.Left="172" Canvas.Top="132" Width="16" Height="16" Fill="{StaticResource stone-white}" x:Name="RippleOrigin"/>
             <Ellipse Canvas.Left="212" Canvas.Top="172" Width="16" Height="16" Fill="#000000" Stroke="{StaticResource kaya-gold}" StrokeThickness="0.6"/>
             <Ellipse Classes="ripple" Canvas.Left="172" Canvas.Top="132" Stroke="{StaticResource kaya-gold}" StrokeThickness="1" Fill="Transparent"/>
-            
         </Canvas>
+
       </Viewbox>
         <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,120,0,0">
             <Border Classes="title-wrap">
