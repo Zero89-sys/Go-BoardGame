@@ -24,6 +24,9 @@
     <Compile Update="Views\GameView.axaml.cs">
       <DependentUpon>GameView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\GameResultDialog.axaml.cs">
+      <DependentUpon>GameResultDialog.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuView.axaml.cs">
       <DependentUpon>MenuView.axaml</DependentUpon>
     </Compile>

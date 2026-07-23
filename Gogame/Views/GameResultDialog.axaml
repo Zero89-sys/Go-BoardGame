@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Gogame.Views.GameResultDialog"
+             Background="#1a1a1a">
+    <UserControl.Styles>
+		<StyleInclude Source="avares://Gogame/Views/Styles.axaml"/>
+    </UserControl.Styles>
+
+    <Grid x:Name="Window">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+			<TextBlock Text="Results:" FontSize="36" Foreground="White" 
+                       HorizontalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="Test" Foreground="#E3E7EA"/>
+
+            <Button x:Name="BackToMenu" Content="Back to Menu" 
+                    Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
+            <Button x:Name="Restart" Content="Restart" 
+                    Classes="end-button" FontSize="18" HorizontalAlignment="Right" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
