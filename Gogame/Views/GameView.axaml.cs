@@ -581,20 +581,20 @@ public partial class GameView : UserControl
         double whiteFinal = whiteTerritory + board.WhiteCaptures + komi;
 
         Stone winningColor;
-        string reason = "";
+        string resultText = "";
         if (resignWinner.HasValue)
         {
             winningColor = resignWinner.Value;
-            reason =
+            resultText =
                 "by resignation\n" +
                 "Stats:\n" +
                 $"BLACK:\n" +
                 $"Territory: {blackTerritory}\n" +
-                $"Captures: {board.BlackCaptures}" +
+                $"Captures: {board.BlackCaptures}\n" +
                 $"Total: {blackFinal}\n\n" +
                 $"WHITE:\n" +
-                $"Territory: {whiteTerritory} " +
-                $"Captures: {board.WhiteCaptures} " +
+                $"Territory: {whiteTerritory}\n" +
+                $"Captures: {board.WhiteCaptures}\n" +
                 $"Komi: {komi}\n" +
                 $"Total: {whiteFinal}"; ;
         }
@@ -602,109 +602,34 @@ public partial class GameView : UserControl
         {
             winningColor = blackFinal > whiteFinal ? Stone.Black : Stone.White;
             double diff = Math.Abs(blackFinal - whiteFinal);
-            reason = $"by {diff:F1} points";
+            resultText = $"by {diff:F1} points";
         }
 
-        string resultText;
         if (_currentMode == GameMode.PlayerVsPlayer)
         {
-            resultText = $"{winningColor} wins {reason}";
+            resultText = $"{winningColor} wins {resultText}";
         }
         else
         {
             if (winningColor == _playerColor)
             {
-                resultText = $"You win {reason}";
+                resultText = $"You win {resultText}";
             }
             else
             {
-                resultText = $"Bot wins {reason}";
+                resultText = $"Bot wins {resultText}";
             }
         }
 
-        var dialog = new Window
-        {
-            Width = 400,
-            Height = 300,
-            Title = "Game result",
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Background = Brushes.AntiqueWhite,
-            CanResize = false,
-            SystemDecorations = SystemDecorations.BorderOnly
-        };
+        var dialog = new GameResultDialog();
+        dialog.ResultText.Text = resultText;
 
-        var closeButton = new Border
-        {
-            Background = Brushes.LightGray,
-            Padding = new Thickness(20, 5),
-            CornerRadius = new CornerRadius(3),
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Margin = new Thickness(0, 20, 0, 0),
-            Child = new TextBlock
-            {
-                Text = "Close",
-                Foreground = Brushes.Black,
-                FontSize = 18,
-            }
-        };
-        closeButton.PointerEntered += (s, e) => closeButton.Background = Brushes.DarkGray;
-        closeButton.PointerExited += (s, e) => closeButton.Background = Brushes.LightGray;
-        closeButton.PointerPressed += (s, e) => dialog.Close();
-
-        var restartButton = new Border
-        {
-            Background = Brushes.LightGray,
-            CornerRadius = new CornerRadius(3),
-            Padding = new Thickness(20, 5),
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Margin = new Thickness(0, 20, 0, 0),
-            Child = new TextBlock
-            {
-                Text = "Restart Game",
-                Foreground = Brushes.Black,
-                FontSize = 18,
-            }
-        };
-
-        restartButton.PointerEntered += (s, e) => restartButton.Background = Brushes.DarkGray;
-        restartButton.PointerExited += (s, e) => restartButton.Background = Brushes.LightGray;
-
-
-        restartButton.PointerPressed += async (s, e) =>
+        dialog.RestartRequested += async (s, e) =>
         {
             await RestartGameAsync();
-            dialog.Close();
         };
 
-
-        var buttonPanel = new StackPanel
-        {
-            Orientation = Avalonia.Layout.Orientation.Horizontal,
-            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-            Margin = new Thickness(0, 20, 0, 0),
-            Spacing = 10,
-            Children = { closeButton, restartButton }
-        };
-
-        dialog.Content = new StackPanel
-        {
-            Margin = new Thickness(20),
-            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            Children =
-        {
-            new TextBlock
-            {
-                Text = resultText,
-                TextAlignment = TextAlignment.Center,
-                FontSize = 18,
-                Foreground = Brushes.Black,
-                TextWrapping = TextWrapping.Wrap
-            },
-            buttonPanel
-        }
-        };
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (this.VisualRoot is Window owner)
+        if(this.VisualRoot is Window owner)
         {
             await dialog.ShowDialog(owner);
         }
@@ -715,6 +640,7 @@ public partial class GameView : UserControl
     }
 
     // Restart
+
     private async Task RestartGameAsync()
     {
         BoardCanvas.IsHitTestVisible = true;

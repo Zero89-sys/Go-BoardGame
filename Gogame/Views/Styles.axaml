@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style Selector="Button.end-button">
             <Setter Property="Background" Value="#0D0D0D"/>
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Foreground" Value="#D8DCDC"/>
             <Setter Property="BorderBrush" Value="#454C54"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="12,7"/>
@@ -28,7 +28,7 @@
             <Setter Property="Opacity" Value="1.0"/>
         </Style>
         <Style Selector="Button.end-button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="BorderBrush" Value="{StaticResource kaya-gold}"/>
+            <Setter Property="BorderBrush" Value="#B08D57"/>
             <Setter Property="Foreground" Value="#F5F0E6"/>
             <Setter Property="Background" Value="#1E1A14"/>
         </Style>

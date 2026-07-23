@@ -1,21 +1,36 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Gogame.Views.GameResultDialog"
-             Background="#1a1a1a">
-    <UserControl.Styles>
-		<StyleInclude Source="avares://Gogame/Views/Styles.axaml"/>
-    </UserControl.Styles>
+             Width="400" Height="600"
+             CanResize="False"
+             Background="Transparent"
+             WindowStartupLocation="CenterOwner"
+             SystemDecorations="None">
 
-    <Grid x:Name="Window">
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-			<TextBlock Text="Results:" FontSize="36" Foreground="White" 
-                       HorizontalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="Test" Foreground="#E3E7EA"/>
+    <Window.Styles>
+        <StyleInclude Source="avares://Gogame/Views/Styles.axaml"/>
+    </Window.Styles>
 
-            <Button x:Name="BackToMenu" Content="Back to Menu" 
-                    Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
-            <Button x:Name="Restart" Content="Restart" 
-                    Classes="end-button" FontSize="18" HorizontalAlignment="Right" Margin="10"/>
-        </StackPanel>
-    </Grid>
-</UserControl>
+    <Border CornerRadius="5"
+            BorderBrush="#3b4441"
+            BorderThickness="2"
+            Background="#1a1a1a">
+        <Grid>
+            <Button Background="#D8DCDC" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Click="OnCloseClicked">
+			    <Image Source="avares://Gogame/Assets/cross.png" Width="25"/>
+            </Button>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="Results:" FontSize="36" Foreground="White" 
+                           HorizontalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock x:Name="ResultText" Foreground="#E3E7EA"/>
+
+                <StackPanel Orientation="Horizontal">
+				    <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
+                        Classes="end-button" FontSize="23" HorizontalAlignment="Left" Margin="10"/>
+                <Button x:Name="Restart" Content="Restart" Click="OnRestartClicked"
+                        Classes="end-button" FontSize="23" HorizontalAlignment="Right" Margin="10"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
