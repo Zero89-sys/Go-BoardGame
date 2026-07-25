@@ -580,46 +580,36 @@ public partial class GameView : UserControl
         double blackFinal = blackTerritory + board.BlackCaptures;
         double whiteFinal = whiteTerritory + board.WhiteCaptures + komi;
 
-        Stone winningColor;
-        string resultText = "";
-        if (resignWinner.HasValue)
-        {
-            winningColor = resignWinner.Value;
-            resultText =
-                "by resignation\n" +
-                "Stats:\n" +
-                $"BLACK:\n" +
-                $"Territory: {blackTerritory}\n" +
-                $"Captures: {board.BlackCaptures}\n" +
-                $"Total: {blackFinal}\n\n" +
-                $"WHITE:\n" +
-                $"Territory: {whiteTerritory}\n" +
-                $"Captures: {board.WhiteCaptures}\n" +
-                $"Komi: {komi}\n" +
-                $"Total: {whiteFinal}"; ;
-        }
-        else
-        {
-            winningColor = blackFinal > whiteFinal ? Stone.Black : Stone.White;
-            double diff = Math.Abs(blackFinal - whiteFinal);
-            resultText = $"by {diff:F1} points";
-        }
+        Stone winningColor = resignWinner ?? (blackFinal > whiteFinal ? Stone.Black : Stone.White);
 
+        string winReason = resignWinner.HasValue
+            ? "by opponent's resignation"
+            : $"by {Math.Abs(blackFinal - whiteFinal):F1} points";
+
+        string winnerText;
         if (_currentMode == GameMode.PlayerVsPlayer)
         {
-            resultText = $"{winningColor} wins {resultText}";
+            winnerText = $"{winningColor} wins {winReason}";
         }
         else
         {
-            if (winningColor == _playerColor)
-            {
-                resultText = $"You win {resultText}";
-            }
-            else
-            {
-                resultText = $"Bot wins {resultText}";
-            }
+            string who = winningColor == _playerColor ? "You" : "Bot";
+            winnerText = $"{who} win {winReason}";
         }
+
+        string statsText =
+            "Stats:\n" +
+            $"BLACK:\n" +
+            $"Territory: {blackTerritory}\n" +
+            $"Captures: {board.BlackCaptures}\n" +
+            $"Total: {blackFinal}\n\n" +
+            $"WHITE:\n" +
+            $"Territory: {whiteTerritory}\n" +
+            $"Captures: {board.WhiteCaptures}\n" +
+            $"Komi: {komi}\n" +
+            $"Total: {whiteFinal}";
+
+        string resultText = $"{winnerText}\n{statsText}";
 
         var dialog = new GameResultDialog();
         dialog.ResultText.Text = resultText;
