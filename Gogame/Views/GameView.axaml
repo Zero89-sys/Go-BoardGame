@@ -3,111 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Gogame.ViewModels"
+             xmlns:views="using:Gogame.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
              x:Class="Gogame.Views.GameView"
              x:DataType="vm:MainViewModel">
 
-    <UserControl.Resources>
-		<SolidColorBrush x:Key="AccentBrush" Color="#3D4A48" />
-        <SolidColorBrush x:Key="TextBrush" Color="#D8DCDC"/>
-        <SolidColorBrush x:Key="MutedBrush" Color="#8A9494"/>
-        <SolidColorBrush x:Key="Void" Color="#141310"/>
-        <SolidColorBrush x:Key="stone-white" Color="#EDE6D6"/>
-        <SolidColorBrush x:Key="kaya-gold" Color="#B08D57"/>
-        <SolidColorBrush x:Key="muted-kaya" Color="#8A7A5C"/>
-        <SolidColorBrush x:Key="hanko-red" Color="#8E3B2F"/>
-    </UserControl.Resources>
-
     <UserControl.Styles>
-
-        <!-- ===================== Buttons ===================== -->
-        <Style Selector="Button.end-button">
-            <Setter Property="Background" Value="#0D0D0D"/>
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
-            <Setter Property="BorderBrush" Value="#454C54"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="12,7"/>
-            <Setter Property="FontFamily" Value="Georgia, 'Noto Serif', serif"/>
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="RenderTransform" Value="scale(1)"/>
-            <Setter Property="RenderTransformOrigin" Value="50%,50%"/>
-            <Setter Property="Transitions">
-                <Transitions>
-                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" Easing="CubicEaseOut"/>
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.25"/>
-                </Transitions>
-            </Setter>
-        </Style>
-        <Style Selector="Button.end-button:enabled /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="BorderBrush" Value="#454C54"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        <Style Selector="Button.end-button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Foreground" Value="#5B564A"/>
-            <Setter Property="BorderBrush" Value="#33302A"/>
-            <Setter Property="Opacity" Value="1.0"/>
-        </Style>
-        <Style Selector="Button.end-button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="BorderBrush" Value="{StaticResource kaya-gold}"/>
-            <Setter Property="Foreground" Value="#F5F0E6"/>
-            <Setter Property="Background" Value="#1E1A14"/>
-        </Style>
-
-        <!-- ===================== Slider ===================== -->
-        <Style Selector="Slider.custom-slider /template/ RepeatButton">
-            <Setter Property="Background" Value="#3A4149"/>
-            <Setter Property="Height" Value="5"/>
-            <Setter Property="CornerRadius" Value="4"/>
-        </Style>
-
-        <Style Selector="Slider.custom-slider /template/ RepeatButton#PART_DecreaseButton">
-            <Setter Property="Background" Value="#6FA89E"/>
-        </Style>
-        <Style Selector="Slider.custom-slider /template/ Thumb">
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
-            <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="BorderBrush" Value="{StaticResource muted-kaya}" />
-            <Setter Property="BorderThickness" Value="2"/>
-        </Style>
-
-        <Style Selector="Slider.custom-slider /template/ Thumb:pointerover">
-            <Setter Property="BorderBrush" Value="{DynamicResource kaya-gold}"/>
-            <Setter Property="BorderThickness" Value="3"/>
-        </Style>
-
-        <!-- ===================== ComboBox ===================== -->
-        <Style Selector="ComboBox">
-            <Setter Property="Background" Value="#0D0D0D"/>
-            <Setter Property="Foreground" Value="#E3E7EA"/>
-            <Setter Property="BorderBrush" Value="#6B7A75"/>
-            <Setter Property="CornerRadius" Value="6"/>
-            <Setter Property="Padding" Value="10,6"/>
-        </Style>
-        <Style Selector="ComboBox:pointerover /template/ Border">
-            <Setter Property="BorderBrush" Value="{StaticResource kaya-gold}"/>
-            <Setter Property="Background" Value="#1E1A14"/>
-        </Style>
-        <Style Selector="ComboBoxItem">
-            <Setter Property="Background" Value="#0D0D0D"/>
-            <Setter Property="Foreground" Value="#E3E7EA"/>
-        </Style>
-        <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="#181b1a"/>
-        </Style>
-
-        <!-- ===================== RadioButton ===================== -->
-        <Style Selector="RadioButton">
-            <Setter Property="Foreground" Value="#E3E7EA"/>
-        </Style>
-
-        <!-- ===================== ProgressBar ===================== -->
-        <Style Selector="ProgressBar">
-            <Setter Property="Foreground" Value="#6FA89E"/>
-            <Setter Property="Background" Value="#3A4149"/>
-        </Style>
-
+    <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
     </UserControl.Styles>
 
 
@@ -138,23 +40,8 @@
                     </StackPanel>
                 </Grid>
 
-                <Border BoxShadow="0 8 30 4 #90000000"
-                        Margin="10"
-                        CornerRadius="4"
-                        BorderBrush="#3b4441"
-                        BorderThickness="2"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <Canvas x:Name="BoardCanvas" Width="800" Height="800" Background="#54514C"
-                        HorizontalAlignment="Center" PointerPressed="OnPointerPressed"
-                        PointerMoved="OnPointerMoved" PointerExited="OnPointerLeave">
-                    <Canvas.Background>
-                        <ImageBrush Stretch="Fill"
-                                    Source="avares://Gogame/Assets/Textures/bamboo.png"
-                                    Opacity="0.5"/>
-                    </Canvas.Background>
-                </Canvas>
-                </Border>
+                <!-- Board -->
+                <views:BoardView x:Name="BoardControl"/>
 
                 <Grid x:Name="BlackInfoRow"  ColumnDefinitions="Auto, *" Margin="50, 0" IsVisible="False">
                     <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">

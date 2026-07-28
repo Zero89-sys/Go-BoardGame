@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="Gogame.Views.BoardView">
+
+    <Border BoxShadow="0 8 30 4 #90000000"
+            Margin="10"
+            CornerRadius="4"
+            BorderBrush="#3b4441"
+            BorderThickness="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        <Canvas x:Name="BoardCanvas" Width="800" Height="800" Background="#54514C"
+                HorizontalAlignment="Center" PointerPressed="OnPointerPressed"
+                PointerMoved="OnPointerMoved" PointerExited="OnPointerLeave">
+            <Canvas.Background>
+                <ImageBrush Stretch="Fill"
+                            Source="avares://Gogame/Assets/Textures/bamboo.png"
+                            Opacity="0.5"/>
+            </Canvas.Background>
+        </Canvas>
+    </Border>
+
+</UserControl>

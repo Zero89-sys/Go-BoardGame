@@ -34,13 +34,6 @@ public partial class GameView : UserControl
 {
     private GoBoard board = new GoBoard(19);
 
-    private const int BoardSizePx = 800;
-    private const int Margin = 30;
-
-    private Ellipse? ghostStone;
-    private int ghostX = -1;
-    private int ghostY = -1;
-
     private TextBlock? Turn_Text;
     private TextBlock? WhiteCapture_Text;
     private TextBlock? BlackCapture_Text;
@@ -83,25 +76,29 @@ public partial class GameView : UserControl
             BotOnlyPanel.IsVisible = (_currentMode == GameMode.PlayerVsBot);
         }
 
-        BoardCanvas = this.FindControl<Canvas>("BoardCanvas");
         Turn_Text = this.FindControl<TextBlock>("TurnText");
         WhiteCapture_Text = this.FindControl<TextBlock>("WhiteCaptureText");
         BlackCapture_Text = this.FindControl<TextBlock>("BlackCaptureText");
-        
+
         WhiteResign_Button = this.FindControl<Button>("WhiteResignButton");
         BlackResign_Button = this.FindControl<Button>("BlackResignButton");
 
-        Avalonia.Threading.Dispatcher.UIThread.Post(() => DrawSetupStones(),
+        BoardControl.BoardPointerPressed += (s, pos) => OnBoardPointerPressed(pos);
+        BoardControl.BoardPointerMoved += (s, pos) => OnBoardPointerMoved(pos);
+        BoardControl.BoardPointerLeft += (s, e) => BoardControl.RemoveGhostStone();
+
+        Avalonia.Threading.Dispatcher.UIThread.Post(() => BoardControl.DrawSetupStones(board, _playerColor),
         Avalonia.Threading.DispatcherPriority.Background);
 
         UpdatePassVisibility();
         UpdateTurnText();
         UpdateCaptureText();
         UpdateButtons();
-        DrawBoard();
+        BoardControl.DrawBoard(board);
     }
+
     // Mouse click
-    private async void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private async void OnBoardPointerPressed(Point pos)
     {
         if (_gameState != GameState.Playing || _isBotThinking)
             return;
@@ -109,8 +106,7 @@ public partial class GameView : UserControl
         if (IsPvBot && board.CurrentPlayer != _playerColor)
             return;
 
-        var pos = e.GetPosition(BoardCanvas);
-        if (!TryGetBoardCoordinates(pos, out int x, out int y))
+        if (!BoardControl.TryGetBoardCoordinates(pos, board, out int x, out int y))
             return;
 
         Stone playerNow = board.CurrentPlayer;
@@ -171,244 +167,32 @@ public partial class GameView : UserControl
         }
     }
 
-    // Render
-    private void DrawBoard()
-    {
-        BoardCanvas.Children.Clear();
-
-        int size = board.Size;
-        double cell = (BoardSizePx - 2.0 * Margin) / (size - 1);
-
-        // Grid
-        for (int i = 0; i < size; i++)
-        {
-            double pos = Margin + i * cell;
-
-            BoardCanvas.Children.Add(new Line
-            {
-                StartPoint = new Avalonia.Point(Margin, pos),
-                EndPoint = new Avalonia.Point(BoardSizePx - Margin, pos),
-                Stroke = Brushes.Black
-            });
-
-            BoardCanvas.Children.Add(new Line
-            {
-                StartPoint = new Avalonia.Point(pos, Margin),
-                EndPoint = new Avalonia.Point(pos, BoardSizePx - Margin),
-                Stroke = Brushes.Black
-            });
-        }
-
-        // Stones
-        for (int x = 0; x < size; x++)
-        {
-            for (int y = 0; y < size; y++)
-            {
-                if (board.Board[x, y] == Stone.Empty)
-                    continue;
-
-                bool isBlack = board.Board[x, y] == Stone.Black;
-                double stoneSize = cell * 0.85;
-                double xPos = Margin + x * cell - stoneSize / 2;
-                double yPos = Margin + y * cell - stoneSize / 2;
-
-                double lightX = 0.25 + _rng.NextDouble() * 0.15;
-                double lightY = 0.20 + _rng.NextDouble() * 0.15;
-                double highlightOffsetX = stoneSize * (0.18 + _rng.NextDouble() * 0.05);
-                double highlightOffsetY = stoneSize * (0.14 + _rng.NextDouble() * 0.05);
-
-                var baseShadow = new Ellipse
-                {
-                    Width = cell * 0.88,
-                    Height = cell * 0.88,
-                    Fill = new SolidColorBrush(isBlack? Color.FromArgb(90,0,0,0):Color.FromArgb(70, 0, 0, 0)),
-                    Opacity = 0.4,
-                    IsHitTestVisible = false
-                };
-                Canvas.SetLeft(baseShadow, xPos + stoneSize * 0.06);
-                Canvas.SetTop(baseShadow, yPos + stoneSize * 0.10);
-
-                var whiteStoneBrush = new RadialGradientBrush
-                {
-                    Center = new RelativePoint(0.4, 0.38, RelativeUnit.Relative),
-                    Radius = 1.0,
-                    GradientStops =
-                    {
-                        new GradientStop(Color.Parse("#FAFAFA"),0),
-                        new GradientStop(Color.Parse("#EDEDED"), 0.45),
-                        new GradientStop(Color.Parse("#D8D8D8"), 0.75),
-                        new GradientStop(Color.Parse("#BEBEBE"),1)
-                    }
-                };
-
-                var whiteHighlight = new Ellipse
-                {
-                    Width = stoneSize * 0.55,
-                    Height = stoneSize * 0.35,
-                    Fill = new RadialGradientBrush
-                    {
-                        Center = new RelativePoint(0.45, 0.4, RelativeUnit.Relative),
-                        Radius = 0.9,
-                        GradientStops =
-                        {
-                            new GradientStop(Color.FromArgb(25, 255, 255, 255), 0),
-                            new GradientStop(Color.FromArgb(15, 255, 255, 255), 0.5),
-                            new GradientStop(Color.FromArgb(0, 255, 255, 255), 1)
-                        }
-                    },
-                    IsHitTestVisible = false
-                };
-                
-                Canvas.SetLeft(whiteHighlight, xPos + cell * 0.16);
-                Canvas.SetTop(whiteHighlight, yPos + cell * 0.18);
-
-                var blackStoneBrush = new RadialGradientBrush
-                {
-                    Center = new RelativePoint(lightX, lightY, RelativeUnit.Relative),
-                    Radius = 0.65,
-                    GradientStops =
-                    {
-                        new GradientStop(Color.Parse("#3A3A3A"), 0),
-                        new GradientStop(Color.Parse("#1A1A1A"), 0.45),
-                        new GradientStop(Color.Parse("#000000"), 1)
-                    }
-                };
-
-                var blackHighlight = new Ellipse
-                {
-                    Width = cell * 0.45,
-                    Height = cell * 0.22,
-                    Fill = new RadialGradientBrush
-                    {
-                        GradientStops =
-                        {
-                            new GradientStop(Color.FromArgb(55,255,255,255), 0),
-                            new GradientStop(Color.FromArgb(15, 255, 255, 255), 0.4),
-                            new GradientStop(Color.FromArgb(0,255,255,255), 1)
-                        }
-                    },
-                    IsHitTestVisible = false
-                };
-                Canvas.SetLeft(blackHighlight, xPos + stoneSize * 0.18);
-                Canvas.SetTop(blackHighlight, yPos + stoneSize * 0.14);
-
-                var stone = new Ellipse
-                {
-                    Width = stoneSize,
-                    Height = stoneSize,
-                    Fill = isBlack ? blackStoneBrush : whiteStoneBrush,
-
-                    Stroke = new SolidColorBrush(
-                        isBlack
-                            ? Color.FromArgb(45, 255, 255, 255)
-                            : Color.FromArgb(60, 0, 0, 0)
-                    ),
-
-                    StrokeThickness = 0.6,                  
-                    IsHitTestVisible = false,
-                    Tag = $"stone_{x}_{y}"
-                };
-                stone.StrokeThickness = stoneSize * 0.015;
-                Canvas.SetLeft(stone, xPos);
-                Canvas.SetTop(stone, yPos);
-                BoardCanvas.Children.Add(baseShadow);
-                BoardCanvas.Children.Add(stone);
-                BoardCanvas.Children.Add(isBlack ? blackHighlight : whiteHighlight);
-            }
-        }
-    }
-    private readonly Random _rng = new();
-
-    // Click on intersections
-    private bool TryGetBoardCoordinates(Point pos, out int x, out int y)
-    {
-        double cell = (BoardSizePx - 2.0 * Margin) / (board.Size - 1);
-
-        x = (int)Math.Round((pos.X - Margin) / cell);
-        y = (int)Math.Round((pos.Y - Margin) / cell);
-
-        return board.IsOnBoard(x, y);
-    }
-
     // Ghost stone
-    private void OnPointerMoved(object? sender, PointerEventArgs e)
+    private void OnBoardPointerMoved(Point pos)
     {
-        if (BoardCanvas == null)
-            return;
-
-        if(_currentMode == GameMode.PlayerVsBot && board.CurrentPlayer != _playerColor)
+        if (_currentMode == GameMode.PlayerVsBot && board.CurrentPlayer != _playerColor)
         {
-            RemoveGhostStone();
+            BoardControl.RemoveGhostStone();
             return;
         }
         if (_gameState != GameState.Playing)
         {
-            RemoveGhostStone();
+            BoardControl.RemoveGhostStone();
             return;
         }
 
-        var pos = e.GetPosition(BoardCanvas);
-
-        if (!TryGetBoardCoordinates(pos, out int x, out int y))
+        if (!BoardControl.TryGetBoardCoordinates(pos, board, out int x, out int y))
         {
-            RemoveGhostStone();
+            BoardControl.RemoveGhostStone();
             return;
         }
         if (board.Board[x, y] != Stone.Empty)
         {
-            RemoveGhostStone();
+            BoardControl.RemoveGhostStone();
             return;
         }
 
-        if (x == ghostX && y == ghostY)
-            return;
-
-        ghostX = x;
-        ghostY = y;
-
-        RemoveGhostStone();
-        DrawGhostStone(x, y);
-    }
-
-    private void OnPointerLeave(object? sender, PointerEventArgs e)
-    {
-        RemoveGhostStone();
-    }
-
-    // Rendering ghost stone
-    private void DrawGhostStone(int x, int y)
-    {
-        if (BoardCanvas == null)
-            return;
-
-        double cell = (BoardSizePx - 2.0 * Margin) / (board.Size - 1);
-
-        ghostStone = new Ellipse
-        {
-            Width = cell * 0.8,
-            Height = cell * 0.8,
-            Fill = board.CurrentPlayer == Stone.Black
-                ? Brushes.Black
-                : Brushes.White,
-            Opacity = 0.4,
-            IsHitTestVisible = false
-        };
-
-        Canvas.SetLeft(ghostStone, Margin + x * cell - ghostStone.Width / 2);
-        Canvas.SetTop(ghostStone, Margin + y * cell - ghostStone.Width / 2);
-
-        BoardCanvas.Children.Add(ghostStone);
-    }
-
-    // Removing ghost stone
-    private void RemoveGhostStone()
-    {
-        if (ghostStone != null && BoardCanvas != null)
-        {
-            BoardCanvas.Children.Remove(ghostStone);
-            ghostStone = null;
-            ghostX = ghostY = -1;
-        }
+        BoardControl.ShowGhostStone(board, x, y, board.CurrentPlayer);
     }
 
     // Update the text
@@ -523,7 +307,7 @@ public partial class GameView : UserControl
     private void OnResignClicked(object? sender, RoutedEventArgs e)
     {
         var winner = board.Resign(board.CurrentPlayer);
-        if(winner.HasValue) ShowGameResult(winner.Value);
+        if (winner.HasValue) ShowGameResult(winner.Value);
     }
 
     public (double blackTerritory, double whiteTerritory) CalculateTerritory(double[] ownership)
@@ -564,7 +348,7 @@ public partial class GameView : UserControl
             return;
 
         _gameState = GameState.GameOver;
-        BoardCanvas.IsHitTestVisible = false;
+        BoardControl.IsInteractive = false;
         await RunFinalAnalysisAsync();
 
         double blackTerritory = 0;
@@ -619,7 +403,7 @@ public partial class GameView : UserControl
             await RestartGameAsync();
         };
 
-        if(this.VisualRoot is Window owner)
+        if (this.VisualRoot is Window owner)
         {
             await dialog.ShowDialog(owner);
         }
@@ -630,11 +414,10 @@ public partial class GameView : UserControl
     }
 
     // Restart
-
     private async Task RestartGameAsync()
     {
-        BoardCanvas.IsHitTestVisible = true;
-        RemoveGhostStone();
+        BoardControl.IsInteractive = true;
+        BoardControl.RemoveGhostStone();
         await _botService.SendRawCommand("stop");
         await _botService.SendRawCommand("clear_board");
         _botService.ClearAnalysisState();
@@ -644,7 +427,7 @@ public partial class GameView : UserControl
         _gameState = GameState.Playing;
         _isBotThinking = false;
 
-        DrawBoard();
+        BoardControl.DrawBoard(board);
         UpdatePassVisibility();
         SyncAndRefreshUI();
         _botService.ResetServiceState();
@@ -659,7 +442,7 @@ public partial class GameView : UserControl
 
             _isBotReady = true;
 
-            if(_botColor == Stone.Black)
+            if (_botColor == Stone.Black)
             {
                 _isBotThinking = true;
                 string response = await _botService.SendCommand("genmove B");
@@ -671,7 +454,7 @@ public partial class GameView : UserControl
     }
 
     // Check for game exit
-    private async void CheckGameOver() 
+    private async void CheckGameOver()
     {
         if (board.IsGameOver)
         {
@@ -729,7 +512,7 @@ public partial class GameView : UserControl
 
             PassButtonW.IsEnabled = isHumanTurn && (_playerColor == Stone.White);
             PassButtonB.IsEnabled = isHumanTurn && (_playerColor == Stone.Black);
-        }     
+        }
     }
 
     private void DisableAllButtons()
@@ -744,43 +527,7 @@ public partial class GameView : UserControl
         UpdateButtons();
         UpdateCaptureText();
         if (_gameState != GameState.GameOver)
-            DrawBoard();
-    }
-
-    // Display the territory
-    private void DrawTerritoryOverlay(double[] ownership)
-    {
-        int dataSize = (int)Math.Round(Math.Sqrt(ownership.Length));
-        double cell = (BoardSizePx - 2.0 * Margin) / (board.Size - 1);
-
-        for (int i = 0; i < ownership.Length; i++)
-        {
-            double val = ownership[i];
-            if (Math.Abs(val) < 0.2) continue; 
-
-            int x = i % dataSize;
-            int y = i / dataSize;
-
-            Stone ownerColor;
-            if (val > 0) ownerColor = Stone.Black;
-            else ownerColor = Stone.White;
-            
-
-            var rect = new Rectangle
-                {
-                    Width = cell * 0.6,
-                    Height = cell * 0.6,
-                    Fill = ownerColor == Stone.White
-                    ? new SolidColorBrush(Color.FromArgb(180, 255, 255, 255)) // white territory
-                    : new SolidColorBrush(Color.FromArgb(180, 0, 0, 0)),
-                    Opacity = 0.35,
-                    IsHitTestVisible = false
-                };
-
-                Canvas.SetLeft(rect, Margin + x * cell - rect.Width / 2);
-                Canvas.SetTop(rect, Margin + y * cell - rect.Height / 2);
-                BoardCanvas.Children.Add(rect);
-        }
+            BoardControl.DrawBoard(board);
     }
 
     // Back to menu button
@@ -811,11 +558,11 @@ public partial class GameView : UserControl
         board = new GoBoard(_selectedBoardSize);
         if (_gameState == GameState.Setup)
         {
-            DrawSetupStones();
+            BoardControl.DrawSetupStones(board, _playerColor);
         }
         else
         {
-            DrawBoard();
+            BoardControl.DrawBoard(board);
         }
     }
 
@@ -831,7 +578,7 @@ public partial class GameView : UserControl
 
             if (_gameState == GameState.Setup)
             {
-                DrawSetupStones();
+                BoardControl.DrawSetupStones(board, _playerColor);
             }
 
             UpdateTurnText();
@@ -847,7 +594,7 @@ public partial class GameView : UserControl
         _gameState = GameState.Playing;
         await _botService.SetBoardSize(_selectedBoardSize);
         await _botService.SendCommand("clear_board");
-        BoardCanvas.IsHitTestVisible = true;
+        BoardControl.IsInteractive = true;
 
         board = new GoBoard(_selectedBoardSize);
         board.Reset();
@@ -862,7 +609,7 @@ public partial class GameView : UserControl
         if (blackRow != null) blackRow.IsVisible = true;
         var container = WhiteInfoRow.Parent as StackPanel;
 
-        DrawBoard();
+        BoardControl.DrawBoard(board);
 
         if (_currentMode == GameMode.PlayerVsBot)
         {
@@ -907,8 +654,8 @@ public partial class GameView : UserControl
     {
         gtp = gtp.Replace("=", "").Trim().ToLower();
 
-        if (string.IsNullOrEmpty(gtp) || gtp == "pass" || gtp == "resign") 
-            return(-1, -1);
+        if (string.IsNullOrEmpty(gtp) || gtp == "pass" || gtp == "resign")
+            return (-1, -1);
 
         char colChar = gtp[0];
         int targetX = colChar - 'a';
@@ -980,14 +727,24 @@ public partial class GameView : UserControl
     }
 
     // Difficulty
-    public async Task SetBotDifficulty (int level)
+    public async Task SetBotDifficulty(int level)
     {
         _currentLevel = level;
 
         int visits = level switch
         {
-            1 => 1, 2 => 5, 3 => 10, 4 => 30, 5 => 50, 6 => 150, 7 => 200,
-            8 => 500, 9 => 800, 10 => 1300, 11 => 2000, _ => 1
+            1 => 1,
+            2 => 5,
+            3 => 10,
+            4 => 30,
+            5 => 50,
+            6 => 150,
+            7 => 200,
+            8 => 500,
+            9 => 800,
+            10 => 1300,
+            11 => 2000,
+            _ => 1
         };
 
         double entropy = level <= 5 ? 0.8 : 0.1;
@@ -995,8 +752,18 @@ public partial class GameView : UserControl
 
         double temperature = level switch
         {
-            1 => 4.0, 2 => 3.8, 3 => 3.5, 4 => 3.0, 5 => 2.8, 6 => 2.3, 7 => 2, 
-            8 => 1.5, 9 => 1.3, 10 => 1.1, 11 => 1.0, _=> 3.0
+            1 => 4.0,
+            2 => 3.8,
+            3 => 3.5,
+            4 => 3.0,
+            5 => 2.8,
+            6 => 2.3,
+            7 => 2,
+            8 => 1.5,
+            9 => 1.3,
+            10 => 1.1,
+            11 => 1.0,
+            _ => 3.0
         };
 
         bool enableNoise = level <= 7;
@@ -1104,7 +871,7 @@ public partial class GameView : UserControl
 
         string move = response.Replace("=", "").Trim().ToLower();
 
-        if(move == "resign")
+        if (move == "resign")
         {
             Debug.WriteLine("Bot resigned");
             ShowGameResult(_playerColor);
@@ -1143,9 +910,9 @@ public partial class GameView : UserControl
 
         for (int x = 0; x < board.Size; x++)
         {
-            for(int y = 0; y < board.Size; y++)
+            for (int y = 0; y < board.Size; y++)
             {
-                if(board.IsLegalMove(x, y, _botColor))
+                if (board.IsLegalMove(x, y, _botColor))
                 {
                     legalPoints.Add(ConvertToGtpCoords(x, y));
                 }
@@ -1157,36 +924,6 @@ public partial class GameView : UserControl
 
     // Helper
     private bool IsPvBot => _currentMode == GameMode.PlayerVsBot;
-
-    // Stones when setting
-    private void DrawSetupStones()
-    {
-        if (board == null) return;
-        board.Reset();
-
-        int mid = board.Size / 2;
-        int padding = board.Size /6;
-
-        Stone opponentColor = (_playerColor == Stone.Black) ? Stone.White : Stone.Black;
-
-        // Top arrow
-        int topTipY = padding + 2;
-        board.Board[mid, topTipY] = opponentColor;
-        board.Board[mid - 1, topTipY-1] = opponentColor;
-        board.Board[mid + 1, topTipY-1] = opponentColor;
-        board.Board[mid - 2, topTipY - 2] = opponentColor;
-        board.Board[mid + 2, topTipY - 2] = opponentColor;
-
-        // Bottom arrow
-        int bottomTipY = (board.Size - 1) - padding - 2;
-        board.Board[mid, bottomTipY] = _playerColor;
-        board.Board[mid - 1, bottomTipY + 1] = _playerColor;
-        board.Board[mid + 1, bottomTipY + 1]= _playerColor;
-        board.Board[mid - 2, bottomTipY + 2] = _playerColor;
-        board.Board[mid + 2, bottomTipY + 2] = _playerColor;     
-
-        DrawBoard();
-    }
 
     private async Task RunFinalAnalysisAsync()
     {
@@ -1209,8 +946,8 @@ public partial class GameView : UserControl
         {
             if (_botService.LastOwnership != null)
             {
-                DrawBoard();
-                DrawTerritoryOverlay(_botService.LastOwnership);
+                BoardControl.DrawBoard(board);
+                BoardControl.DrawTerritoryOverlay(board, _botService.LastOwnership);
                 Debug.WriteLine("The overlay has been rendered!");
             }
             else
