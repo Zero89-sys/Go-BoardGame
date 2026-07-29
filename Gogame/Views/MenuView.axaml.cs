@@ -17,7 +17,7 @@ public partial class MenuView : UserControl
     {
         InitializeComponent();
 
-        
+
     }
 
     //New Player vs Player game
@@ -52,6 +52,16 @@ public partial class MenuView : UserControl
             var gameView = new GameView();
             gameView.SetMode(GameView.GameMode.PlayerVsBot);
             mainWindow.MainContent.Content = gameView;
+        }
+    }
+
+    private void OnTutorialClick(object? sender, RoutedEventArgs e)
+    {
+        var mainWindow = TopLevel.GetTopLevel(this) as MainWindow;
+        if(mainWindow != null)
+        {
+            var tutorialView = new TutorialView();
+            mainWindow.MainContent.Content = tutorialView;
         }
     }
 }

@@ -280,4 +280,39 @@ public class BoardRenderer
 
         DrawBoard(board);
     }
+
+    // Mark
+    private Shape? _mark;
+    public void DrawMarker(GoBoard board, int x, int y)
+    {
+        RemoveMark();
+
+        double cell = CellSize(board.Size);
+        double size = cell * 0.4;
+
+        double centerX = _margin + x * cell;
+        double centerY = _margin + y * cell;
+
+        var geometryString = $"M {centerX - size},{centerY - size} L {centerX + size},{centerY + size} M {centerX - size},{centerY + size} L {centerX + size},{centerY - size}";
+
+        var mark = new Path
+        {
+            Data = StreamGeometry.Parse(geometryString),
+            Stroke = Brushes.Red,
+            StrokeThickness = 4,
+            IsHitTestVisible = false,
+        };
+
+        _canvas.Children.Add(mark);
+        _mark = mark;
+    }
+
+    public void RemoveMark()
+    {
+        if(_mark != null)
+        {
+            _canvas.Children.Remove(_mark);
+            _mark = null;
+        }
+    }
 }

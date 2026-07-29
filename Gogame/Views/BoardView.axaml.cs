@@ -54,6 +54,9 @@ public partial class BoardView : UserControl
 
     public void RemoveGhostStone() => _renderer.RemoveGhostStone();
 
+    public void DrawMarker(GoBoard board, int x, int y) => _renderer.DrawMarker(board, x, y);
+    public void RemoveMarker() => _renderer.RemoveMark();
+
     public bool IsInteractive
     {
         get => BoardCanvas.IsHitTestVisible;

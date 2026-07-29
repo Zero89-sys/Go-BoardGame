@@ -245,7 +245,7 @@
     <Button Classes="menu-item menu-item-1" Content="Player vs Player" Click="OnPlayervsPlayer"/>
     <Button Classes="menu-item menu-item-2" Content="Player vs Bot" Click="OnPlayerVsBotClick"/>
     <Button Classes="menu-item menu-item-3" Content="Puzzles"/>
-    <Button Classes="menu-item menu-item-4" Content="Tutorial"/>
+    <Button Classes="menu-item menu-item-4" Content="Tutorial" Click="OnTutorialClick"/>
     <Button Classes="menu-item menu-item-5" Content="Exit" Click="OnExit"/>
 </StackPanel>
         <TextBlock Text="v0.1" FontSize="18" Foreground="{StaticResource muted-kaya}"
