@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.Collections.Generic;
 using static Gogame.Models.GoGame;
+using static Gogame.TutorialView;
 
 namespace Gogame.Rendering;
 
@@ -285,7 +286,7 @@ public class BoardRenderer
 
     // Mark
     private List<Shape> _mark = new();
-    public void DrawMarker(GoBoard board, List<(int x, int y)> positions)
+    public void DrawMarker(GoBoard board, List<MoveOption> positions)
     {
         RemoveMark();
 
@@ -311,7 +312,7 @@ public class BoardRenderer
             var mark = new Path
             {
                 Data = StreamGeometry.Parse(geometryString),
-                Stroke = Brushes.Black,
+                Stroke = pos.Color,
                 StrokeThickness = 6,
                 IsHitTestVisible = false,
             };

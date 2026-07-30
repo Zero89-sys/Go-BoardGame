@@ -2,24 +2,52 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Gogame.Rendering;
 using Gogame.ViewModels;
 using Gogame.Views;
 using System.Collections.Generic;
+using System.Linq;
 using static Gogame.Models.GoGame;
 
 namespace Gogame;
 
 public partial class TutorialView : UserControl
 {
+    public class MoveOption
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public IBrush Color { get; set; } = Brushes.Black;
+        public bool Capture { get; set; } = true;
+        public MoveOption(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public MoveOption(int x, int y, IBrush color)
+        {
+            this.x = x;
+            this.y = y;
+            Color = color;
+        }
+        public MoveOption(int x, int y, IBrush color, bool capture)
+        {
+            this.x = x;
+            this.y = y;
+            Color = color;
+            Capture = capture;
+        }
+    }
+
     private GoBoard board = new GoBoard(9);
     private class TutorialStep
     {
         public string Instructions = "";
         public string ResponseMessage = "";
-        public List<(int x, int y)> AllowedMoves = new();
+        public List<MoveOption> AllowedMoves { get; set; } = new();
         public bool AllowAnyMove = false;
         public bool IsCompleted = false;
         public Stone MoveColor = Stone.Black;
@@ -44,7 +72,7 @@ public partial class TutorialView : UserControl
                 {
                     Instructions = "The intersections around a stone are called liberties. Fill one liberty of a black stone.",
                     ResponseMessage = "Good job",
-                    AllowedMoves = new() { (2, 1), (2, 3), (3, 2), (1, 2) },
+                    AllowedMoves = new() { new (2, 1), new (2, 3), new(3, 2), new(1, 2) },
                     MoveColor = Stone.White,
                     InitialStones = new()
                     {
@@ -55,7 +83,7 @@ public partial class TutorialView : UserControl
                 {
                     Instructions = "A stone is captured if all its liberties are occupied by enemy stones. Capture the black stone by filling its last liberty.",
                     ResponseMessage = "Nice! Now you captured black's stone",
-                    AllowedMoves = new() {(2, 3)},
+                    AllowedMoves = new() {new(2, 3) },
                     MoveColor = Stone.White,
                     InitialStones = new()
                     {
@@ -69,7 +97,7 @@ public partial class TutorialView : UserControl
                 {
                     Instructions = "Stones of the same color next to each other form a chain. Fill one of the liberties of the black chain.",
                     ResponseMessage = "Great job!",
-                    AllowedMoves = new() {(1,2), (1,3), (2, 1), (2, 4), (3, 1), (3,3),(4, 2)},
+                    AllowedMoves = new() {new(1,2), new(1,3), new(2, 1), new(2, 4), new(3, 1), new(3,3), new(4, 2) },
                     MoveColor = Stone.White,
                     InitialStones = new()
                     {
@@ -82,7 +110,7 @@ public partial class TutorialView : UserControl
                 {
                     Instructions = "The black chain has only one liberty left. This is called 'atari'. Capture the black chain that is in atari.",
                     ResponseMessage = "Nice capture!\nThis is everything from basic. You can now move on Eyes",
-                    AllowedMoves = new(){(4,2)},
+                    AllowedMoves = new(){new(4,2) },
                     MoveColor= Stone.White,
                     InitialStones = new()
                     {
@@ -98,6 +126,50 @@ public partial class TutorialView : UserControl
                     }
                 }
             } 
+        },
+        { "Eyes", new List<TutorialStep>
+            {
+                new TutorialStep
+                {
+                    Instructions = "Red point is surrounded by white stones; it is called an 'eye'. Black can not play at A (self-capture). " +
+                    "Black point is also an eye, but Black can play at B and capture. Capture the white stones.",
+                    ResponseMessage = "Nice capture!",
+                    AllowedMoves = new(){new (3,2, Brushes.Red, false), new (4,8)},
+                    MoveColor= Stone.Black,
+                    InitialStones = new()
+                    {
+                        (2, 2, Stone.White),
+                        (3, 1, Stone.White),
+                        (3, 3, Stone.White),
+                        (4, 2, Stone.White),
+
+                        (2, 8, Stone.Black),
+                        (3, 7, Stone.Black),
+                        (4, 6, Stone.Black),
+                        (5, 7, Stone.Black),
+                        (6, 8, Stone.Black),
+                        (3, 8, Stone.White),
+                        (4, 7, Stone.White),
+                        (5, 8, Stone.White)
+                    }
+                }
+            } 
+        },
+        { "Territory", new List<TutorialStep>
+            {
+                new TutorialStep
+                {
+                    Instructions = "Territory",
+                }
+            }
+        },
+        { "Ko", new List<TutorialStep>
+            {
+                new TutorialStep
+                {
+                    Instructions = "Ko",
+                }
+            }
         }
     };
 
@@ -162,7 +234,7 @@ public partial class TutorialView : UserControl
                 step.IsCompleted = true;
             }
         }
-        if(step.AllowedMoves != null && step.AllowedMoves.Contains((x, y)))
+        if(step.AllowedMoves != null && step.AllowedMoves.Any(m => m.x == x && m.y == y && m.Capture))
         {
             board.PlaceStone(x, y, step.MoveColor);
             BoardControl.DrawBoard(board);
@@ -225,6 +297,13 @@ public partial class TutorialView : UserControl
         ShowStep();
     }
 
+    private void OnSectionSelected(object? sender, SelectionChangedEventArgs e)
+    {
+        if(SectiontListBox.SelectedItem is ListBoxItem selectedItem && selectedItem.Tag is string sectionName)
+        {
+            LoadSection(sectionName);
+        }
+    }
     // Back to menu button
     private void OnBackToMenu(object? sender, RoutedEventArgs e)
     {

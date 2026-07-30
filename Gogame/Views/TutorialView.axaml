@@ -20,11 +20,11 @@
 			<StackPanel Spacing="5" Margin="5">
             <Button Classes="end-button" Content="☰" Command="{Binding TogglePaneCommand}"
                     Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
-            <ListBox Background="#363836" Foreground="#E3E7EA">
-				<ListBoxItem>Basics</ListBoxItem>
-                <ListBoxItem>Eyes</ListBoxItem>
-                <ListBoxItem>Territory</ListBoxItem>
-                <ListBoxItem>Ko</ListBoxItem>
+            <ListBox Name="SectiontListBox" SelectionChanged="OnSectionSelected" Background="#363836" Foreground="#E3E7EA">
+				<ListBoxItem Tag="Basics">Basics</ListBoxItem>
+                <ListBoxItem Tag="Eyes">Eyes</ListBoxItem>
+                <ListBoxItem Tag="Territory">Territory</ListBoxItem>
+                <ListBoxItem Tag="Ko">Ko</ListBoxItem>
             </ListBox>
         </StackPanel>
         </Border>

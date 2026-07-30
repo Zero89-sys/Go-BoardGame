@@ -1,11 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Gogame.Models;
 using Gogame.Rendering;
 using System;
 using System.Collections.Generic;
 using static Gogame.Models.GoGame;
+using static Gogame.TutorialView;
 
 namespace Gogame.Views;
 
@@ -55,7 +57,7 @@ public partial class BoardView : UserControl
 
     public void RemoveGhostStone() => _renderer.RemoveGhostStone();
 
-    public void DrawMarker(GoBoard board, List<(int x, int y)> positions) => _renderer.DrawMarker(board, positions);
+    public void DrawMarker(GoBoard board, List<MoveOption> positions) => _renderer.DrawMarker(board, positions);
     public void RemoveMarker() => _renderer.RemoveMark();
 
     public bool IsInteractive
