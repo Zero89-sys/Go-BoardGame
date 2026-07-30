@@ -2,16 +2,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:Gogame.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:views="using:Gogame.Views"
-             x:Class="Gogame.TutorialView">
+             x:Class="Gogame.TutorialView"
+             x:DataType="viewmodels:TutorialViewModel">
 
     <UserControl.Styles>
     <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
     </UserControl.Styles>
 
 
-<Grid x:Name="GameContentGrid">
+<SplitView DisplayMode="CompactInline" OpenPaneLength="150" IsPaneOpen="{Binding IsPaneOpen}"
+           CompactPaneLength="50" PaneBackground="#1F2221">
+    <SplitView.Pane>
+		<Border CornerRadius="0 10 10 0" Background="#1e1e1e">
+			<StackPanel Spacing="5" Margin="5">
+            <Button Classes="end-button" Content="☰" Command="{Binding TogglePaneCommand}"
+                    Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
+            <ListBox Background="#363836" Foreground="#E3E7EA">
+				<ListBoxItem>Basics</ListBoxItem>
+                <ListBoxItem>Eyes</ListBoxItem>
+                <ListBoxItem>Territory</ListBoxItem>
+                <ListBoxItem>Ko</ListBoxItem>
+            </ListBox>
+        </StackPanel>
+        </Border>
+    </SplitView.Pane>
+
+	<SplitView.Content>
+		<Grid x:Name="GameContentGrid">
     <Grid.Background>
         <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
             <GradientStop Color="#1F2221" Offset="0"/>
@@ -35,7 +55,7 @@
                     BorderBrush="#3A4149" BorderThickness="1"
                     BoxShadow="0 6 24 0 #80000000">
                 <StackPanel Spacing="14">
-                    <TextBlock Text="Instructions" FontSize="22" FontWeight="Light"
+                    <TextBlock Text="Informations" FontSize="22" FontWeight="Light"
                                FontFamily="Georgia, 'Noto Serif', serif" Foreground="#E3E7EA"/>
                     <Rectangle Height="1" Fill="#3A4149" Margin="0,0,0,4"/>
 
@@ -65,5 +85,7 @@
         </StackPanel>
     </Border>
 </Grid>
+    </SplitView.Content>
+</SplitView>
 
 </UserControl>

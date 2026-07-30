@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,15 @@ using System.Threading.Tasks;
 
 namespace Gogame.ViewModels
 {
-    internal class TutorialViewModel
+    internal partial class TutorialViewModel : ViewModelBase
     {
+        [ObservableProperty]
+        private bool _isPaneOpen = true;
+        [RelayCommand]
+        private void TogglePane()
+        {
+            IsPaneOpen = !IsPaneOpen;
+            System.Diagnostics.Debug.WriteLine("Kliknuto");
+        }
     }
 }

@@ -2,7 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Gogame.Rendering;
+using Gogame.ViewModels;
 using Gogame.Views;
 using System.Collections.Generic;
 using static Gogame.Models.GoGame;
@@ -47,6 +50,7 @@ public partial class TutorialView : UserControl
     public TutorialView()
     {
         InitializeComponent();
+        DataContext = new TutorialViewModel();
 
         BoardControl.BoardPointerPressed += (s, pos) => OnBoardClicked(pos);
         BoardControl.BoardPointerLeft += (s, e) => BoardControl.RemoveGhostStone();
