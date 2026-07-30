@@ -16,7 +16,7 @@
 <SplitView DisplayMode="CompactInline" OpenPaneLength="150" IsPaneOpen="{Binding IsPaneOpen}"
            CompactPaneLength="50" PaneBackground="#1F2221">
     <SplitView.Pane>
-		<Border CornerRadius="0 10 10 0" Background="#1e1e1e">
+		<Border CornerRadius="0 12 0 0" Background="#1e1e1e">
 			<StackPanel Spacing="5" Margin="5">
             <Button Classes="end-button" Content="☰" Command="{Binding TogglePaneCommand}"
                     Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>

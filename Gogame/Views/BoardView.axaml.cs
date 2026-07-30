@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Gogame.Models;
 using Gogame.Rendering;
 using System;
+using System.Collections.Generic;
 using static Gogame.Models.GoGame;
 
 namespace Gogame.Views;
@@ -54,7 +55,7 @@ public partial class BoardView : UserControl
 
     public void RemoveGhostStone() => _renderer.RemoveGhostStone();
 
-    public void DrawMarker(GoBoard board, int x, int y) => _renderer.DrawMarker(board, x, y);
+    public void DrawMarker(GoBoard board, List<(int x, int y)> positions) => _renderer.DrawMarker(board, positions);
     public void RemoveMarker() => _renderer.RemoveMark();
 
     public bool IsInteractive

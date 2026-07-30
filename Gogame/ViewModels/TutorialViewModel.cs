@@ -11,12 +11,11 @@ namespace Gogame.ViewModels
     internal partial class TutorialViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private bool _isPaneOpen = true;
+        private bool _isPaneOpen = false;
         [RelayCommand]
         private void TogglePane()
         {
             IsPaneOpen = !IsPaneOpen;
-            System.Diagnostics.Debug.WriteLine("Kliknuto");
         }
     }
 }

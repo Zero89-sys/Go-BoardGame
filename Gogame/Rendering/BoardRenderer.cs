@@ -4,6 +4,8 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using Gogame.Models;
 using System;
+using System.Globalization;
+using System.Collections.Generic;
 using static Gogame.Models.GoGame;
 
 namespace Gogame.Rendering;
@@ -282,37 +284,49 @@ public class BoardRenderer
     }
 
     // Mark
-    private Shape? _mark;
-    public void DrawMarker(GoBoard board, int x, int y)
+    private List<Shape> _mark = new();
+    public void DrawMarker(GoBoard board, List<(int x, int y)> positions)
     {
         RemoveMark();
 
         double cell = CellSize(board.Size);
         double size = cell * 0.4;
 
-        double centerX = _margin + x * cell;
-        double centerY = _margin + y * cell;
-
-        var geometryString = $"M {centerX - size},{centerY - size} L {centerX + size},{centerY + size} M {centerX - size},{centerY + size} L {centerX + size},{centerY - size}";
-
-        var mark = new Path
+        foreach(var pos in positions)
         {
-            Data = StreamGeometry.Parse(geometryString),
-            Stroke = Brushes.Red,
-            StrokeThickness = 4,
-            IsHitTestVisible = false,
-        };
+            double centerX = _margin + pos.x * cell;
+            double centerY = _margin + pos.y * cell;
 
-        _canvas.Children.Add(mark);
-        _mark = mark;
+            double x1 = centerX - size;
+            double x2 = centerX + size;
+            double y1 = centerY - size;
+            double y2 = centerY + size;
+
+            var geometryString = string.Format(
+                CultureInfo.InvariantCulture,
+                "M {0},{1} L {2},{3} M {0},{3} L {2},{1}",
+                x1, y1, x2, y2
+            );
+
+            var mark = new Path
+            {
+                Data = StreamGeometry.Parse(geometryString),
+                Stroke = Brushes.Black,
+                StrokeThickness = 6,
+                IsHitTestVisible = false,
+            };
+
+            _canvas.Children.Add(mark);
+            _mark.Add(mark);
+        }
     }
 
     public void RemoveMark()
     {
-        if(_mark != null)
+        foreach(var marker in _mark)
         {
-            _canvas.Children.Remove(_mark);
-            _mark = null;
+            _canvas.Children.Remove(marker);
         }
+        _mark.Clear();
     }
 }
