@@ -21,10 +21,10 @@
             <Button Classes="end-button" Content="☰" Command="{Binding TogglePaneCommand}"
                     Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
             <ListBox Name="SectiontListBox" SelectionChanged="OnSectionSelected" Background="#363836" Foreground="#E3E7EA">
-				<ListBoxItem Tag="Basics">Basics</ListBoxItem>
-                <ListBoxItem Tag="Eyes">Eyes</ListBoxItem>
-                <ListBoxItem Tag="Territory">Territory</ListBoxItem>
-                <ListBoxItem Tag="Ko">Ko</ListBoxItem>
+				<ListBoxItem Tag="basics">Basics</ListBoxItem>
+                <ListBoxItem Tag="eyes">Eyes</ListBoxItem>
+                <ListBoxItem Tag="territory">Territory</ListBoxItem>
+                <ListBoxItem Tag="ko">Ko</ListBoxItem>
             </ListBox>
         </StackPanel>
         </Border>

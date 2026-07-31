@@ -9,7 +9,11 @@ using Gogame.Rendering;
 using Gogame.ViewModels;
 using Gogame.Views;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using static Gogame.Models.GoGame;
 
 namespace Gogame;
@@ -20,161 +24,77 @@ public partial class TutorialView : UserControl
     {
         public int x { get; set; }
         public int y { get; set; }
-        public IBrush Color { get; set; } = Brushes.Black;
+        public string Color { get; set; } = "Black";
         public bool Capture { get; set; } = true;
+        public bool HasOpponentResponse { get; set; } = false;
+        public int OpponentX { get; set; }
+        public int OpponentY { get; set; }
+        public string OpponentColor { get; set; } = "White";
+        public List<MoveOption> NextAllowedMoves { get; set; } = new();
+        public string? NextInstructions { get; set; }
+        public MoveOption(){ }
         public MoveOption(int x, int y)
         {
             this.x = x;
             this.y = y;
         }
-        public MoveOption(int x, int y, IBrush color)
-        {
-            this.x = x;
-            this.y = y;
-            Color = color;
-        }
-        public MoveOption(int x, int y, IBrush color, bool capture)
+        public MoveOption(int x, int y, string color, bool capture)
         {
             this.x = x;
             this.y = y;
             Color = color;
             Capture = capture;
         }
+
+        [JsonIgnore]
+        public IBrush AvaloniaColor => Color switch
+        {
+            "Red" => Brushes.Red,
+            "Blue" => Brushes.Blue,
+            "White" => Brushes.White,
+            _ => Brushes.Black
+        };
+    }
+
+    public class InitialStone
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public string Color { get; set; } = "Black";
     }
 
     private GoBoard board = new GoBoard(9);
-    private class TutorialStep
+    public class TutorialStep
     {
-        public string Instructions = "";
-        public string ResponseMessage = "";
+        public string Instructions { get; set; } = "";
+        public string ResponseMessage { get; set; } = "";
         public List<MoveOption> AllowedMoves { get; set; } = new();
-        public bool AllowAnyMove = false;
-        public bool IsCompleted = false;
-        public Stone MoveColor = Stone.Black;
-        public bool ShowGhost = true;
-        public List<(int x, int y, Stone color)> InitialStones = new();
+        public bool AllowAnyMove { get; set; } = false;
+        public bool IsCompleted { get; set; } = false;
+        public string MoveColor { get; set; } = "Black";
+        public bool ShowGhost { get; set; } = true;
+
+        public List<InitialStone> InitialStones { get; set; } = new();
+
+        public bool HasOpponentResponse { get; set; } = false;
+        public int OpponentX { get; set; }
+        public int OpponentY { get; set; }
+        public string OpponentColor { get; set; } = "White";
     }
 
-    private readonly Dictionary<string, List<TutorialStep>> _sections = new()
+    public class TutorialSectionData
     {
-        {"Basics", new List<TutorialStep>
-            {
-                new TutorialStep
-                {
-                    Instructions = "This is the Go board. Two players, Black and White, take turns placing stones on the board. Black goes first." +
-                    "You can place a stone on any empty intersection, including those on the edge.",
-                    ResponseMessage = "Great! That’s how stones are placed across the board.\n" +
-                    "You can now click \"Next\" below to go to the next page, or \"Previous\" to return to the previous page.",
-                    AllowAnyMove = true,
-                    MoveColor = Stone.Black,
-                },
-                new TutorialStep
-                {
-                    Instructions = "The intersections around a stone are called liberties. Fill one liberty of a black stone.",
-                    ResponseMessage = "Good job",
-                    AllowedMoves = new() { new (2, 1), new (2, 3), new(3, 2), new(1, 2) },
-                    MoveColor = Stone.White,
-                    InitialStones = new()
-                    {
-                        (2, 2, Stone.Black)
-                    }
-                },
-                new TutorialStep
-                {
-                    Instructions = "A stone is captured if all its liberties are occupied by enemy stones. Capture the black stone by filling its last liberty.",
-                    ResponseMessage = "Nice! Now you captured black's stone",
-                    AllowedMoves = new() {new(2, 3) },
-                    MoveColor = Stone.White,
-                    InitialStones = new()
-                    {
-                        (2, 1, Stone.White),
-                        (1, 2, Stone.White),
-                        (3, 2, Stone.White),
-                        (2, 2, Stone.Black),
-                    }
-                },
-                new TutorialStep
-                {
-                    Instructions = "Stones of the same color next to each other form a chain. Fill one of the liberties of the black chain.",
-                    ResponseMessage = "Great job!",
-                    AllowedMoves = new() {new(1,2), new(1,3), new(2, 1), new(2, 4), new(3, 1), new(3,3), new(4, 2) },
-                    MoveColor = Stone.White,
-                    InitialStones = new()
-                    {
-                        (2, 2, Stone.Black),
-                        (2, 3, Stone.Black),
-                        (3, 2, Stone.Black),
-                    }
-                },
-                new TutorialStep
-                {
-                    Instructions = "The black chain has only one liberty left. This is called 'atari'. Capture the black chain that is in atari.",
-                    ResponseMessage = "Nice capture!\nThis is everything from basic. You can now move on Eyes",
-                    AllowedMoves = new(){new(4,2) },
-                    MoveColor= Stone.White,
-                    InitialStones = new()
-                    {
-                        (2, 2, Stone.Black),
-                        (2, 3, Stone.Black),
-                        (3, 2, Stone.Black),
-                        (1, 2, Stone.White),
-                        (1, 3, Stone.White),
-                        (2, 1, Stone.White),
-                        (2, 4, Stone.White),
-                        (3, 1, Stone.White),
-                        (3, 3, Stone.White)
-                    }
-                }
-            } 
-        },
-        { "Eyes", new List<TutorialStep>
-            {
-                new TutorialStep
-                {
-                    Instructions = "Red point is surrounded by white stones; it is called an 'eye'. Black can not play at A (self-capture). " +
-                    "Black point is also an eye, but Black can play at B and capture. Capture the white stones.",
-                    ResponseMessage = "Nice capture!",
-                    AllowedMoves = new(){new (3,2, Brushes.Red, false), new (4,8)},
-                    MoveColor= Stone.Black,
-                    InitialStones = new()
-                    {
-                        (2, 2, Stone.White),
-                        (3, 1, Stone.White),
-                        (3, 3, Stone.White),
-                        (4, 2, Stone.White),
+        public string SectionName { get; set; } = "";
+        public List<TutorialStep> Steps { get; set; } = new();
+    }
 
-                        (2, 8, Stone.Black),
-                        (3, 7, Stone.Black),
-                        (4, 6, Stone.Black),
-                        (5, 7, Stone.Black),
-                        (6, 8, Stone.Black),
-                        (3, 8, Stone.White),
-                        (4, 7, Stone.White),
-                        (5, 8, Stone.White)
-                    }
-                }
-            } 
-        },
-        { "Territory", new List<TutorialStep>
-            {
-                new TutorialStep
-                {
-                    Instructions = "Territory",
-                }
-            }
-        },
-        { "Ko", new List<TutorialStep>
-            {
-                new TutorialStep
-                {
-                    Instructions = "Ko",
-                }
-            }
-        }
-    };
+    private readonly Dictionary<string, List<TutorialStep>> _sections = new();
 
-    private string _currentSection = "Basics";
+    private string _currentSection = string.Empty;
     private int _stepIndex = 0;
+
+    private List<MoveOption> _activeAllowedMoves = new();
+    private bool _isWaitingForOpponent = false;
     public TutorialView()
     {
         InitializeComponent();
@@ -184,11 +104,14 @@ public partial class TutorialView : UserControl
         BoardControl.BoardPointerLeft += (s, e) => BoardControl.RemoveGhostStone();
         BoardControl.BoardPointerMoved += (s, pos) => OnBoardMoved(pos);
 
-        ShowStep();
+        LoadSectionFromJson("Assets/Tutorial/basics.json");
     }
     //Show step
     private void ShowStep()
     {
+        if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection) || _sections[_currentSection].Count == 0)
+            return;
+
         var step = _sections[_currentSection][_stepIndex];
         InstructionText.Text = step.Instructions;
         PreviousButton.IsEnabled = _stepIndex > 0;
@@ -196,13 +119,17 @@ public partial class TutorialView : UserControl
 
         board.Reset();
         step.IsCompleted = false;
+        _isWaitingForOpponent = false;
 
         foreach(var stone in step.InitialStones)
         {
-            board.Board[stone.x, stone.y] = stone.color;
+            Stone stoneEnum = stone.Color == "Black" ? Stone.Black : Stone.White;
+            board.Board[stone.x, stone.y] = stoneEnum;
         }
 
         BoardControl.DrawBoard(board);
+
+        _activeAllowedMoves = step.AllowedMoves ?? new();
 
         if (step.AllowedMoves != null && step.AllowedMoves.Count > 0)
         {
@@ -214,43 +141,107 @@ public partial class TutorialView : UserControl
         }
     }
 
-    private void OnBoardClicked(Point pos)
+    private async void OnBoardClicked(Point pos)
     {
-        var step = _sections[_currentSection][_stepIndex];
-        if (step == null)
+        if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection))
             return;
-        if (step.IsCompleted)
+
+        var step = _sections[_currentSection][_stepIndex];
+        if (step == null || step.IsCompleted || _isWaitingForOpponent)
             return;
         if (!BoardControl.TryGetBoardCoordinates(pos, board, out int x, out int y))
             return;
+
+        Stone playerStone = step.MoveColor == "White" ? Stone.White : Stone.Black;
+        bool moveValid = false;
+        MoveOption? matchedMove = null;
+
         if (step.AllowAnyMove)
         {
             if (board.Board[x, y] == Stone.Empty)
             {
-                board.PlaceStone(x, y, step.MoveColor);
-                BoardControl.DrawBoard(board);
-                InstructionText.Text = step.ResponseMessage;
-
-                step.IsCompleted = true;
+                moveValid = true;
             }
         }
-        if(step.AllowedMoves != null && step.AllowedMoves.Any(m => m.x == x && m.y == y && m.Capture))
+        else if(step.AllowedMoves != null)
         {
-            board.PlaceStone(x, y, step.MoveColor);
-            BoardControl.DrawBoard(board);
-            InstructionText.Text = step.ResponseMessage;
-
-            step.IsCompleted = true;
+            matchedMove = _activeAllowedMoves.FirstOrDefault(m => m.x == x && m.y == y && m.Capture);
+            
+            if(matchedMove != null)
+            {
+                moveValid = true;
+            }
         }
-        BoardControl.ShowGhostStone(board, x, y, step.MoveColor);
+        BoardControl.ShowGhostStone(board, x, y, playerStone);
+
+        if (moveValid)
+        {
+            _isWaitingForOpponent = true;
+
+            board.PlaceStone(x, y, playerStone);
+            BoardControl.DrawBoard(board);
+            BoardControl.RemoveMarker();
+
+            bool hasResponse = false;
+            int oppX = 0, oppY = 0;
+            string oppColor = "White";
+
+            if(matchedMove != null && matchedMove.HasOpponentResponse)
+            {
+                hasResponse = true;
+                oppX = matchedMove.OpponentX;
+                oppY = matchedMove.OpponentY;
+                oppColor = matchedMove.OpponentColor;
+            }else if (step.HasOpponentResponse)
+            {
+                hasResponse = true;
+                oppX = step.OpponentX;
+                oppY = step.OpponentY;
+                oppColor = step.OpponentColor;
+            }
+
+            if (hasResponse)
+            {
+                Stone opponentStone = oppColor == "White" ? Stone.White : Stone.Black;
+                await Task.Delay(600);
+                board.PlaceStone(oppX, oppY, opponentStone);
+                BoardControl.DrawBoard(board);
+            }
+
+            if(matchedMove != null && matchedMove.NextAllowedMoves != null && matchedMove.NextAllowedMoves.Count > 0)
+            {
+                _activeAllowedMoves = matchedMove.NextAllowedMoves;
+
+                if (!string.IsNullOrEmpty(matchedMove.NextInstructions))
+                {
+                    InstructionText.Text = matchedMove.NextInstructions;
+                }
+
+                BoardControl.DrawMarker(board, _activeAllowedMoves);
+                _isWaitingForOpponent = false;
+            }
+            else
+            {
+                step.IsCompleted = true;
+                InstructionText.Text = step.ResponseMessage;
+                _isWaitingForOpponent = false;
+            }
+        }
+        else
+        {
+            BoardControl.ShowGhostStone(board, x, y, playerStone);
+        }
     }
 
     // Mouse move
     private void OnBoardMoved(Point pos)
     {
-        var step = _sections[_currentSection][_stepIndex];
+        if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection))
+            return;
 
-        if(!step.ShowGhost)
+        var step = _sections[_currentSection][_stepIndex];
+        Stone playerStone = step.MoveColor == "White" ? Stone.White : Stone.Black;
+        if (!step.ShowGhost)
         {
             BoardControl.RemoveGhostStone();
             return;
@@ -265,12 +256,13 @@ public partial class TutorialView : UserControl
             BoardControl.RemoveGhostStone();
             return;
         }
-        BoardControl.ShowGhostStone(board, x, y, step.MoveColor);
+        BoardControl.ShowGhostStone(board, x, y, playerStone);
     }
 
     private void OnPreviousStep(object? sender, RoutedEventArgs e)
     {
-        if(_stepIndex > 0)
+        if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection)) return;
+        if (_stepIndex > 0)
         {
             _stepIndex--;
                         board.Reset();
@@ -280,7 +272,9 @@ public partial class TutorialView : UserControl
     }
     private void OnNextStep(object? sender, RoutedEventArgs e)
     {
-        if(_stepIndex < _sections[_currentSection].Count - 1)
+        if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection)) return;
+
+        if (_stepIndex < _sections[_currentSection].Count - 1)
         {
             _stepIndex++;
             board.Reset();
@@ -292,8 +286,10 @@ public partial class TutorialView : UserControl
     // Load Section
     public void LoadSection(string sectionName)
     {
+        string filePath = $"Assets/Tutorial/{sectionName.ToLower()}.json";
         _currentSection = sectionName;
         _stepIndex = 0;
+        LoadSectionFromJson(filePath);
         ShowStep();
     }
 
@@ -304,6 +300,38 @@ public partial class TutorialView : UserControl
             LoadSection(sectionName);
         }
     }
+
+    // Tutorial
+    public void LoadSectionFromJson(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            InstructionText.Text = $"Error: File not found.\nSearched in: {Path.GetFullPath(filePath)}";
+            return;
+        }
+
+        string jsonString = File.ReadAllText(filePath);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+        };
+
+        var sectionData = JsonSerializer.Deserialize<TutorialSectionData>(jsonString, options);
+
+        if (sectionData != null && sectionData.Steps.Count > 0)
+        {
+            _sections[sectionData.SectionName] = sectionData.Steps;
+            _currentSection = sectionData.SectionName;
+            _stepIndex = 0;
+            ShowStep();
+        }
+        else
+        {
+            InstructionText.Text = "Error: The file was found, but no steps could be loaded from it. Check the JSON structure.";
+        }
+    }
+
     // Back to menu button
     private void OnBackToMenu(object? sender, RoutedEventArgs e)
     {

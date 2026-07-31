@@ -1,0 +1,195 @@
+{
+  "sectionName": "Basics",
+  "steps": [
+    {
+      "instructions": "This is the Go board. Two players, Black and White, take turns placing stones on the board. Black goes first. You can place a stone on any empty intersection, including those on the edge.",
+      "responseMessage": "Great! That’s how stones are placed across the board.\nYou can now click \"Next\" below to go to the next page, or \"Previous\" to return to the previous page.",
+      "allowAnyMove": true,
+      "moveColor": "Black",
+      "showGhost": true,
+      "allowedMoves": [],
+      "initialStones": []
+    },
+    {
+      "instructions": "The intersections around a stone are called liberties. Fill one liberty of a black stone.",
+      "responseMessage": "Good job",
+      "allowAnyMove": false,
+      "moveColor": "White",
+      "showGhost": true,
+      "allowedMoves": [
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 3
+        },
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 2
+        }
+      ],
+      "initialStones": [
+        {
+          "x": 2,
+          "y": 2,
+          "color": "Black"
+        }
+      ]
+    },
+    {
+      "instructions": "A stone is captured if all its liberties are occupied by enemy stones. Capture the black stone by filling its last liberty.",
+      "responseMessage": "Nice! Now you captured black's stone",
+      "allowAnyMove": false,
+      "moveColor": "White",
+      "showGhost": true,
+      "allowedMoves": [
+        {
+          "x": 2,
+          "y": 3
+        }
+      ],
+      "initialStones": [
+        {
+          "x": 2,
+          "y": 1,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "color": "Black"
+        }
+      ]
+    },
+    {
+      "instructions": "Stones of the same color next to each other form a chain. Fill one of the liberties of the black chain.",
+      "responseMessage": "Great job!",
+      "allowAnyMove": false,
+      "moveColor": "White",
+      "showGhost": true,
+      "allowedMoves": [
+        {
+          "x": 1,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 3
+        },
+        {
+          "x": 2,
+          "y": 1
+        },
+        {
+          "x": 2,
+          "y": 4
+        },
+        {
+          "x": 3,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 3
+        },
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "initialStones": [
+        {
+          "x": 2,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "color": "Black"
+        }
+      ]
+    },
+    {
+      "instructions": "The black chain has only one liberty left. This is called 'atari'. Capture the black chain that is in atari.",
+      "responseMessage": "Nice capture!\nThis is everything from basic. You can now move on Eyes",
+      "allowAnyMove": false,
+      "moveColor": "White",
+      "showGhost": true,
+      "allowedMoves": [
+        {
+          "x": 4,
+          "y": 2
+        }
+      ],
+      "initialStones": [
+        {
+          "x": 2,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "color": "White"
+        }
+      ]
+    }
+  ]
+}

@@ -312,7 +312,7 @@ public class BoardRenderer
             var mark = new Path
             {
                 Data = StreamGeometry.Parse(geometryString),
-                Stroke = pos.Color,
+                Stroke = pos.AvaloniaColor,
                 StrokeThickness = 6,
                 IsHitTestVisible = false,
             };

@@ -1,0 +1,185 @@
+{
+  "SectionName": "Eyes",
+  "Steps": [
+    {
+      "Instructions": "Red point is surrounded by white stones; it is called an 'eye'. Black can not play at A (self-capture). Black point is also an eye, but Black can play at B and capture. Capture the white stones.",
+      "ResponseMessage": "Nice capture!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "AllowedMoves": [
+        {
+          "X": 3,
+          "Y": 2,
+          "Color": "Red",
+          "Capture": false
+        },
+        {
+          "X": 4,
+          "Y": 8,
+          "Color": "Black",
+          "Capture": true
+        }
+      ],
+      "InitialStones": [
+        {
+          "X": 2,
+          "Y": 2,
+          "Color": "White"
+        },
+        {
+          "X": 3,
+          "Y": 1,
+          "Color": "White"
+        },
+        {
+          "X": 3,
+          "Y": 3,
+          "Color": "White"
+        },
+        {
+          "X": 4,
+          "Y": 2,
+          "Color": "White"
+        },
+        {
+          "X": 2,
+          "Y": 8,
+          "Color": "Black"
+        },
+        {
+          "X": 3,
+          "Y": 7,
+          "Color": "Black"
+        },
+        {
+          "X": 4,
+          "Y": 6,
+          "Color": "Black"
+        },
+        {
+          "X": 5,
+          "Y": 7,
+          "Color": "Black"
+        },
+        {
+          "X": 6,
+          "Y": 8,
+          "Color": "Black"
+        },
+        {
+          "X": 3,
+          "Y": 8,
+          "Color": "White"
+        },
+        {
+          "X": 4,
+          "Y": 7,
+          "Color": "White"
+        },
+        {
+          "X": 5,
+          "Y": 8,
+          "Color": "White"
+        }
+      ],
+      "HasOpponentResponse": false,
+      "OpponentX": 0,
+      "OpponentY": 0,
+      "OpponentColor": "White"
+    },
+    {
+      "Instructions": "White has a single bigger eye of two points, but the white group is not safe. Black to play. Capture the white stones by filling the eye point by point.",
+      "ResponseMessage": "Nice capture!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "InitialStones": [
+        {
+          "X": 7,
+          "Y": 0,
+          "Color": "White"
+        },
+        {
+          "X": 7,
+          "Y": 1,
+          "Color": "White"
+        },
+        {
+          "X": 7,
+          "Y": 2,
+          "Color": "White"
+        },
+        {
+          "X": 8,
+          "Y": 2,
+          "Color": "White"
+        },
+        {
+          "X": 6,
+          "Y": 0,
+          "Color": "Black"
+        },
+        {
+          "X": 6,
+          "Y": 1,
+          "Color": "Black"
+        },
+        {
+          "X": 6,
+          "Y": 2,
+          "Color": "Black"
+        },
+        {
+          "X": 6,
+          "Y": 3,
+          "Color": "Black"
+        },
+        {
+          "X": 7,
+          "Y": 3,
+          "Color": "Black"
+        },
+        {
+          "X": 8,
+          "Y": 3,
+          "Color": "Black"
+        }
+      ],
+      "allowedMoves": [
+        {
+          "x": 8,
+          "y": 0,
+          "hasOpponentResponse": true,
+          "opponentX": 8,
+          "opponentY": 1,
+          "opponentColor": "White",
+          "nextInstructions":  "Nice! Now Place it right there to capture",
+          "nextAllowedMoves": [
+            {
+              "x": 8,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "hasOpponentResponse": true,
+          "opponentX": 8,
+          "opponentY": 0,
+          "opponentColor": "White",
+          "nextInstructions": "Nice! Now place it right there to capture.",
+          "nextAllowedMoves": [
+            {
+              "x": 8,
+              "y": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "SectionName": "Ko",
+  "Steps": [
+    {
+      "Instructions": "To prevent endlessly recapturing the same space, there is a special rule called the 'Ko rule' which prevents immediately recapturing the same position. Black can capture the marked white stone. White is not allowed to recapture the black stone immediately. White has to play elsewhere first.",
+      "ResponseMessage": "Great job! Now white has to play somewhere else.",
+      "MoveColor": "Black",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "ShowGhost": true,
+      "AllowedMoves": [
+        {
+          "X": 4,
+          "Y": 4,
+          "Color": "Black",
+          "Capture": true
+        }
+      ],
+      "InitialStones": [
+        {
+          "X": 4,
+          "Y": 3,
+          "Color": "White"
+        },
+        {
+          "X": 4,
+          "Y": 5,
+          "Color": "White"
+        },
+        {
+          "X": 3,
+          "Y": 4,
+          "Color": "White"
+        },
+        {
+          "X": 5,
+          "Y": 4,
+          "Color": "White"
+        },
+        {
+          "X": 4,
+          "Y": 6,
+          "Color": "Black"
+        },
+        {
+          "X": 3,
+          "Y": 5,
+          "Color": "Black"
+        },
+        {
+          "X": 5,
+          "Y": 5,
+          "Color": "Black"
+        }
+      ],
+      "HasOpponentResponse": false,
+      "OpponentX": 0,
+      "OpponentY": 0,
+      "OpponentColor": "White"
+    }
+  ]
+}

@@ -6,6 +6,12 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
+	<ItemGroup>
+		<None Update="Assets\Tutorial\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
