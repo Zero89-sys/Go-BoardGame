@@ -57,6 +57,293 @@
       "OpponentX": 0,
       "OpponentY": 0,
       "OpponentColor": "White"
+    },
+    {
+      "Instructions": "Capture the white group by exploiting the Ko rule.",
+      "ResponseMessage": "Good job!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "hideMarkers": true,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "allowedMoves": [
+        {
+          "x": 1,
+          "y": 7,
+          "hasOpponentResponse": true,
+          "opponentX": 3,
+          "opponentY": 6,
+          "opponentColor": "White",
+          "nextAllowedMoves": [
+            {
+              "x": 0,
+              "y": 8
+            }
+          ]
+        }
+      ],
+      "InitialStones": [
+        {
+          "x": 0,
+          "y": 5,
+          "color": "Black"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 8,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 8,
+          "color": "Black"
+        },
+
+        {
+          "x": 0,
+          "y": 6,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "color": "White"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "color": "White"
+        }
+      ]
+    },
+    {
+      "Instructions": "Connect your black stones.",
+      "ResponseMessage": "Good job!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "hideMarkers": true,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "allowedMoves": [
+        {
+          "x": 5,
+          "y": 5,
+          "hasOpponentResponse": true,
+          "opponentX": 2,
+          "opponentY": 5,
+          "opponentColor": "White",
+          "nextAllowedMoves": [
+            {
+              "x": 4,
+              "y": 5
+            }
+          ]
+        }
+      ],
+      "InitialStones": [
+        {
+          "x": 4,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "color": "Black"
+        },
+        {
+          "x": 5,
+          "y": 7,
+          "color": "Black"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "color": "White"
+        },
+        {
+          "x": 6,
+          "y": 5,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "color": "White"
+        },
+        {
+          "x": 5,
+          "y": 6,
+          "color": "White"
+        }
+      ]
+    },
+    {
+      "Instructions": "Capture two white stones by exploiting the Ko rule.",
+      "ResponseMessage": "Good job!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "hideMarkers": true,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "allowedMoves": [
+        {
+          "x": 5,
+          "y": 4,
+          "hasOpponentResponse": true,
+          "opponentX": 4,
+          "opponentY": 5,
+          "opponentColor": "White",
+          "nextAllowedMoves": [
+            {
+              "x": 4,
+              "y": 3
+            }
+          ]
+        }
+      ],
+      "InitialStones": [
+        {
+          "x": 5,
+          "y": 1,
+          "color": "Black"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 5,
+          "color": "Black"
+        },
+        {
+          "x": 5,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 6,
+          "y": 4,
+          "color": "White"
+        },
+        {
+          "x": 5,
+          "y": 5,
+          "color": "White"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "color": "White"
+        }
+      ]
     }
   ]
 }

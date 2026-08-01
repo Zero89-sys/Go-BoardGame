@@ -23,7 +23,6 @@
             <ListBox Name="SectiontListBox" SelectionChanged="OnSectionSelected" Background="#363836" Foreground="#E3E7EA">
 				<ListBoxItem Tag="basics">Basics</ListBoxItem>
                 <ListBoxItem Tag="eyes">Eyes</ListBoxItem>
-                <ListBoxItem Tag="territory">Territory</ListBoxItem>
                 <ListBoxItem Tag="ko">Ko</ListBoxItem>
             </ListBox>
         </StackPanel>
