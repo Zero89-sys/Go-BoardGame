@@ -1,7 +1,7 @@
 {
   "SectionName": "Eyes",
   "Steps": [
-    {
+    { 
       "Instructions": "Red point is surrounded by white stones; it is called an 'eye'. Black can not play at A (self-capture). Black point is also an eye, but Black can play at B and capture. Capture the white stones.",
       "ResponseMessage": "Nice capture!",
       "AllowAnyMove": false,
@@ -156,7 +156,7 @@
           "opponentX": 8,
           "opponentY": 1,
           "opponentColor": "White",
-          "nextInstructions":  "Nice! Now Place it right there to capture",
+          "nextInstructions": "Nice! Now Place it right there to capture",
           "nextAllowedMoves": [
             {
               "x": 8,
@@ -178,6 +178,307 @@
               "y": 1
             }
           ]
+        }
+      ]
+    },
+    {
+      "Instructions": "White has two groups of stones. One group has two eyes. The other group has a single big eye. The group with two eyes is safe and can never be captured. Black to play. Capture a white group.",
+      "ResponseMessage": "Nice capture!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "hideMarkers": true,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "allowedMoves": [
+        {
+          "x": 8,
+          "y": 1,
+          "hasOpponentResponse": true,
+          "opponentX": 8,
+          "opponentY": 2,
+          "opponentColor": "White",
+          "nextAllowedMoves": [
+            {
+              "x": 8,
+              "y": 0
+            }
+          ]
+        }
+      ],
+      "InitialStones": [
+        {
+          "x": 6,
+          "y": 0,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 4,
+          "color": "Black"
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "color": "Black"
+        },
+        {
+          "x": 8,
+          "y": 4,
+          "color": "Black"
+        },
+
+        {
+          "x": 7,
+          "y": 0,
+          "color": "White"
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "color": "White"
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "x": 7,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 8,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 8,
+          "color": "Black"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 8,
+          "color": "White"
+        }
+      ]
+    },
+    {
+      "Instructions": "One white group has two 'real' eyes. The other group has a real eye at A and a 'false' eye at B. The false eye is not safe and can be attacked. Black to play. Capture the white group by attacking the false eye.",
+      "ResponseMessage": "Good job!",
+      "AllowAnyMove": false,
+      "IsCompleted": false,
+      "hideMarkers": true,
+      "MoveColor": "Black",
+      "ShowGhost": true,
+      "allowedMoves": [
+        {
+          "x": 7,
+          "y": 3,
+          "hasOpponentResponse": true,
+          "opponentX": 8,
+          "opponentY": 2,
+          "opponentColor": "White",
+          "nextAllowedMoves": [
+            {
+              "x": 8,
+              "y": 0
+            }
+          ]
+        }
+      ],
+      "InitialStones": [
+        {
+          "x": 6,
+          "y": 0,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 2,
+          "color": "Black"
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "color": "Black"
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "color": "Black"
+        },
+        {
+          "x": 8,
+          "y": 4,
+          "color": "Black"
+        },
+
+        {
+          "x": 7,
+          "y": 0,
+          "color": "White"
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "color": "White"
+        },
+        {
+          "x": 7,
+          "y": 2,
+          "color": "White"
+        },
+        {
+          "X": 8,
+          "Y": 1,
+          "Color": "White"
+        },
+        {
+          "x": 8,
+          "y": 3,
+          "color": "White"
+        },
+        {
+          "x": 0,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 1,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 2,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 3,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 6,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 7,
+          "color": "Black"
+        },
+        {
+          "x": 4,
+          "y": 8,
+          "color": "Black"
+        },
+        {
+          "x": 0,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 2,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 7,
+          "color": "White"
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "color": "White"
+        },
+        {
+          "x": 3,
+          "y": 8,
+          "color": "White"
         }
       ]
     }

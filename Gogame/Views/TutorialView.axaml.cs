@@ -73,6 +73,7 @@ public partial class TutorialView : UserControl
         public bool IsCompleted { get; set; } = false;
         public string MoveColor { get; set; } = "Black";
         public bool ShowGhost { get; set; } = true;
+        public bool HideMarkers { get; set; } = false;
 
         public List<InitialStone> InitialStones { get; set; } = new();
 
@@ -131,7 +132,7 @@ public partial class TutorialView : UserControl
 
         _activeAllowedMoves = step.AllowedMoves ?? new();
 
-        if (step.AllowedMoves != null && step.AllowedMoves.Count > 0)
+        if (step.AllowedMoves != null && step.AllowedMoves.Count > 0 && !step.HideMarkers)
         {
             BoardControl.DrawMarker(board, step.AllowedMoves);
         }
@@ -217,7 +218,11 @@ public partial class TutorialView : UserControl
                     InstructionText.Text = matchedMove.NextInstructions;
                 }
 
-                BoardControl.DrawMarker(board, _activeAllowedMoves);
+                if (!step.HideMarkers)
+                {
+                    BoardControl.DrawMarker(board, _activeAllowedMoves);
+                }
+
                 _isWaitingForOpponent = false;
             }
             else
@@ -229,7 +234,27 @@ public partial class TutorialView : UserControl
         }
         else
         {
-            BoardControl.ShowGhostStone(board, x, y, playerStone);
+            if (board.Board[x, y] == Stone.Empty)
+            {
+                _isWaitingForOpponent = true;
+
+                board.PlaceStone(x, y, playerStone);
+                BoardControl.DrawBoard(board);
+
+                InstructionText.Text = "Wrong move! Try again.";
+
+                await Task.Delay(1000);
+                
+                InstructionText.Text = step.Instructions;
+                board.Board[x, y] = Stone.Empty;
+                BoardControl.DrawBoard(board);
+
+                _isWaitingForOpponent = false;
+            }
+            else
+            {
+                BoardControl.ShowGhostStone(board, x, y, playerStone);
+            }
         }
     }
 
