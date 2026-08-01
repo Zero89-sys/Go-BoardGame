@@ -10,6 +10,7 @@
 
     <UserControl.Styles>
     <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
+    <StyleInclude Source="avares://Gogame/Assets/Icons.axaml"/>
     </UserControl.Styles>
 
 
@@ -21,9 +22,32 @@
             <Button Classes="end-button" Content="☰" Command="{Binding TogglePaneCommand}"
                     Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
             <ListBox Name="SectiontListBox" SelectionChanged="OnSectionSelected" Background="#363836" Foreground="#E3E7EA">
-				<ListBoxItem Tag="basics">Basics</ListBoxItem>
-                <ListBoxItem Tag="eyes">Eyes</ListBoxItem>
-                <ListBoxItem Tag="ko">Ko</ListBoxItem>
+				<ListBoxItem Tag="basics">
+                     <StackPanel Orientation="Horizontal" Spacing="10">
+						<PathIcon Data="{StaticResource cube_regular}" 
+                          Width="20" 
+                          Height="20"/>
+                    <TextBlock Text="Basics" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </ListBoxItem>
+
+                <ListBoxItem Tag="eyes">
+                     <StackPanel Orientation="Horizontal" Spacing="10">
+						<PathIcon Data="{StaticResource eye_show_regular}" 
+                          Width="20" 
+                          Height="20"/>
+                    <TextBlock Text="Eyes" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </ListBoxItem>
+
+                <ListBoxItem Tag="ko">
+                     <StackPanel Orientation="Horizontal" Spacing="10">
+						<PathIcon Data="{StaticResource arrow_repeat_all_off_regular}" 
+                          Width="20" 
+                          Height="20"/>
+                    <TextBlock Text="Ko" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </ListBoxItem>
             </ListBox>
         </StackPanel>
         </Border>
