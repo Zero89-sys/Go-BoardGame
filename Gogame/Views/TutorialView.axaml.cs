@@ -142,6 +142,7 @@ public partial class TutorialView : UserControl
         }
     }
 
+    // Clicking on board
     private async void OnBoardClicked(Point pos)
     {
         if (string.IsNullOrEmpty(_currentSection) || !_sections.ContainsKey(_currentSection))
@@ -317,7 +318,7 @@ public partial class TutorialView : UserControl
         LoadSectionFromJson(filePath);
         ShowStep();
     }
-
+    // Sections
     private void OnSectionSelected(object? sender, SelectionChangedEventArgs e)
     {
         if(SectiontListBox.SelectedItem is ListBoxItem selectedItem && selectedItem.Tag is string sectionName)
