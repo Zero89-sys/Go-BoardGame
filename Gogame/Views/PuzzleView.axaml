@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="using:Gogame.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:views="using:Gogame.Views"
+             x:Class="Gogame.PuzzleView"
+             x:DataType="viewmodels:PuzzleViewModel">
+
+    <UserControl.Styles>
+    <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
+    <StyleInclude Source="avares://Gogame/Assets/Icons.axaml"/>
+    </UserControl.Styles>
+
+
+    <SplitView Name="PuzzleSplitView" DisplayMode="CompactInline" OpenPaneLength="150" IsPaneOpen="{Binding IsPaneOpen}"
+           CompactPaneLength="50" PaneBackground="#1F2221">
+    <SplitView.Pane>
+        <StackPanel>
+            <Button Classes="end-button" Content="☰" Click="OnTogglePane"
+                    Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
+            <TextBlock Text="Seznam Úloh" 
+                       Margin="10" 
+                       FontWeight="Bold"
+                       IsVisible="{Binding #PuzzleSplitView.IsPaneOpen}"/>
+            
+            <ListBox ItemsSource="" 
+                     SelectionChanged="OnPuzzleSelectionChanged">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <PathIcon Data="{StaticResource PuzzleIconGeometry}" Width="16" Height="16"/>
+                            <TextBlock
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </SplitView.Pane>
+
+    <SplitView.Content>
+		<Grid x:Name="GameContentGrid">
+    <Grid.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <GradientStop Color="#1F2221" Offset="0"/>
+            <GradientStop Color="#161817" Offset="1"/>
+        </LinearGradientBrush>
+    </Grid.Background>
+    <Viewbox Stretch="Uniform" Margin="20">
+        <StackPanel Orientation="Horizontal" Spacing="40" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+            <StackPanel Width="900" Spacing="10">
+                <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
+                        Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
+
+                <!-- Board -->
+                <views:BoardView x:Name="BoardControl"/>
+
+            </StackPanel>
+
+             <Border x:Name="SetupPanel" Width="280" Background="#262928" VerticalAlignment="Center"
+                    Padding="24" IsVisible="True" CornerRadius="12"
+                    BorderBrush="#3A4149" BorderThickness="1"
+                    BoxShadow="0 6 24 0 #80000000">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Informations" FontSize="22" FontWeight="Light"
+                               FontFamily="Georgia, 'Noto Serif', serif" Foreground="#E3E7EA"/>
+                    <Rectangle Height="1" Fill="#3A4149" Margin="0,0,0,4"/>
+
+                    <TextBlock x:Name="InstructionText" Foreground="#D8DCDC" FontSize="15"
+                               TextWrapping="Wrap"/>
+
+                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center"
+                                Margin="0,16,0,0">
+
+                        <Button x:Name="NextButton" Content="Next" Margin="0, 16, 0, 0" Click="OnNexPuzzleClicked"
+                                Classes="end-button" MaxWidth="110" Width="80"
+                                HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Viewbox>
+
+    <Border x:Name="BotLoadingOverlay" Background="#14171B" IsVisible="False" ZIndex="100">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
+            <TextBlock Text="Loading..." Foreground="#E3E7EA" FontSize="34" FontWeight="Light"
+                        FontFamily="Georgia, 'Noto Serif', serif" HorizontalAlignment="Center"/>
+            <ProgressBar IsIndeterminate="True" Width="300" Height="6" Margin="0,15,0,0"/>
+        </StackPanel>
+    </Border>
+</Grid>
+    </SplitView.Content>
+</SplitView>
+
+</UserControl>

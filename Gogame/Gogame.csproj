@@ -15,6 +15,12 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<None Update="Assets\Puzzles\**\*.sgf">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
   <ItemGroup>
     <AvaloniaXaml Remove="Assets\Icons.axaml" />

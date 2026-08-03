@@ -54,14 +54,24 @@ public partial class MenuView : UserControl
             mainWindow.MainContent.Content = gameView;
         }
     }
-
+    // Tutorial
     private void OnTutorialClick(object? sender, RoutedEventArgs e)
+    {
+        var mainWindow = TopLevel.GetTopLevel(this) as MainWindow;
+        if (mainWindow != null)
+        {
+            var tutorialView = new TutorialView();
+            mainWindow.MainContent.Content = tutorialView;
+        }
+    }
+    // Puzzle
+    private void OnPuzzleClick(object? sender, RoutedEventArgs e)
     {
         var mainWindow = TopLevel.GetTopLevel(this) as MainWindow;
         if(mainWindow != null)
         {
-            var tutorialView = new TutorialView();
-            mainWindow.MainContent.Content = tutorialView;
+            var puzzleView = new PuzzleView();
+            mainWindow.MainContent.Content = puzzleView;
         }
     }
 }
