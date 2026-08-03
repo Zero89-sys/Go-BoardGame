@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using static Gogame.Models.GoGame;
 using static Gogame.TutorialView;
 
@@ -15,7 +17,7 @@ namespace Gogame;
 
 public partial class PuzzleView : UserControl
 {
-    private GoBoard board = new GoBoard();
+    private GoBoard board = new GoBoard(19);
 
     public class PuzzleItem
     {
@@ -24,8 +26,8 @@ public partial class PuzzleView : UserControl
     }
 
     private List<MoveOption> _activeAllowedMoves = new();
-    private bool _isWatingForOpponent = false;
-    private TutorialStep _currentPuzzleStep;
+    private bool _isWaitingForOpponent = false;
+    private TutorialStep? _currentPuzzleStep;
     public ObservableCollection<PuzzleItem> PuzzleList { get; set; } = new();
     private List<string> _puzzleFiles = new();
     private int _currentPuzzleIndex = 0;
@@ -34,6 +36,10 @@ public partial class PuzzleView : UserControl
     {
         InitializeComponent();
         DataContext = this;
+
+        BoardControl.BoardPointerPressed += (s, pos) => OnBoardClicked(pos);
+        BoardControl.BoardPointerMoved += (s, pos) => OnBoardMoved(pos);
+        BoardControl.BoardPointerLeft += (s, e) => BoardControl.RemoveGhostStone();
 
         LoadPuzzleDirectory();
     }
@@ -126,6 +132,9 @@ public partial class PuzzleView : UserControl
     {
         if (step == null) return;
 
+        _currentPuzzleStep = step;
+        _isWaitingForOpponent = false;
+
         board.Reset();
 
         if (step.InitialStones != null)
@@ -149,7 +158,6 @@ public partial class PuzzleView : UserControl
         }
 
         _activeAllowedMoves = step.AllowedMoves ?? new List<MoveOption>();
-        _isWatingForOpponent = false;
 
         BoardControl.DrawBoard(board);
 
@@ -162,7 +170,119 @@ public partial class PuzzleView : UserControl
             BoardControl.RemoveMarker();
         }
     }
-    // Toggle
+
+    // Clicking on the board
+    private async void OnBoardClicked(Point pos)
+    {
+        if (_currentPuzzleStep == null || _currentPuzzleStep.IsCompleted || _isWaitingForOpponent)
+            return;
+
+        if (!BoardControl.TryGetBoardCoordinates(pos, board, out int x, out int y))
+            return;
+
+        var step = _currentPuzzleStep;
+        Stone playerStone = step.MoveColor == "White" ? Stone.White : Stone.Black;
+
+        var matchedMove = _activeAllowedMoves.FirstOrDefault(m => m.x == x && m.y == y && m.Capture);
+
+        if (matchedMove != null)
+        {
+            _isWaitingForOpponent = true;
+
+            board.PlaceStone(x, y, playerStone);
+            BoardControl.DrawBoard(board);
+            BoardControl.RemoveMarker();
+
+            if (matchedMove.HasOpponentResponse)
+            {
+                Stone opponentStone = matchedMove.OpponentColor == "White" ? Stone.White : Stone.Black;
+                await Task.Delay(600);
+                board.PlaceStone(matchedMove.OpponentX, matchedMove.OpponentY, opponentStone);
+                BoardControl.DrawBoard(board);
+            }
+
+            if (matchedMove.NextAllowedMoves != null && matchedMove.NextAllowedMoves.Count > 0)
+            {
+                _activeAllowedMoves = matchedMove.NextAllowedMoves;
+
+                if (!string.IsNullOrEmpty(matchedMove.NextInstructions))
+                {
+                    InstructionText.Text = matchedMove.NextInstructions;
+                }
+
+                if (!step.HideMarkers)
+                {
+                    BoardControl.DrawMarker(board, _activeAllowedMoves);
+                }
+
+                _isWaitingForOpponent = false;
+            }
+            else
+            {
+                step.IsCompleted = true;
+                InstructionText.Text = step.ResponseMessage;
+                _isWaitingForOpponent = false;
+            }
+        }
+        else if (board.Board[x, y] == Stone.Empty)
+        {
+            _isWaitingForOpponent = true;
+
+            board.PlaceStone(x, y, playerStone);
+            BoardControl.DrawBoard(board);
+
+            string previousInstructions = step.Instructions;
+            InstructionText.Text = "Wrong move! Try again.";
+
+            await Task.Delay(1000);
+
+            InstructionText.Text = previousInstructions;
+            board.Board[x, y] = Stone.Empty;
+            BoardControl.DrawBoard(board);
+
+            if (!step.HideMarkers)
+            {
+                BoardControl.DrawMarker(board, _activeAllowedMoves);
+            }
+
+            _isWaitingForOpponent = false;
+        }
+        else
+        {
+            BoardControl.ShowGhostStone(board, x, y, playerStone);
+        }
+    }
+
+    // Hovering over the board
+    private void OnBoardMoved(Point pos)
+    {
+        if (_currentPuzzleStep == null || _currentPuzzleStep.IsCompleted || _isWaitingForOpponent)
+        {
+            BoardControl.RemoveGhostStone();
+            return;
+        }
+
+        Stone playerStone = _currentPuzzleStep.MoveColor == "White" ? Stone.White : Stone.Black;
+
+        if (!_currentPuzzleStep.ShowGhost)
+        {
+            BoardControl.RemoveGhostStone();
+            return;
+        }
+        if (!BoardControl.TryGetBoardCoordinates(pos, board, out int x, out int y))
+        {
+            BoardControl.RemoveGhostStone();
+            return;
+        }
+        if (board.Board[x, y] != Stone.Empty)
+        {
+            BoardControl.RemoveGhostStone();
+            return;
+        }
+
+        BoardControl.ShowGhostStone(board, x, y, playerStone);
+    }
+    // Toggle for menu
     private void OnTogglePane(object? sender, RoutedEventArgs e)
     {
         PuzzleSplitView.IsPaneOpen = !PuzzleSplitView.IsPaneOpen;

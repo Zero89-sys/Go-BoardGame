@@ -20,7 +20,7 @@
         <StackPanel>
             <Button Classes="end-button" Content="☰" Click="OnTogglePane"
                     Width="40" HorizontalAlignment="Left" HorizontalContentAlignment="Center"/>
-            <TextBlock Text="Seznam Úloh" 
+            <TextBlock Text="List of Tasks" 
                        Margin="10" 
                        FontWeight="Bold"
                        IsVisible="{Binding #PuzzleSplitView.IsPaneOpen}"/>
