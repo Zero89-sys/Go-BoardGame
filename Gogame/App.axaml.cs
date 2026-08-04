@@ -39,12 +39,21 @@ public partial class App : Application
 
             Task.Run(async () =>
             {
-                await StartBot();
-
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                try
                 {
-                    mainWindow.MainContent.Content = new MenuView();
-                });
+                    await StartBot();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error starting the bot: {ex.Message}");
+                }
+                finally
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        mainWindow.MainContent.Content = new MenuView();
+                    });
+                }
             });
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
@@ -65,7 +74,13 @@ public partial class App : Application
         string model = Path.Combine(baseDir, "Engine", "KataGo.txt.gz");
         string cfg = Path.Combine(baseDir, "Engine", "default_gtp.cfg");
 
-        GtpService.Instance.StartEngine(exe, model, cfg);
+        bool isStarted = await GtpService.Instance.StartEngineAsync(exe, model, cfg);
+
+        if (!isStarted)
+        {
+            System.Diagnostics.Debug.WriteLine("[App] The bot was not started; proceeding without it.");
+            return;
+        }
 
         for (int i = 0; i < 10; i++)
         {
@@ -77,5 +92,6 @@ public partial class App : Application
         }
 
         throw new Exception("Failed to start KataGo");
+        GtpService.Instance.StopEngine();
     }
 }

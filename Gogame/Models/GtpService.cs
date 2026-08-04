@@ -21,40 +21,74 @@ namespace Gogame.Models
         private int _currentBoardSize = 19;
         public double[]? LastOwnership { get; private set; }
         public static GtpService Instance { get; } = new GtpService();
+        public bool IsAvailable { get; private set; } = false;
 
         // Starting the engine
-        public void StartEngine(string exePath, string modelPath, string configPath)
+        public async Task<bool> StartEngineAsync(string exePath, string modelPath, string configPath)
         {
-            if (_process != null && !_process.HasExited) return;
+            if (_process != null && !_process.HasExited && IsAvailable) return true;
 
-            _process = new Process();
-            _process.StartInfo.FileName = exePath;
-
-            _process.StartInfo.Arguments = $"gtp -model \"{modelPath}\" -config \"{configPath}\"";
-
-            _process.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
-
-            _process.StartInfo.UseShellExecute = false;
-            _process.StartInfo.RedirectStandardInput = true;
-            _process.StartInfo.RedirectStandardOutput = true;
-            _process.StartInfo.CreateNoWindow = true;
-
-            _process.StartInfo.RedirectStandardError = true;
-
-            _process.ErrorDataReceived += (sender, e) =>
+            IsAvailable = false;
+            
+            if(!File.Exists(exePath) || !File.Exists(modelPath) || !File.Exists(configPath))
             {
-                if (!string.IsNullOrEmpty(e.Data))
+                Debug.WriteLine("[GTP] Bot files (EXE, Model, or Config) were not found!");
+                return false;
+            }
+
+            try
+            {
+                _process = new Process();
+                _process.StartInfo.FileName = exePath;
+
+                _process.StartInfo.Arguments = $"gtp -model \"{modelPath}\" -config \"{configPath}\"";
+
+                _process.StartInfo.WorkingDirectory = Path.GetDirectoryName(exePath);
+
+                _process.StartInfo.UseShellExecute = false;
+                _process.StartInfo.RedirectStandardInput = true;
+                _process.StartInfo.RedirectStandardOutput = true;
+                _process.StartInfo.CreateNoWindow = true;
+
+                _process.StartInfo.RedirectStandardError = true;
+
+                _process.ErrorDataReceived += (sender, e) =>
                 {
-                    Debug.WriteLine("Katago error: " + e.Data);
+                    if (!string.IsNullOrEmpty(e.Data))
+                    {
+                        Debug.WriteLine("Katago error: " + e.Data);
+                    }
+                };
+
+                _process.Start();
+                _process.BeginErrorReadLine();
+
+                _input = _process.StandardInput;
+                _output = _process.StandardOutput;
+                _ = Task.Run(ReadOutputLoop);
+
+                var pingTask = SendCommand("name");
+                var completedTask = await Task.WhenAny(pingTask, Task.Delay(5000));
+
+                if(completedTask == pingTask && pingTask.Result != null)
+                {
+                    IsAvailable = true;
+                    Debug.WriteLine("[GTP] Engine has been successfully started.");
+                    return true;
                 }
-            };
-
-            _process.Start();
-            _process.BeginErrorReadLine();
-
-            _input = _process.StandardInput;
-            _output = _process.StandardOutput;
-            _ = Task.Run(ReadOutputLoop);
+                else
+                {
+                    Debug.WriteLine("[GTP] Engine did not respond in time (Timeout/Error).");
+                    StopEngine();
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[GTP] Exception while starting the bot: {ex.Message}");
+                StopEngine();
+                return false;
+            }
         }
 
         // Engine function
@@ -72,9 +106,15 @@ namespace Gogame.Models
                 await _input!.WriteLineAsync(command);
                 await _input.FlushAsync();
 
-                var result = await _currentCommandTcs.Task;
-                Debug.WriteLine($"GTP Receive: {result}");
-                return result;
+                var completedTask = await Task.WhenAny(_currentCommandTcs.Task, Task.Delay(5000));
+                if(completedTask == _currentCommandTcs.Task)
+                {
+                    var result = await _currentCommandTcs.Task;
+                    Debug.WriteLine($"GTP Receive: {result}");
+                    return result;
+                }
+                Debug.WriteLine($"GTP Timeout for command: {command}");
+                return null;
             }
             catch (Exception ex)
             {
@@ -89,11 +129,17 @@ namespace Gogame.Models
 
         public void StopEngine()
         {
+            IsAvailable = false;
             if (_process != null && !_process.HasExited)
             {
-                _input?.WriteLine("quit");
-                _process.Kill();
+                try
+                {
+                    _input?.WriteLine("quit");
+                    _process.Kill();
+                }
+                catch { }
             }
+            _process = null;
         }
 
         public async Task StartOwnershipAnalysisAsync(int boardSize)

@@ -637,6 +637,9 @@ public partial class GameView : UserControl
                 container.Children.Add(BlackInfoRow);
             }
         }
+        await _botService.StopAnalysisAsync();
+        _botService.ResetServiceState();
+
         SyncAndRefreshUI();
         UpdatePassVisibility();
     }
@@ -681,26 +684,38 @@ public partial class GameView : UserControl
 
         if (_currentMode == GameMode.PlayerVsBot)
         {
-
+            if (BotLoadingOverlay != null) BotLoadingOverlay.IsVisible = true;
             Task.Run(async () =>
             {
+                bool isReady = false;
                 try
                 {
-                    await Task.Delay(500);
-                    var response = await _botService.SendCommand("boardsize 19");
-
-                    if (response != null)
+                    if (!_botService.IsAvailable)
                     {
-                        await _botService.SendCommand("clear_board");
-                        int startLevel = 4;
-                        await Dispatcher.UIThread.InvokeAsync(() =>
+                        string exePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "katago.exe");
+                        string modelPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "model.bin.gz");
+                        string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "gtp_custom.cfg");
+
+                        await _botService.StartEngineAsync(exePath, modelPath, configPath);
+                    }
+                    if (_botService.IsAvailable)
+                    {
+                        var response = await _botService.SendCommand("boardsize 19");
+
+                        if (response != null)
                         {
-                            startLevel = (int)DifficultySlider.Value;
-                        });
+                            await _botService.SendCommand("clear_board");
+                            int startLevel = 4;
+                            await Dispatcher.UIThread.InvokeAsync(() =>
+                            {
+                                startLevel = (int)DifficultySlider.Value;
+                            });
 
-                        await SetBotDifficulty(startLevel);
+                            await SetBotDifficulty(startLevel);
 
-                        _isBotReady = true;
+                            _isBotReady = true;
+                            isReady = true;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -709,11 +724,17 @@ public partial class GameView : UserControl
                 }
                 finally
                 {
-                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    await Dispatcher.UIThread.InvokeAsync(async() =>
                     {
+                        _isBotReady = isReady;
                         if (BotLoadingOverlay != null)
                             BotLoadingOverlay.IsVisible = false;
                         Debug.WriteLine("The bot is ready to play!");
+
+                        if (!isReady)
+                        {
+                            await ShowBotErrorDialogAsync("Failed to start the KataGo engine. Check if the 'Engine' folder contains the necessary files.");
+                        }
                     });
                 }
             });
@@ -955,5 +976,21 @@ public partial class GameView : UserControl
                 Debug.WriteLine("Error: Failed to get ownership data (LastOwnership is null).");
             }
         });
+    }
+
+    // Error window
+    private async Task ShowBotErrorDialogAsync(string message)
+    {
+        var dialog = new BotErrorDialog();
+        dialog.MessageText.Text = message;
+
+        if (this.VisualRoot is Window owner)
+        {
+            await dialog.ShowDialog(owner);
+        }
+        else
+        {
+            dialog.Show();
+        }
     }
 }
