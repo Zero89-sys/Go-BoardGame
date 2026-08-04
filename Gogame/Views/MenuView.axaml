@@ -248,7 +248,7 @@
     <Button Classes="menu-item menu-item-4" Content="Tutorial" Click="OnTutorialClick"/>
     <Button Classes="menu-item menu-item-5" Content="Exit" Click="OnExit"/>
 </StackPanel>
-        <TextBlock Text="v0.1" FontSize="18" Foreground="{StaticResource muted-kaya}"
+        <TextBlock Text="v0.4" FontSize="18" Foreground="{StaticResource muted-kaya}"
                    Opacity="0.5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16"/>
     </Grid>
 </UserControl>
