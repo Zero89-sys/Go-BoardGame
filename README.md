@@ -1,17 +1,17 @@
 # Go Board Game
 This project is a desktop implementation of the traditional board game **Go** written in C# using the modern cross-platform framework **Avalonia UI**.
-The application is currently in the state of **fully functional prototype**.
+The application is currently in **Alpha version (v0.4)**.
 
 ## 🚀 Main features
 * **Local game (1v1):** Ability to play on one computer against another player.
 * **Play against AI (KataGo):** Integration with one of the best open-source Go engines.
-* **Puzzles:** Consists fo tsumego puzzles
+* **Puzzles:** Includes tsumego problems sourced from [gogameguru/go-problems](https://github.com/gogameguru/go-problems) to sharpen your tactical skills at various difficulty levels.
 * **Tutorial:** Step-by-step introduction covering core Go fundamentals (liberties, capture, two eyes, and ko rule) designed specifically for beginners.
 * **Game Settings:** A curated collection of Go problems (life and death, tsumego) to sharpen your tactical skills at various difficulty levels.
     * Choice of game board size (standard 19x19, 13x13, 9x9).
     * Choice of stone color (black/white) when playing against a bot.
     * Setting the level/difficulty of the KataGo bot. 
-* **Scoring:** The calculation of the game result is delegated directly to the KataGo engine, which ensures more accurate determination of territory and dead stones than a purely local algorithm.
+* **Scoring:** Japanese territory scoring rules. The calculation of the final score is delegated directly to the KataGo engine, ensuring accurate determination of territory and dead stones.
 
 ## 🛠️ Technologies used
 * **Language:** C#
@@ -28,17 +28,14 @@ The application is currently in the state of **fully functional prototype**.
 
 ---
 
-## ⚠️ Current Project Status & Notice
+## 📢 Project Overview & Status
 
-**The current application is only a prototype**
-Since this is a development version, there are some bugs, inconsistencies, and technical debt in the application. The project was created within the framework of a C# and was primarily used to test more complex game logic and integration with an external engine.
+**Current Version: Alpha (v0.4)** As an early alpha release, it provides a playable experience while continuing to refine underlying systems and feature implementations.
 ### For developers and contributors:
-I am open to any modifications, forks, or optimizations to this code. However, please note the following:
+You are welcome to modify, fork, or optimize this code. Please keep the following in mind:
 * **All modifications and execution of the code are at your own risk.**
-* Due to the bugs present, I recommend **first thoroughly checking and testing** the code before any deployment or modification.
+* Due to early-stage bugs, it is recommended to **thoroughly inspect and test** the code before deployment or further development.
 
-
-This repository currently serves mainly as an archive.
 
 ---
  
