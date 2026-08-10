@@ -360,11 +360,5 @@ public partial class TutorialView : UserControl
 
     // Back to menu button
     private void OnBackToMenu(object? sender, RoutedEventArgs e)
-    {
-        var mainWindow = TopLevel.GetTopLevel(this) as MainWindow;
-        if (mainWindow != null)
-        {
-            mainWindow.MainContent.Content = new MenuView();
-        }
-    }
+    => Navigator.NavigateTo(new MenuView());
 }

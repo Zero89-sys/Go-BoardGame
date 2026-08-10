@@ -532,13 +532,7 @@ public partial class GameView : UserControl
 
     // Back to menu button
     private void OnBackToMenu(object? sender, RoutedEventArgs e)
-    {
-        var mainWindow = TopLevel.GetTopLevel(this) as MainWindow;
-        if (mainWindow != null)
-        {
-            mainWindow.MainContent.Content = new MenuView();
-        }
-    }
+    => Navigator.NavigateTo(new MenuView());
 
     // Resize the board
     private void OnBoardSizeChanged(object? sender, SelectionChangedEventArgs e)

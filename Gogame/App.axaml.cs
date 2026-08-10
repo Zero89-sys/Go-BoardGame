@@ -37,6 +37,8 @@ public partial class App : Application
             desktop.MainWindow = mainWindow;
             mainWindow.Show();
 
+            Navigator.RootContent = mainWindow.MainContent;
+
             Task.Run(async () =>
             {
                 try
@@ -58,10 +60,14 @@ public partial class App : Application
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = new GameView
+            var root = new ContentControl
             {
-                DataContext = new MainViewModel()
+                DataContext = new MainViewModel(),
+                Content = new MenuView()
             };
+            singleViewPlatform.MainView = root;
+
+            Navigator.RootContent = root;
         }
 
         base.OnFrameworkInitializationCompleted();
