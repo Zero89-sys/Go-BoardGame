@@ -6,7 +6,7 @@ The application is currently in **Alpha version (v0.4)**.
 * **Local game (1v1):** Ability to play on one computer against another player.
 * **Play against AI (KataGo):** Integration with one of the best open-source Go engines.
 * **Puzzles:** Includes tsumego problems sourced from [gogameguru/go-problems](https://github.com/gogameguru/go-problems) to sharpen your tactical skills at various difficulty levels.
-* **Tutorial:** Step-by-step introduction covering core Go fundamentals (liberties, capture, two eyes, and ko rule) designed specifically for beginners.
+* **Tutorial:** Step-by-step introduction covering core Go fundamentals (liberties, capture, two eyes, and ko rule).
 * **Game Settings:** A curated collection of Go problems (life and death, tsumego) to sharpen your tactical skills at various difficulty levels.
     * Choice of game board size (standard 19x19, 13x13, 9x9).
     * Choice of stone color (black/white) when playing against a bot.
