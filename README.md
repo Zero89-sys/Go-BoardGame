@@ -11,7 +11,7 @@ The application is currently in **Alpha version (v0.4)**.
     * Choice of game board size (standard 19x19, 13x13, 9x9).
     * Choice of stone color (black/white) when playing against a bot.
     * Setting the level/difficulty of the KataGo bot. 
-* **Scoring:** Japanese territory scoring rules. The calculation of the final score is delegated directly to the KataGo engine, ensuring accurate determination of territory and dead stones.
+* **Scoring:** Japanese territory scoring rules. The calculation of the final score is delegated directly to the KataGo engine.
 
 ## 🛠️ Technologies used
 * **Language:** C#
