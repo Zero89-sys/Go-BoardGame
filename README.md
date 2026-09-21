@@ -3,7 +3,7 @@ This project is a desktop implementation of the traditional board game **Go** wr
 The application is currently in **Alpha version (v0.4)**.
 
 ## 🚀 Main features
-* **Local game (1v1):** Ability to play on one computer against another player.
+* **Local game (1v1):** Ability to play on one device against another player.
 * **Play against AI (KataGo):** Integration with one of the best open-source Go engines.
 * **Puzzles:** Includes tsumego problems sourced from [gogameguru/go-problems](https://github.com/gogameguru/go-problems) to sharpen your tactical skills at various difficulty levels.
 * **Tutorial:** Step-by-step introduction covering core Go fundamentals (liberties, capture, two eyes, and ko rule).
