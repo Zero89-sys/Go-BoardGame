@@ -354,7 +354,12 @@ public partial class GameView : UserControl
         double blackTerritory = 0;
         double whiteTerritory = 0;
 
-        if (_botService.LastOwnership != null)
+        if (OperatingSystem.IsBrowser())
+        {
+            blackTerritory = _lastBlackTerritory;
+            whiteTerritory = _lastWhiteTerritory;
+        }
+        else if (_botService.LastOwnership != null)
         {
             var result = CalculateTerritory(_botService.LastOwnership);
             blackTerritory = result.blackTerritory;
@@ -398,19 +403,26 @@ public partial class GameView : UserControl
         var dialog = new GameResultDialog();
         dialog.ResultText.Text = resultText;
 
+        // Restart button
         dialog.RestartRequested += async (s, e) =>
         {
+            ResultOverlay.IsVisible = false;
             await RestartGameAsync();
         };
+        // Close button
+        dialog.CloseRequested += async (s, e) =>
+        {
+            ResultOverlay.IsVisible = false;
+        };
+        // BackToMenu button
+        dialog.BackToMenuRequested += async (s, e) =>
+        {
+            ResultOverlay.IsVisible = false;
+            Navigator.NavigateTo(new MenuView());
+        };
 
-        if (this.VisualRoot is Window owner)
-        {
-            await dialog.ShowDialog(owner);
-        }
-        else
-        {
-            dialog.Show();
-        }
+        ResultOverlay.Content = dialog;
+        ResultOverlay.IsVisible = true;
     }
 
     // Restart
@@ -459,7 +471,7 @@ public partial class GameView : UserControl
         if (board.IsGameOver)
         {
             string? score = null;
-            if (_currentMode == GameMode.PlayerVsBot)
+            if (_currentMode == GameMode.PlayerVsBot && !OperatingSystem.IsBrowser())
             {
                 score = await _botService.SendCommand("final_score");
             }
@@ -897,21 +909,21 @@ public partial class GameView : UserControl
         if (move == "pass")
         {
             board.Pass(_botColor);
+            SyncAndRefreshUI();
+            if (board.IsGameOver) CheckGameOver();
+            return;
+        }
 
-        }
-        else
-        {
-            var (x, y) = ConvertFromGtpCoords(move);
-            if (x >= 0 && y >= 0)
+         var (x, y) = ConvertFromGtpCoords(move);
+         if (x >= 0 && y >= 0)
             {
-                if (!board.PlaceStone(x, y, _botColor))
-                {
-                    Debug.WriteLine($"WARNING: local board rejected engine move {move} at ({x},{y}) — board desync!");
-                    SyncAndRefreshUI();
-                    return;
-                }
+            if (!board.PlaceStone(x, y, _botColor))
+            {
+                Debug.WriteLine($"WARNING: local board rejected engine move {move} at ({x},{y}) — board desync!");
+                SyncAndRefreshUI();
+                return;
             }
-        }
+         }
 
         board.SwitchTurnAfterMove();
         SyncAndRefreshUI();
@@ -940,8 +952,25 @@ public partial class GameView : UserControl
     // Helper
     private bool IsPvBot => _currentMode == GameMode.PlayerVsBot;
 
+    // Analyze
+    private double _lastBlackTerritory;
+    private double _lastWhiteTerritory;
     private async Task RunFinalAnalysisAsync()
     {
+        if (OperatingSystem.IsBrowser())
+        {
+            var (blackTerritory, whiteTerritory, ownership) = CalculateTerritoryManual();
+            _lastBlackTerritory = blackTerritory;
+            _lastWhiteTerritory = whiteTerritory;
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                BoardControl.DrawBoard(board);
+                BoardControl.DrawTerritoryOverlay(board, ownership);
+            });
+            return;
+        }
+
         await _botService.StartOwnershipAnalysisAsync(board.Size);
 
         for (int i = 0; i < 50; i++)
@@ -970,6 +999,89 @@ public partial class GameView : UserControl
                 Debug.WriteLine("Error: Failed to get ownership data (LastOwnership is null).");
             }
         });
+    }
+
+    // Analysis of browser version
+    private (double blackTerritory, double whiteTerritory, double[] ownership) CalculateTerritoryManual()
+    {
+        int size = board.Size;
+        var visited = new bool[size, size];
+        double blackTerritory = 0;
+        double whiteTerritory = 0;
+        var ownership = new double[size * size];
+
+        for(int x = 0; x < size; x++)
+        {
+            for(int y = 0; y < size; y++)
+            {
+                if (board.Board[x, y] != Stone.Empty || visited[x, y])
+                    continue;
+
+                var region = new List<(int x, int y)>();
+                var queue = new Queue<(int x, int y)>();
+                queue.Enqueue((x, y));
+                visited[x, y] = true;
+
+                bool touchesBlack = false;
+                bool touchesWhite = false;
+
+                while(queue.Count > 0)
+                {
+                    var (cx, cy) = queue.Dequeue();
+                    region.Add((cx, cy));
+
+                    foreach (var (nx, ny) in board.GetNeighbors(cx, cy))
+                    {
+                        var neighborStone = board.Board[nx, ny];
+                        if(neighborStone == Stone.Empty)
+                        {
+                            if (!visited[nx, ny])
+                            {
+                                visited[nx, ny] = true;
+                                queue.Enqueue((nx, ny));
+                            }
+                        }
+                        else if (neighborStone == Stone.Black)
+                        {
+                            touchesBlack = true;
+                        }
+                        else if(neighborStone == Stone.White)
+                        {
+                            touchesWhite = true;
+                        }
+                    }
+                }
+                double value = 0;
+                if (touchesBlack && !touchesWhite)
+                {
+                    blackTerritory += region.Count;
+                    value = 1;
+                }
+                else if(touchesWhite && !touchesBlack)
+                {
+                    whiteTerritory += region.Count;
+                    value = -1;
+                }
+
+                foreach(var (rx, ry) in region)
+                {
+                    ownership[ry * size + rx] = value;
+                }
+            }
+        }
+        for(int x = 0; x < size; x++)
+            for(int y = 0; y < size; y++)
+            {
+                if (board.Board[x, y] == Stone.Black)
+                {
+                    ownership[y * size + x] = 1;
+                }else if (board.Board[x, y] == Stone.White)
+                {
+                    ownership[y * size + x] = -1;
+                }
+            }
+
+        return (blackTerritory, whiteTerritory, ownership);
     }
 
     // Error window

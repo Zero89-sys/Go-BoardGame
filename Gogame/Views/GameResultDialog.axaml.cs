@@ -8,35 +8,33 @@ using System.Threading.Tasks;
 
 namespace Gogame.Views
 {
-    public partial class GameResultDialog : Window
+    public partial class GameResultDialog : UserControl
     {
         public GameResultDialog()
         {
             InitializeComponent();
         }
 
-        // Restart
         public event EventHandler? RestartRequested;
+        public event EventHandler? CloseRequested;
+        public event EventHandler? BackToMenuRequested;
+
+        // Restart
         private void OnRestartClicked(object sender, RoutedEventArgs e)
         {
-            RestartRequested.Invoke(this, EventArgs.Empty);
-            Close();
+            RestartRequested?.Invoke(this, EventArgs.Empty);
         }
 
         // Return to menu
         private void OnBackToMenu(object? sender, RoutedEventArgs e)
         {
-            if (this.Owner is MainWindow mainWindow)
-            {
-                mainWindow.MainContent.Content = new MenuView();
-            }
-            Close();
+            BackToMenuRequested?.Invoke(this, EventArgs.Empty);
         }
 
         // Close window
         private void OnCloseClicked(object? sender, RoutedEventArgs e)
         {
-            Close();
+            CloseRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

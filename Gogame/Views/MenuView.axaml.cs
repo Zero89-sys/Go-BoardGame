@@ -17,7 +17,14 @@ public partial class MenuView : UserControl
     {
         InitializeComponent();
 
-
+        //Browser menu
+        if (OperatingSystem.IsBrowser())
+        {
+            ExitButton.IsVisible = false;
+            PlayerVsBotButton.IsEnabled = false;
+            TutorialButton.IsEnabled = false;
+            PuzzleButton.IsEnabled = false;
+        }
     }
 
     //New Player vs Player game

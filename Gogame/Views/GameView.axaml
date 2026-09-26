@@ -92,6 +92,11 @@
         </StackPanel>
     </Viewbox>
 
+    <!-- Result Dialog -->
+    <ContentControl x:Name="ResultOverlay" IsVisible="False"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="#88000000"/>
+
     <Border x:Name="BotLoadingOverlay" Background="#14171B" IsVisible="False" ZIndex="100">
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="10">
             <TextBlock Text="Loading..." Foreground="#E3E7EA" FontSize="34" FontWeight="Light"

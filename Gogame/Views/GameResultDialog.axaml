@@ -1,15 +1,12 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Gogame.Views.GameResultDialog"
              Width="400" Height="600"
-             CanResize="False"
-             Background="Transparent"
-             WindowStartupLocation="CenterOwner"
-             SystemDecorations="None">
+             Background="Transparent">
 
-    <Window.Styles>
+    <UserControl.Styles>
         <StyleInclude Source="avares://Gogame/Views/Styles.axaml"/>
-    </Window.Styles>
+    </UserControl.Styles>
 
     <Border CornerRadius="5"
             BorderBrush="#3b4441"
@@ -33,4 +30,4 @@
             </StackPanel>
         </Grid>
     </Border>
-</Window>
+</UserControl>
