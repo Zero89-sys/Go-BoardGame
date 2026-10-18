@@ -53,6 +53,7 @@
                 </Grid>
             </StackPanel>
 
+            <!-- Setup panel -->
             <Border x:Name="SetupPanel" Width="280" Background="#262928" VerticalAlignment="Center"
                     Padding="24" IsVisible="True" CornerRadius="12"
                     BorderBrush="#3A4149" BorderThickness="1"
