@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Gogame.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Gogame.ProfileView"
+             x:DataType="vm:MainViewModel">
+  <UserControl.Styles>
+    <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
+   </UserControl.Styles>
+
+    <Grid>
+		<Grid.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#1F2221" Offset="0"/>
+                <GradientStop Color="#161817" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
+                        Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
+    </Grid>
+</UserControl>

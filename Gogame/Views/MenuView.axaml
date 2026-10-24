@@ -21,6 +21,7 @@
     <UserControl.Styles>
         <!-- ===================== Button styles ===================== -->
         <Style Selector="Button">
+
             <Setter Property="FontFamily" Value="{StaticResource OutfitFont}"/>
             <Setter Property="Width" Value="280"/>
             <Setter Property="FontSize" Value="17"/>
@@ -203,6 +204,7 @@
 
         <!-- Profile card -->
         <Button x:Name="ProfileButton"
+                Click="OnProfileClick"
                 Grid.RowSpan="2"
                 MinWidth="200"
                 MaxWidth="280"

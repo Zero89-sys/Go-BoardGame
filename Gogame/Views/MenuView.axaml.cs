@@ -52,4 +52,8 @@ public partial class MenuView : UserControl
     // Puzzle
     private void OnPuzzleClick(object? sender, RoutedEventArgs e)
     => Navigator.NavigateTo(new PuzzleView());
+
+    // Profile
+    private void OnProfileClick(object? sender, RoutedEventArgs e)
+    => Navigator.NavigateTo(new ProfileView());
 }
