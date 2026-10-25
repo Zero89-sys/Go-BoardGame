@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Gogame.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="Gogame.ProfileView"
              x:DataType="vm:MainViewModel">
   <UserControl.Styles>
@@ -17,7 +17,151 @@
                 <GradientStop Color="#161817" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
+        <StackPanel>
+			<Button x:Name="BackToMenu" Content="Back to Menu" Click="OnBackToMenu"
                         Classes="end-button" FontSize="18" HorizontalAlignment="Left" Margin="10"/>
+        </StackPanel>  
+
+    <ScrollViewer Margin="40">
+      <Grid Width="1100" HorizontalAlignment="Center" Margin="40">
+		<StackPanel Spacing="40" HorizontalAlignment="Stretch">
+			<!-- Profile header -->
+            <Grid ColumnDefinitions="Auto, *">
+				<!-- Avatar -->
+                <Grid Grid.Column="0" Width="90" Height="90" Margin="0,25,0,0">
+					<Border CornerRadius="45" ClipToBounds="True" BorderBrush="{DynamicResource kaya-gold}" BorderThickness="1">
+						<Image Source="avares://Gogame/Assets/default-avatar.jpg" Width="100" Height="100"/>
+                    </Border>
+                        <Image Source="avares://Gogame/Assets/avatar-frame.webp" Width="105" Height="105" IsHitTestVisible="False"/>
+                </Grid>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="12"  Margin="25">
+					<!-- Name -->
+                    <StackPanel Spacing="4">
+						<TextBlock Text="ZERO" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource stone-white}"/>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Joined October 2026" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
+                            <TextBlock Text="·" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
+                            <TextBlock Text="0 games played" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
+                        </StackPanel>
+                    </StackPanel>
+                                    <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" Spacing="10">
+					<Button Classes="end-button" Content="Edit profile" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16, 8"/>
+                    <Button Classes="end-button" Content="Share" Padding="16, 8"/>
+                    <Button Classes="end-button" Content="Manage Users"  Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16,8"/>
+                    <Button Classes="end-button" Content="Log out" Background="Transparent" Foreground="#D92D0D" Padding="16,8"/>
+                </StackPanel>
+             </StackPanel>
+            </Grid>
+            <TextBlock Text=". . ." HorizontalAlignment="Center" Foreground="{DynamicResource muted-kaya}" FontSize="50" LetterSpacing="4"/>
+
+            <!-- Statistics -->
+            <StackPanel Spacing="15">
+				<TextBlock Text="STATS" FontSize="12" LetterSpacing="1" Foreground="{DynamicResource muted-kaya}"/>
+
+                <!-- Stats grid -->
+                <UniformGrid Rows="2" Columns="3">
+                    <!-- Number of games -->
+					<Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+                        <StackPanel Spacing="8">
+							<TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+								<Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                                <TextBlock Text="Games played" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                   <!-- Win rate -->
+                   <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+					   <StackPanel Spacing="8">
+						   <TextBlock Text="--" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                           <StackPanel Orientation="Horizontal" Spacing="6">
+							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                               <TextBlock Text="Win rate" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                           </StackPanel>
+                       </StackPanel>
+                   </Border>
+                   <!-- Current Rank -->
+                   <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+					   <StackPanel Spacing="8">
+						   <TextBlock Text="5 kyu" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                           <StackPanel Orientation="Horizontal" Spacing="6">
+							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                               <TextBlock Text="Current rank" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                           </StackPanel>
+                       </StackPanel>
+                   </Border>
+                   <!-- Rank last 30 days  -->
+                   <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+					   <StackPanel Spacing="8">
+						   <TextBlock Text="--" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                           <StackPanel Orientation="Horizontal" Spacing="6">
+							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                               <TextBlock Text="Rank last 30 days" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                           </StackPanel>
+                       </StackPanel>
+                   </Border>
+                   <!-- Win streak -->
+                   <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+					   <StackPanel Spacing="8">
+						   <TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                           <StackPanel Orientation="Horizontal" Spacing="6">
+							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                               <TextBlock Text="Win streak" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                           </StackPanel>
+                       </StackPanel>
+                   </Border>
+                   <!-- Puzzles solved -->
+                   <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
+					   <StackPanel Spacing="8">
+						   <TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+                           <StackPanel Orientation="Horizontal" Spacing="6">
+							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
+                               <TextBlock Text="Puzzles solved" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
+                           </StackPanel>
+                       </StackPanel>
+                   </Border>
+                </UniformGrid>
+            </StackPanel>
+            <TextBlock Text=". . ." HorizontalAlignment="Center" Foreground="{DynamicResource muted-kaya}" FontSize="50" LetterSpacing="4"/>
+            <!-- Recent games -->
+            <StackPanel Spacing="15">
+				<TextBlock Text="Recent games" FontSize="12" LetterSpacing="1" Foreground="{DynamicResource muted-kaya}"/>
+                
+                <!-- List of recent games -->
+                <StackPanel>
+                    <Border BorderBrush="{DynamicResource muted-kaya}" BorderThickness="0,0,0,0.5" Padding="0,14">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Grid.Column="0" Text="vs. moss_walker" Foreground="{DynamicResource stone-white}" VerticalAlignment="Center"/>
+                
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                                <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="3">
+                                    <TextBlock Text="B+R" FontSize="11" Foreground="{DynamicResource TextBrush}"/>
+                                </Border>
+                                <TextBlock Text="19×19" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12"/>
+                                <TextBlock Text="Aug 9" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12" Width="40" TextAlignment="Right"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border BorderBrush="{DynamicResource muted-kaya}" BorderThickness="0,0,0,0.5" Padding="0,14">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Grid.Column="0" Text="vs. KataBot (5d)" Foreground="{DynamicResource stone-white}" VerticalAlignment="Center"/>
+                
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                                <Border Background="{DynamicResource muted-kaya}" Padding="8,4" CornerRadius="3">
+                                    <TextBlock Text="W+12.5" FontSize="11" Foreground="{DynamicResource Void}"/>
+                                </Border>
+                                <TextBlock Text="9×9" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12"/>
+                                <TextBlock Text="Aug 7" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12" Width="40" TextAlignment="Right"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+     </Grid>
+    </ScrollViewer>
     </Grid>
 </UserControl>
