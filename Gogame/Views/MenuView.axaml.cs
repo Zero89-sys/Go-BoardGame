@@ -55,5 +55,19 @@ public partial class MenuView : UserControl
 
     // Profile
     private void OnProfileClick(object? sender, RoutedEventArgs e)
-    => Navigator.NavigateTo(new ProfileView());
+    {
+        bool isLoggedIn = false;
+        if (isLoggedIn)
+        {
+            Navigator.NavigateTo(new ProfileView());
+        }
+        else
+        {
+            Navigator.NavigateTo(new LoginFormView());
+        }
+    }
+
+    // LoginForm
+    private void OnLoginClick(object? sender, RoutedEventArgs e)
+    => Navigator.NavigateTo(new LoginFormView());
 }

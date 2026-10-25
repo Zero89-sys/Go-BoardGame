@@ -57,5 +57,8 @@
     <Compile Update="Views\MenuView.axaml.cs">
       <DependentUpon>MenuView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Profile\LoginFormView.axaml.cs">
+      <DependentUpon>LoginFormView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

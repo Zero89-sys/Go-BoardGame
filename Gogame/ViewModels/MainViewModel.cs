@@ -1,5 +1,6 @@
 ﻿using Avalonia.Metadata;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Gogame.Models;
 using Gogame.Views;
 using System;
@@ -60,4 +61,31 @@ public partial class MainViewModel : ObservableObject
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    // Profile
+    [ObservableProperty]
+    private bool _isLoggedIn = false;
+
+    [ObservableProperty]
+    private string? _userAvatarPath;
+
+    [RelayCommand]
+    private void ToggleMode()
+    {
+        IsLoggedIn = !IsLoggedIn;
+    }
+
+    public string avatarImage
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(UserAvatarPath))
+            {
+                return UserAvatarPath;
+            }
+
+            // Defalut avatar
+            return "avares://Gogame/Assets/default-avatar.jpg";
+        }
+    }
 }

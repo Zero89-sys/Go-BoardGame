@@ -46,6 +46,45 @@
         <Setter Property="Background" Value="#1E1A14"/>
     </Style>
 
+    <!-- ===================== TextBox inputs ===================== -->
+    <Style Selector="TextBox.field">
+		<Setter Property="Background" Value="#0D0D0D"/>
+        <Setter Property="Foreground" Value="{StaticResource stone-white}"/>
+        <Setter Property="CaretBrush" Value="{StaticResource kaya-gold}"/>
+        <Setter Property="SelectionBrush" Value="{StaticResource muted-kaya}"/>
+        <Setter Property="BorderBrush" Value="#454C54"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="FontFamily" Value="Georgia, 'Noto Serif', serif"/>
+
+        <Style.Resources>
+			<SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#8A9494"/>
+            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#121211"/>
+            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#121211"/>
+            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#EDE6D6"/>
+            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#EDE6D6"/>
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#8A7A5C"/>
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#B08D57"/>
+        </Style.Resources>
+    </Style>
+    <!-- ===================== Link button ===================== -->
+    <Style Selector="Button.link-button">
+		<Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource kaya-gold}"/>
+        <Setter Property="FontFamily" Value="Georgia, 'Noto Serif', serif"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="Button.link-button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource stone-white}"/>
+    </Style>
+    <Style Selector="Button.link-button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource muted-kaya}"/>
+    </Style>
+
     <!-- ===================== Slider ===================== -->
     <Style Selector="Slider.custom-slider /template/ RepeatButton">
         <Setter Property="Background" Value="#3A4149"/>

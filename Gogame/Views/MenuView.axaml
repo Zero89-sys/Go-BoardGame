@@ -214,8 +214,8 @@
                 VerticalAlignment="Top"
                 HorizontalContentAlignment="Stretch">
 
-				<!-- Avatar -->
                 <Grid ColumnDefinitions="Auto, *">
+                    <!-- Avatar -->
 					<Border Width="50" 
                             Height="50"
                             CornerRadius="30"
@@ -224,15 +224,31 @@
                             BorderThickness="1"
                             Background="#1D1914">
 
-                        <!-- profile picture -->
-                        <Image Source="avares://Gogame/Assets/default-avatar.jpg" Width="60" Height="60"/>
+                        <Grid>
+                            <!-- Not logged in user pfp -->
+                            <TextBlock Text="A" 
+                               FontSize="22"
+                               FontWeight="SemiBold"
+                               FontFamily="{StaticResource OutfitFont}"
+                               Foreground="{StaticResource kaya-gold}"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"
+                               IsVisible="{Binding !IsLoggedIn}"/>
+
+							<!-- Logged in user pfp -->
+                           <Image Source="{Binding avatarImage}" 
+                                  Width="50" Height="50"
+                                  Stretch="UniformToFill"
+                                  IsVisible="{Binding IsLoggedIn}"/>
+                        </Grid>
+                        
                     </Border>
 
-                    <!-- Name -->
-                    <StackPanel Grid.Column="1" 
-                                Margin="14,0,0,0" 
-                                VerticalAlignment="Center" 
-                                Spacing="5">
+                    <!-- Text information -->
+                    <Grid Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+						
+                    <!-- Logged-in user -->
+                    <StackPanel Spacing="3" IsVisible="{Binding IsLoggedIn}">
 						<TextBlock Text="Zero" 
                                    FontSize="20"
                                    FontWeight="Medium"
@@ -246,6 +262,21 @@
                                            Foreground="{StaticResource kaya-gold}"/>
                         </StackPanel>
                     </StackPanel>
+
+                     <!-- Not logged in user -->
+                     <StackPanel Spacing="3" IsVisible="{Binding !IsLoggedIn}">
+                        <TextBlock Text="Anonymous" 
+                                   FontSize="18"
+                                   FontWeight="Medium"
+                                   FontFamily="{StaticResource OutfitFont}"
+                                   Foreground="{StaticResource stone-white}"/>
+                
+                        <TextBlock Text="Click to log in" 
+                                   FontSize="11"
+                                   FontFamily="{StaticResource OutfitFont}"
+                                   Foreground="{StaticResource MutedBrush}"/>
+                    </StackPanel>
+                    </Grid>
                 </Grid>
         </Button>
 
