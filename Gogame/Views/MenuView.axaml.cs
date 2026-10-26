@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.VisualTree;
+using Gogame.Models;
 using Gogame.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -56,8 +57,7 @@ public partial class MenuView : UserControl
     // Profile
     private void OnProfileClick(object? sender, RoutedEventArgs e)
     {
-        bool isLoggedIn = false;
-        if (isLoggedIn)
+        if (App.Session.IsLoggedIn)
         {
             Navigator.NavigateTo(new ProfileView());
         }

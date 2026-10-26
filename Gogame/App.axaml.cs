@@ -9,6 +9,7 @@ using Gogame.ViewModels;
 using Gogame.Views;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Gogame;
@@ -20,11 +21,18 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    public static ApiClient Api { get; private set; } = null!;
+    public static UserSession Session { get; private set; } = null!;
+
     public override void OnFrameworkInitializationCompleted()
     {
         // Line below is needed to remove Avalonia data validation.
         // Without this line you will get duplicate validations from both Avalonia and CT
         BindingPlugins.DataValidators.RemoveAt(0);
+
+        var http = new HttpClient { BaseAddress = new Uri("https://localhost:7109") };
+        Api = new ApiClient(http);
+        Session = new UserSession();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

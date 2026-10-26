@@ -233,13 +233,13 @@
                                Foreground="{StaticResource kaya-gold}"
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center"
-                               IsVisible="{Binding !IsLoggedIn}"/>
+                               IsVisible="{Binding !Session.IsLoggedIn}"/>
 
 							<!-- Logged in user pfp -->
-                           <Image Source="{Binding avatarImage}" 
+                           <Image Source="{Binding Session.Avatar}" 
                                   Width="50" Height="50"
                                   Stretch="UniformToFill"
-                                  IsVisible="{Binding IsLoggedIn}"/>
+                                  IsVisible="{Binding Session.IsLoggedIn}"/>
                         </Grid>
                         
                     </Border>
@@ -248,8 +248,8 @@
                     <Grid Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
 						
                     <!-- Logged-in user -->
-                    <StackPanel Spacing="3" IsVisible="{Binding IsLoggedIn}">
-						<TextBlock Text="Zero" 
+                    <StackPanel Spacing="3" IsVisible="{Binding Session.IsLoggedIn}">
+						<TextBlock Text="{Binding Session.Username}" 
                                    FontSize="20"
                                    FontWeight="Medium"
                                    FontFamily="{StaticResource OutfitFont}"
@@ -257,14 +257,14 @@
                                    TextTrimming="CharacterEllipsis"/>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                                 <!-- rank -->
-								<TextBlock Text="5 kyu" FontSize="12"
+								<TextBlock Text="{Binding Session.CurrentRank}" FontSize="12"
                                            FontFamily="{StaticResource OutfitFont}"
                                            Foreground="{StaticResource kaya-gold}"/>
                         </StackPanel>
                     </StackPanel>
 
                      <!-- Not logged in user -->
-                     <StackPanel Spacing="3" IsVisible="{Binding !IsLoggedIn}">
+                     <StackPanel Spacing="3" IsVisible="{Binding !Session.IsLoggedIn}">
                         <TextBlock Text="Anonymous" 
                                    FontSize="18"
                                    FontWeight="Medium"

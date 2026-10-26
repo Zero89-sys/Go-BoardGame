@@ -39,10 +39,19 @@
                                    Fill="{DynamicResource kaya-gold}"/>
                     </StackPanel>
 
-                    <TextBox Classes="field" Watermark="E-mail" />
-                    <TextBox Classes="field" Watermark="Password" PasswordChar='*'/>
+                    <TextBox Classes="field" Text="{Binding Email}" Watermark="E-mail" />
+                    <TextBlock Text="{Binding EmailError}" Foreground="Red"
+                               IsVisible="{Binding EmailError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                    <TextBox Classes="field" Text="{Binding Password}" Watermark="Password" PasswordChar='*'/>
+                    <TextBlock Text="{Binding PasswordError}" Foreground="red"
+                               IsVisible="{Binding PasswordError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                    <TextBlock Text="{Binding GeneralError}" Foreground="Red"
+                               IsVisible="{Binding GeneralError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
                     <Button Classes="end-button" Content="Sign in" 
+                            Command="{Binding LoginCommand}"
                             HorizontalAlignment="Stretch" 
                             HorizontalContentAlignment="Center"
                             Margin="0,8,0,0"/>
@@ -63,13 +72,30 @@
                                    Fill="{DynamicResource kaya-gold}"/>
                     </StackPanel>
 
-                    <TextBox Classes="field" Watermark="Username"/>
-                    <TextBox Classes="field" Watermark="E-mail"/>
-                    <TextBox Classes="field" Watermark="Password" PasswordChar='*'/>
-                    <TextBox Classes="field" Watermark="Confirm password" PasswordChar='*'/>
+                    <TextBox Classes="field" Text="{Binding Username}" Watermark="Username"/>
+                    <TextBlock Text="{Binding UsernameError}" Foreground="Red"
+                               IsVisible="{Binding UsernameError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
-                     <Button Classes="end-button" Content="Register" HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBox Classes="field" Text="{Binding Email}" Watermark="E-mail"/>
+                    <TextBlock Text="{Binding EmailError}" Foreground="Red"
+                               IsVisible="{Binding EmailError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                    
+                    <TextBox Classes="field" Text="{Binding Password}" Watermark="Password" PasswordChar='*'/>
+                    <TextBlock Text="{Binding PasswordError}" Foreground="Red"
+                               IsVisible="{Binding PasswordError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                    <TextBox Classes="field" Text="{Binding ConfirmPassword}" Watermark="Confirm password" PasswordChar='*'/>
+                    <TextBlock Text="{Binding ConfirmPasswordError}" Foreground="Red"
+                               IsVisible="{Binding ConfirmPasswordError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                    <TextBlock Text="{Binding GeneralError}" Foreground="Red"
+                               IsVisible="{Binding GeneralError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                     <Button Classes="end-button" Content="Register" 
+                             Command="{Binding RegisterCommand}"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Center" 
+                             Margin="0,8,0,0"/>
 
                     <Button Classes="link-button" Content="Already have an account? Sign in"
                         Command="{Binding ToggleModeCommand}"/>

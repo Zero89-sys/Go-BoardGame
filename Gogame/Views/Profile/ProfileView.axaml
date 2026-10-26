@@ -5,7 +5,8 @@
              xmlns:vm="clr-namespace:Gogame.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="Gogame.ProfileView"
-             x:DataType="vm:MainViewModel">
+             x:DataType="vm:ProfileViewModel">
+
   <UserControl.Styles>
     <StyleInclude Source="avares://Gogame/Styles/GameStyles.axaml"/>
    </UserControl.Styles>
@@ -30,7 +31,7 @@
 				<!-- Avatar -->
                 <Grid Grid.Column="0" Width="90" Height="90" Margin="0,25,0,0">
 					<Border CornerRadius="45" ClipToBounds="True" BorderBrush="{DynamicResource kaya-gold}" BorderThickness="1">
-						<Image Source="avares://Gogame/Assets/default-avatar.jpg" Width="100" Height="100"/>
+						<Image Source="{Binding Avatar}" Width="100" Height="100"/>
                     </Border>
                         <Image Source="avares://Gogame/Assets/avatar-frame.webp" Width="105" Height="105" IsHitTestVisible="False"/>
                 </Grid>
@@ -38,7 +39,7 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="12"  Margin="25">
 					<!-- Name -->
                     <StackPanel Spacing="4">
-						<TextBlock Text="ZERO" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource stone-white}"/>
+						<TextBlock Text="{Binding Username}" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource stone-white}"/>
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="Joined October 2026" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
                             <TextBlock Text="·" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
@@ -50,7 +51,7 @@
 					<Button Classes="end-button" Content="Edit profile" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16, 8"/>
                     <Button Classes="end-button" Content="Share" Padding="16, 8"/>
                     <Button Classes="end-button" Content="Manage Users"  Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16,8"/>
-                    <Button Classes="end-button" Content="Log out" Background="Transparent" Foreground="#D92D0D" Padding="16,8"/>
+                    <Button Classes="end-button" Command="{Binding LogoutCommand}" Content="Log out" Background="Transparent" Foreground="#D92D0D" Padding="16,8"/>
                 </StackPanel>
              </StackPanel>
             </Grid>
@@ -65,7 +66,7 @@
                     <!-- Number of games -->
 					<Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
                         <StackPanel Spacing="8">
-							<TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+							<TextBlock Text="{Binding GamesPlayed}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                             <StackPanel Orientation="Horizontal" Spacing="6">
 								<Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                 <TextBlock Text="Games played" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
@@ -75,7 +76,7 @@
                    <!-- Win rate -->
                    <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
 					   <StackPanel Spacing="8">
-						   <TextBlock Text="--" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+						   <TextBlock Text="{Binding Winrate}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                            <StackPanel Orientation="Horizontal" Spacing="6">
 							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                <TextBlock Text="Win rate" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
@@ -85,7 +86,7 @@
                    <!-- Current Rank -->
                    <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
 					   <StackPanel Spacing="8">
-						   <TextBlock Text="5 kyu" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+						   <TextBlock Text="{Binding CurrentRank}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                            <StackPanel Orientation="Horizontal" Spacing="6">
 							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                <TextBlock Text="Current rank" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
@@ -95,7 +96,7 @@
                    <!-- Rank last 30 days  -->
                    <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
 					   <StackPanel Spacing="8">
-						   <TextBlock Text="--" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+						   <TextBlock Text="{Binding RankLast30Days}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                            <StackPanel Orientation="Horizontal" Spacing="6">
 							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                <TextBlock Text="Rank last 30 days" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
@@ -105,7 +106,7 @@
                    <!-- Win streak -->
                    <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
 					   <StackPanel Spacing="8">
-						   <TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+						   <TextBlock Text="{Binding WinStreak}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                            <StackPanel Orientation="Horizontal" Spacing="6">
 							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                <TextBlock Text="Win streak" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>
@@ -115,7 +116,7 @@
                    <!-- Puzzles solved -->
                    <Border BorderBrush="{StaticResource muted-kaya}" BorderThickness="1" Padding="24" Background="Transparent">
 					   <StackPanel Spacing="8">
-						   <TextBlock Text="0" FontSize="28" Foreground="{DynamicResource stone-white}"/>
+						   <TextBlock Text="{Binding PuzzlesSolved}" FontSize="28" Foreground="{DynamicResource stone-white}"/>
                            <StackPanel Orientation="Horizontal" Spacing="6">
 							   <Ellipse Width="6" Height="6" Fill="{StaticResource kaya-gold}" VerticalAlignment="Center"/>
                                <TextBlock Text="Puzzles solved" FontSize="12" Foreground="{DynamicResource MutedBrush}"/>

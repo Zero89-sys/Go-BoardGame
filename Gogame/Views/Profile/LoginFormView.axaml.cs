@@ -12,7 +12,7 @@ public partial class LoginFormView : UserControl
     public LoginFormView()
     {
         InitializeComponent();
-        DataContext = new LoginFormViewModel();
+        DataContext = new LoginFormViewModel(App.Api);
     }
     // Back to menu button
     private void OnBackToMenu(object? sender, RoutedEventArgs e)
