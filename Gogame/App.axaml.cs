@@ -9,6 +9,7 @@ using Gogame.ViewModels;
 using Gogame.Views;
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -30,9 +31,17 @@ public partial class App : Application
         // Without this line you will get duplicate validations from both Avalonia and CT
         BindingPlugins.DataValidators.RemoveAt(0);
 
-        var http = new HttpClient { BaseAddress = new Uri("https://localhost:7109") };
-        Api = new ApiClient(http);
+        var baseUri = new Uri("https://localhost:7109");
+        var cookies = new CookieContainer();
+        var storage = new CookieStorage();
+        storage.Load(cookies, baseUri); // restore saved cookies
+
+        var handler = new HttpClientHandler { CookieContainer = cookies, UseCookies = true };
+        var http = new HttpClient(handler) { BaseAddress = baseUri };
+        Api = new ApiClient(http, cookies, storage, baseUri);
         Session = new UserSession();
+
+        _ = RestoreSessionAsync();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -107,5 +116,24 @@ public partial class App : Application
 
         throw new Exception("Failed to start KataGo");
         GtpService.Instance.StopEngine();
+    }
+
+    // Session restoration
+    private static async Task RestoreSessionAsync()
+    {
+        try
+        {
+            var result = await Api.GetProfileAsync();
+
+            if (result.Success && result.Data != null)
+            {
+                Session.SignIn(result.Data, Api);
+                Api.SaveSession(); // saves the renewd cookie
+            }
+        }
+        catch(Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
+        }
     }
 }

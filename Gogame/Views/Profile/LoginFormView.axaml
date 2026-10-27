@@ -50,6 +50,18 @@
                     <TextBlock Text="{Binding GeneralError}" Foreground="Red"
                                IsVisible="{Binding GeneralError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
+                    <CheckBox Content="Remember me" IsChecked="{Binding RememberMe}"
+                              FontFamily="Georgia, 'Noto Serif', serif"
+                              Foreground="{DynamicResource stone-white}">
+                        <CheckBox.Resources>
+							<SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="#8A7A5C" />
+                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="#B08D57" />
+                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver" Color="#D8DCDC" />
+                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPressed" Color="#3D4A48" />
+                            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPressed" Color="#8A9494" />
+                        </CheckBox.Resources>
+                    </CheckBox>
+
                     <Button Classes="end-button" Content="Sign in" 
                             Command="{Binding LoginCommand}"
                             HorizontalAlignment="Stretch" 

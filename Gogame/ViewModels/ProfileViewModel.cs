@@ -13,6 +13,7 @@ namespace Gogame.ViewModels
 {
     public partial class ProfileViewModel : ObservableObject
     {
+        private readonly ApiClient _api;
         public string Username => App.Session.Username ?? string.Empty;
         public Bitmap Avatar => App.Session.Avatar;
         public string Winrate => App.Session.Winrate;
@@ -22,14 +23,17 @@ namespace Gogame.ViewModels
         public int PuzzlesSolved => App.Session.PuzzlesSolved;
         public int GamesPlayed => App.Session.GamesPlayed;
 
-        public ProfileViewModel()
-        {      
+        public ProfileViewModel(ApiClient api)
+        {
+            _api = api;
         }
 
         // Log out
         [RelayCommand]
-        private void Logout()
+        private async Task Logout()
         {
+            await _api.LogoutAsync();
+            _api.ClearSession();
             App.Session.SignOut();
             Navigator.NavigateTo(new MenuView());
         }

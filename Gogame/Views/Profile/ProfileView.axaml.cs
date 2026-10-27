@@ -12,7 +12,7 @@ public partial class ProfileView : UserControl
     public ProfileView()
     {
         InitializeComponent();
-        DataContext = new ProfileViewModel();
+        DataContext = new ProfileViewModel(App.Api);
     }
 
     // Back to menu button

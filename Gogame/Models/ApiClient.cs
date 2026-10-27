@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Avalonia.Media.Imaging;
+using Gogame.Dto;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
+using System.Text;
 using System.Text.Json;
-using Gogame.Dto;
-using Avalonia.Media.Imaging;
-using System.IO;
+using System.Threading.Tasks;
+using System.Threading.Tasks;
+using static Gogame.Models.GoGame;
 
 namespace Gogame.Models
 {
@@ -25,16 +27,27 @@ namespace Gogame.Models
     public class ApiClient
     {
         private readonly HttpClient _http;
+        private readonly CookieContainer _cookies;
+        private readonly CookieStorage _storage;
+        private readonly Uri _baseUri;
         private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
-        public ApiClient(HttpClient http) => _http = http;
+        public ApiClient(HttpClient http, CookieContainer cookies, CookieStorage store, Uri baseUri)
+        {
+            _http = http;
+            _cookies = cookies;
+            _storage = store;
+            _baseUri = baseUri;
+        }
 
-        public void SetToken(string token) =>
-        _http.DefaultRequestHeaders.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        public void SaveSession() => _storage.Save(_cookies, _baseUri);
 
-        public void ClearToken() =>
-            _http.DefaultRequestHeaders.Authorization = null;
+        public void ClearSession()
+        {
+            foreach (Cookie c in _cookies.GetCookies(_baseUri))
+                c.Expired = true;
+            _storage.Delete();
+        }
 
         // Registration endpoint
         public Task<ApiResult<AuthResponse>> RegisterAsync(RegisterRequest req)
@@ -142,6 +155,23 @@ namespace Gogame.Models
             catch (JsonException) { }
 
             return new() { [""] = new() { $"Request failed ({(int)response.StatusCode})." } };
+        }
+
+        // Logout
+        public async Task LogoutAsync()
+        {
+            try
+            {
+                using var response = await _http.PostAsync("api/users/logou", null);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ClearSession();
+            }
         }
     }
 }

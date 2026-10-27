@@ -30,6 +30,8 @@ namespace Gogame.ViewModels
         // API using
         private readonly ApiClient _api;
 
+        [ObservableProperty] private bool _rememberMe = true;
+
         // Inputs
         [ObservableProperty]
         private string _username = string.Empty;
@@ -69,11 +71,13 @@ namespace Gogame.ViewModels
             var result = await _api.LoginAsync(new LoginRequest
             {
                 Email = Email,
-                Password = Password
+                Password = Password,
+                RememberMe = RememberMe
             });
 
             if (result.Success)
             {
+                _api.SaveSession();
                 var profile = await _api.GetProfileAsync();
 
                 if (profile.Success && profile.Data != null)
