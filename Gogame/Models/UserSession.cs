@@ -19,6 +19,8 @@ namespace Gogame.Models
 
         [ObservableProperty] private bool _isLoggedIn;
         [ObservableProperty] private string? _username;
+        [ObservableProperty] private string? _email;
+        [ObservableProperty] private string? _bio;
         [ObservableProperty] private string? _currentRank;
 
         // Stats
@@ -31,6 +33,8 @@ namespace Gogame.Models
         public void SignIn(UserProfileDto profile, ApiClient api)
         {
             Username = profile.Username;
+            Email = profile.Email;
+            Bio = profile.Bio;
             CurrentRank = profile.Stats.CurrentRank ?? "--";
             Winrate = profile.Stats.Winrate ?? "--";
             RankLast30Days = profile.Stats.RankLast30Days ?? "--";
@@ -52,6 +56,8 @@ namespace Gogame.Models
         {
             IsLoggedIn = false;
             Username = null;
+            Email = null;
+            Bio = null;
             Avatar = DefaultAvatar.Value;
             CurrentRank = "--";
             Winrate = "--";

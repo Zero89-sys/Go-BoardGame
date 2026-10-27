@@ -1,4 +1,7 @@
-﻿using Avalonia.Media.Imaging;
+﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Gogame.Models;
@@ -15,6 +18,8 @@ namespace Gogame.ViewModels
     {
         private readonly ApiClient _api;
         public string Username => App.Session.Username ?? string.Empty;
+        public string Email => App.Session.Email ?? string.Empty;
+        public string Bio => App.Session.Bio ?? string.Empty;
         public Bitmap Avatar => App.Session.Avatar;
         public string Winrate => App.Session.Winrate;
         public string CurrentRank => App.Session.CurrentRank ?? "--";
@@ -26,6 +31,31 @@ namespace Gogame.ViewModels
         public ProfileViewModel(ApiClient api)
         {
             _api = api;
+        }
+
+        // Edit profile window
+        [ObservableProperty]
+        private bool _editModeHidden = true;
+        [ObservableProperty]
+        private bool _securityModeHidden = true;
+
+        [RelayCommand]
+        private void ToggleEditMode()
+        {
+            EditModeHidden = !EditModeHidden;
+            SecurityModeHidden = true;
+        }
+        [RelayCommand]
+        private void ToggleSecurityMode()
+        {
+            SecurityModeHidden = !SecurityModeHidden;
+            EditModeHidden = true;
+        }
+        [RelayCommand]
+        private void CloseAll()
+        {
+            EditModeHidden = true;
+            SecurityModeHidden = true;
         }
 
         // Log out

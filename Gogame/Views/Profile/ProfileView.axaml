@@ -45,10 +45,11 @@
                             <TextBlock Text="·" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
                             <TextBlock Text="0 games played" FontSize="13" Foreground="{DynamicResource MutedBrush}"/>
                         </StackPanel>
+                        <TextBlock Text="{Binding Bio}" FontSize="15" Foreground="{DynamicResource stone-white}"/>
                     </StackPanel>
                                     <!-- Buttons -->
                 <StackPanel Orientation="Horizontal" Spacing="10">
-					<Button Classes="end-button" Content="Edit profile" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16, 8"/>
+					<Button Classes="end-button" Content="Edit profile" Command="{Binding ToggleEditModeCommand}" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16, 8"/>
                     <Button Classes="end-button" Content="Share" Padding="16, 8"/>
                     <Button Classes="end-button" Content="Manage Users"  Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16,8"/>
                     <Button Classes="end-button" Command="{Binding LogoutCommand}" Content="Log out" Background="Transparent" Foreground="#D92D0D" Padding="16,8"/>
@@ -162,6 +163,154 @@
                 </StackPanel>
             </StackPanel>
         </StackPanel>
+
+         <!-- Edit panel -->
+        <Border HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="400"
+                Margin="20,0,20,60" 
+                Padding="36,32"
+                Background="#1A1C1B"
+                BorderBrush="{StaticResource muted-kaya}" 
+                BorderThickness="1"
+                IsVisible="{Binding !EditModeHidden}">
+			<StackPanel Spacing="14">
+                <StackPanel Spacing="8" Margin="0,0,0,10">
+						<TextBlock Text="Edit profile" FontSize="26" 
+                                   FontFamily="Georgia, 'Noto Serif', serif"
+                                   Foreground="{DynamicResource stone-white}"/>
+                        <Rectangle Height="1" Width="40" HorizontalAlignment="Left"
+                                   Fill="{DynamicResource kaya-gold}"/>
+                </StackPanel>
+
+                <!-- Avatar -->
+				<Button Classes="avatar"
+                        Background="Transparent" 
+                        Margin="0,0,0,20"
+                        Cursor="Hand"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        ToolTip.Tip="Change avatar"
+                        AutomationProperties.Name="Edit avatar">
+
+                    <!-- Style for avatar button -->
+                    <Button.Styles>
+						<Style Selector="Button.avatar">
+							<Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+
+                        <Style Selector="Button.avatar:pointerover /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                        <Style Selector="Button.avatar:pressed /template/ ContentPresenter">
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+
+                        <Style Selector="Button.avatar Border.overlay">
+                            <Setter Property="Opacity" Value="0"/>
+                            <Setter Property="Transitions">
+                                <Transitions>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                                </Transitions>
+                            </Setter>
+                        </Style>
+                        <Style Selector="Button.avatar:pointerover Border.overlay">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Style>
+                        <Style Selector="Button.avatar:focus-visible Border.overlay">
+                            <Setter Property="Opacity" Value="1"/>
+                        </Style>
+                    </Button.Styles>
+
+                    <!-- Avatar -->
+                    <Border Width="100" Height="100"
+                            CornerRadius="50"
+                            ClipToBounds="True"
+                            BorderBrush="{DynamicResource kaya-gold}"
+                            BorderThickness="1">
+                        <Grid>
+                            <Image Source="{Binding Avatar}" Stretch="UniformToFill"/>
+
+                            <Border Classes="overlay"
+                                    Background="#99000000"
+                                    IsHitTestVisible="False">
+                                <TextBlock Text="Edit"
+                                           Foreground="White"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Button>
+                <!-- Inputs -->
+                <TextBox Classes="field" Text="{Binding Username}"/>
+                <TextBox Classes="field" Text="{Binding Bio}" Watermark="Bio"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"/>
+
+                <Button Classes="link-button" Content="Security settings →" Command="{Binding ToggleSecurityModeCommand}" HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
+                    <Button Classes="end-button"
+                            Content="Cancel"  
+                            Command="{Binding ToggleEditModeCommand}"
+                            HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Center"
+                            Background="Transparent" 
+                            Foreground="{DynamicResource kaya-gold}" 
+                            Margin="0,8,0,0"/>
+                    <Button Classes="end-button" Content="Save changes" 
+                                HorizontalAlignment="Stretch" 
+                                HorizontalContentAlignment="Center"
+                                Margin="0,8,0,0"/>
+                </StackPanel>
+            </StackPanel>
+       </Border>
+
+        <!-- Security mode -->
+        <Border HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="400"
+                Margin="20,0,20,60" 
+                Padding="36,32"
+                Background="#1A1C1B"
+                BorderBrush="{StaticResource muted-kaya}" 
+                BorderThickness="1"
+                IsVisible="{Binding !SecurityModeHidden}">
+			<StackPanel Spacing="14">
+                <StackPanel Spacing="8" Margin="0,0,0,10">
+						<TextBlock Text="Security" FontSize="26" 
+                                   FontFamily="Georgia, 'Noto Serif', serif"
+                                   Foreground="{DynamicResource stone-white}"/>
+                        <Rectangle Height="1" Width="40" HorizontalAlignment="Left"
+                                   Fill="{DynamicResource kaya-gold}"/>
+                </StackPanel>
+
+                <!-- Inputs -->
+                <TextBox Classes="field" Text="{Binding Email}"/>
+                <TextBox Classes="field" Text="" Watermark="Password" PasswordChar='*'/>
+                <TextBox Classes="field" Text="" Watermark="Confirm password" PasswordChar='*'/>
+
+                <Button Classes="link-button" Content="← Back to edit profile" 
+                        HorizontalAlignment="Left"
+                        Command="{Binding ToggleEditModeCommand}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
+                    <Button Classes="end-button"
+                            Content="Cancel"  
+                            Command="{Binding CloseAllCommand}"
+                            HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Center"
+                            Background="Transparent" 
+                            Foreground="{DynamicResource kaya-gold}" 
+                            Margin="0,8,0,0"/>
+                    <Button Classes="end-button" Content="Save changes" 
+                                HorizontalAlignment="Stretch" 
+                                HorizontalContentAlignment="Center"
+                                Margin="0,8,0,0"/>
+                </StackPanel>
+            </StackPanel>
+       </Border>
      </Grid>
     </ScrollViewer>
     </Grid>
