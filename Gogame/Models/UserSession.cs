@@ -12,15 +12,14 @@ namespace Gogame.Models
 {
     public partial class UserSession : ObservableObject
     {
-        private static readonly Lazy<Bitmap> DefaultAvatar = new(() =>
-            new Bitmap(AssetLoader.Open(new Uri("avares://Gogame/Assets/default-avatar.jpg"))));
         [ObservableProperty]
-        private Bitmap? _avatar = DefaultAvatar.Value;
+        private Bitmap? _avatar;
 
         [ObservableProperty] private bool _isLoggedIn;
         [ObservableProperty] private string? _username;
         [ObservableProperty] private string? _email;
         [ObservableProperty] private string? _bio;
+        [ObservableProperty] private string? _role;
         [ObservableProperty] private string? _currentRank;
 
         // Stats
@@ -30,11 +29,13 @@ namespace Gogame.Models
         [ObservableProperty] private int _puzzlesSolved;
         [ObservableProperty] private int _gamesPlayed;
 
-        public void SignIn(UserProfileDto profile, ApiClient api)
+        public async Task SignIn(UserProfileDto profile, ApiClient api)
         {
+            Role = profile.Role;
             Username = profile.Username;
             Email = profile.Email;
             Bio = profile.Bio;
+            Avatar = await api.LoadImageAsync(profile.ProfilePicture);
             CurrentRank = profile.Stats.CurrentRank ?? "--";
             Winrate = profile.Stats.Winrate ?? "--";
             RankLast30Days = profile.Stats.RankLast30Days ?? "--";
@@ -42,14 +43,6 @@ namespace Gogame.Models
             PuzzlesSolved = profile.Stats.PuzzlesSolved;
             GamesPlayed = profile.Stats.GamesPlayed;
             IsLoggedIn = true;
-
-            _ = LoadAvatarAsync(api, profile.ProfilePicture);
-        }
-
-        private async Task LoadAvatarAsync(ApiClient api, string? path)
-        {
-            var bitmap = await api.LoadImageAsync(path);
-            Avatar = bitmap ?? DefaultAvatar.Value;
         }
 
         public void SignOut()
@@ -58,7 +51,8 @@ namespace Gogame.Models
             Username = null;
             Email = null;
             Bio = null;
-            Avatar = DefaultAvatar.Value;
+            Role = null;
+            Avatar = null;
             CurrentRank = "--";
             Winrate = "--";
             RankLast30Days = "--";

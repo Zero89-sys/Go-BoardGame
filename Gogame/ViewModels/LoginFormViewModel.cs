@@ -110,7 +110,7 @@ namespace Gogame.ViewModels
                 return;
             }
 
-                var result = await _api.RegisterAsync(new RegisterRequest
+            var result = await _api.RegisterAsync(new RegisterRequest
             {
                 Username = Username,
                 Email = Email,

@@ -31,7 +31,7 @@
 				<!-- Avatar -->
                 <Grid Grid.Column="0" Width="90" Height="90" Margin="0,25,0,0">
 					<Border CornerRadius="45" ClipToBounds="True" BorderBrush="{DynamicResource kaya-gold}" BorderThickness="1">
-						<Image Source="{Binding Avatar}" Width="100" Height="100"/>
+						<Image Source="{Binding Session.Avatar}" Width="100" Height="100"/>
                     </Border>
                         <Image Source="avares://Gogame/Assets/avatar-frame.webp" Width="105" Height="105" IsHitTestVisible="False"/>
                 </Grid>
@@ -51,7 +51,7 @@
                 <StackPanel Orientation="Horizontal" Spacing="10">
 					<Button Classes="end-button" Content="Edit profile" Command="{Binding ToggleEditModeCommand}" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16, 8"/>
                     <Button Classes="end-button" Content="Share" Padding="16, 8"/>
-                    <Button Classes="end-button" Content="Manage Users"  Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16,8"/>
+                    <Button Classes="end-button" Content="Manage Users" IsVisible="{Binding IsAdmin}" Background="{DynamicResource AccentBrush}" Foreground="{DynamicResource TextBrush}" Padding="16,8"/>
                     <Button Classes="end-button" Command="{Binding LogoutCommand}" Content="Log out" Background="Transparent" Foreground="#D92D0D" Padding="16,8"/>
                 </StackPanel>
              </StackPanel>
@@ -185,6 +185,7 @@
 
                 <!-- Avatar -->
 				<Button Classes="avatar"
+                        Command="{Binding SelectAvatarCommand}"
                         Background="Transparent" 
                         Margin="0,0,0,20"
                         Cursor="Hand"
@@ -223,14 +224,14 @@
                         </Style>
                     </Button.Styles>
 
-                    <!-- Avatar -->
+                    <!-- Avatar picture -->
                     <Border Width="100" Height="100"
                             CornerRadius="50"
                             ClipToBounds="True"
                             BorderBrush="{DynamicResource kaya-gold}"
                             BorderThickness="1">
                         <Grid>
-                            <Image Source="{Binding Avatar}" Stretch="UniformToFill"/>
+                            <Image Source="{Binding AvatarPreview}" Stretch="UniformToFill"/>
 
                             <Border Classes="overlay"
                                     Background="#99000000"
@@ -245,10 +246,17 @@
                     </Border>
                 </Button>
                 <!-- Inputs -->
-                <TextBox Classes="field" Text="{Binding Username}"/>
-                <TextBox Classes="field" Text="{Binding Bio}" Watermark="Bio"
+                <TextBox Classes="field" Text="{Binding UserName}"/>
+                <TextBlock Text="{Binding UsernameError}" Foreground="red"
+                           IsVisible="{Binding UsernameError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                <TextBox Classes="field" Text="{Binding EditBio}" Watermark="Bio"
                          AcceptsReturn="True"
                          TextWrapping="Wrap"/>
+                 <TextBlock Text="{Binding BioError}" Foreground="red"
+                           IsVisible="{Binding BioError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                 <TextBlock Text="{Binding GeneralError}" Foreground="red"
+                               IsVisible="{Binding GeneralError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
                 <Button Classes="link-button" Content="Security settings →" Command="{Binding ToggleSecurityModeCommand}" HorizontalAlignment="Left"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="15">
@@ -261,9 +269,10 @@
                             Foreground="{DynamicResource kaya-gold}" 
                             Margin="0,8,0,0"/>
                     <Button Classes="end-button" Content="Save changes" 
-                                HorizontalAlignment="Stretch" 
-                                HorizontalContentAlignment="Center"
-                                Margin="0,8,0,0"/>
+                            Command="{Binding SaveEditProfileCommand}"
+                            HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Center"
+                            Margin="0,8,0,0"/>
                 </StackPanel>
             </StackPanel>
        </Border>
@@ -288,9 +297,18 @@
                 </StackPanel>
 
                 <!-- Inputs -->
-                <TextBox Classes="field" Text="{Binding Email}"/>
-                <TextBox Classes="field" Text="" Watermark="Password" PasswordChar='*'/>
-                <TextBox Classes="field" Text="" Watermark="Confirm password" PasswordChar='*'/>
+                <TextBox Classes="field" Text="{Binding SecurityEmail}"/>
+                <TextBlock Text="{Binding SecurityEmailError}" Foreground="red"
+                           IsVisible="{Binding SecurityEmailError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                <TextBox Classes="field" Text="{Binding SecurityPassword}" Watermark="Password" PasswordChar='*'/>
+                <TextBlock Text="{Binding SecurityPasswordError}" Foreground="red"
+                           IsVisible="{Binding SecurityPasswordError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                <TextBox Classes="field" Text="{Binding SecurityConfirmPassword}" Watermark="Confirm password" PasswordChar='*'/>
+                <TextBlock Text="{Binding SecurityConfirmPasswordError}" Foreground="red"
+                           IsVisible="{Binding SecurityConfirmPasswordError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                <TextBlock Text="{Binding GeneralError}" Foreground="red"
+                           IsVisible="{Binding GeneralError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
 
                 <Button Classes="link-button" Content="← Back to edit profile" 
                         HorizontalAlignment="Left"
@@ -305,9 +323,10 @@
                             Foreground="{DynamicResource kaya-gold}" 
                             Margin="0,8,0,0"/>
                     <Button Classes="end-button" Content="Save changes" 
-                                HorizontalAlignment="Stretch" 
-                                HorizontalContentAlignment="Center"
-                                Margin="0,8,0,0"/>
+                            Command="{Binding SaveSecurityProfileCommand}"
+                            HorizontalAlignment="Stretch" 
+                            HorizontalContentAlignment="Center"
+                            Margin="0,8,0,0"/>
                 </StackPanel>
             </StackPanel>
        </Border>

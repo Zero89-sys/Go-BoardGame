@@ -61,6 +61,44 @@ namespace Gogame.Models
         public Task<ApiResult<UserProfileDto>> GetProfileAsync()
             => SendAsync<UserProfileDto>("api/users/profile-data", HttpMethod.Get, null);
 
+        // Edit profile endpoint
+        public async Task<ApiResult<UserProfileDto>> EditProfileAsync(UpdateUserDto update, string? filePath = null)
+        {
+            try
+            {
+                using var content = new MultipartFormDataContent();
+
+
+                content.Add(new StringContent(update.Username ?? string.Empty), "Username");
+                content.Add(new StringContent(update.Bio ?? string.Empty), "Bio");
+
+                if(!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
+                {
+                    var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                    var fileContent = new StreamContent(fileStream);
+                    content.Add(fileContent, "AvatarFile", Path.GetFileName(filePath));
+                }
+
+                var response = await _http.PutAsync("api/users/update-profile", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<UserProfileDto>();
+                    return new ApiResult<UserProfileDto> { Success = true, Data = result };
+                }
+
+                return new ApiResult<UserProfileDto> { Success = false };
+            }
+            catch
+            {
+                return new ApiResult<UserProfileDto> { Success = false };
+            }
+        }
+
+        // Edit security endpoint
+        public Task<ApiResult<object>> UpdateSecurityAsync(UpdateUserSecurityDto security)
+            => SendAsync<object>("api/users/update-security", HttpMethod.Put, security);
+
         // Sends an HTTP POST request
         private async Task<ApiResult<T>> PostAsync<T>(string url, object body)
         {
@@ -102,7 +140,12 @@ namespace Gogame.Models
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var data = await response.Content.ReadFromJsonAsync<T>(Json);
+                    var raw = await response.Content.ReadAsStringAsync();
+
+                    var data = string.IsNullOrWhiteSpace(raw)
+                    ? default
+                    : JsonSerializer.Deserialize<T>(raw, Json);
+
                     return ApiResult<T>.Ok(data!);
                 }
 
@@ -121,7 +164,12 @@ namespace Gogame.Models
 
             try
             {
-                var bytes = await _http.GetByteArrayAsync(path);
+                // full path for the avatar
+                var fullUri = new Uri(_http.BaseAddress!, path.TrimStart('/'));
+
+                System.Diagnostics.Debug.WriteLine($"Downloading avatar from: {fullUri}");
+
+                var bytes = await _http.GetByteArrayAsync(fullUri);
                 using var ms = new MemoryStream(bytes);
                 return new Bitmap(ms);
             }
