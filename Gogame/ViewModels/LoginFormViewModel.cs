@@ -83,6 +83,7 @@ namespace Gogame.ViewModels
                 if (profile.Success && profile.Data != null)
                 {
                     App.Session.SignIn(profile.Data, _api);
+                    _ = App.Sync.SyncAsync();
                     Navigator.NavigateTo(new ProfileView());
                 }
                 else

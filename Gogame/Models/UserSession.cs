@@ -15,6 +15,7 @@ namespace Gogame.Models
         [ObservableProperty]
         private Bitmap? _avatar;
 
+        [ObservableProperty] private int? _userId;
         [ObservableProperty] private bool _isLoggedIn;
         [ObservableProperty] private string? _username;
         [ObservableProperty] private string? _email;
@@ -31,6 +32,7 @@ namespace Gogame.Models
 
         public async Task SignIn(UserProfileDto profile, ApiClient api)
         {
+            UserId = profile.Id;
             Role = profile.Role;
             Username = profile.Username;
             Email = profile.Email;
@@ -47,6 +49,7 @@ namespace Gogame.Models
 
         public void SignOut()
         {
+            UserId = null;
             IsLoggedIn = false;
             Username = null;
             Email = null;

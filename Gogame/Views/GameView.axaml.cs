@@ -371,6 +371,13 @@ public partial class GameView : UserControl
 
         Stone winningColor = resignWinner ?? (blackFinal > whiteFinal ? Stone.Black : Stone.White);
 
+        string sgfResult = resignWinner.HasValue
+            ? (resignWinner == Stone.Black ? "B+R" : "W+R")
+            : (blackFinal > whiteFinal ? "B+" : "W+")
+            + Math.Abs(blackFinal - whiteFinal).ToString("F1", CultureInfo.InvariantCulture);
+
+        await SaveGameRecordAsync(sgfResult, komi);
+
         string winReason = resignWinner.HasValue
             ? "by opponent's resignation"
             : $"by {Math.Abs(blackFinal - whiteFinal):F1} points";
@@ -425,9 +432,47 @@ public partial class GameView : UserControl
         ResultOverlay.IsVisible = true;
     }
 
+    // Save game record
+    private bool _gameSaved;
+    private async Task SaveGameRecordAsync(string sgfResult, double komi)
+    {
+        if (_gameSaved || OperatingSystem.IsBrowser()) return;
+        _gameSaved = true;
+
+        try
+        {
+            string me = App.Session.Username ?? "Player";
+            string black, white;
+            if(_currentMode == GameMode.PlayerVsPlayer)
+            {
+                black = "Black";
+                white = "White";
+            }
+            else if (_playerColor == Stone.Black) 
+            { 
+                black = me; white = "KataGo"; 
+            }
+            else 
+            { 
+                black = "KataGo"; white = me; 
+            }
+
+            var sgf = SgfBuilder.Build(board.Moves, board.Size, komi,
+                black, white, sgfResult, DateTime.UtcNow);
+
+            await new LocalGameService().SaveFinishedGameAsync(sgf, sgfResult, App.Session.UserId);
+            _ = App.Sync.SyncAsync();
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine($"Saving game failed: {ex.Message}");
+        }
+    }
+
     // Restart
     private async Task RestartGameAsync()
     {
+        _gameSaved = false;
         BoardControl.IsInteractive = true;
         BoardControl.RemoveGhostStone();
         await _botService.SendRawCommand("stop");

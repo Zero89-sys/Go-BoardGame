@@ -4,14 +4,17 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Gogame.Data;
 using Gogame.Models;
 using Gogame.ViewModels;
 using Gogame.Views;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using static Gogame.Models.LocalGameService;
 
 namespace Gogame;
 
@@ -24,6 +27,7 @@ public partial class App : Application
 
     public static ApiClient Api { get; private set; } = null!;
     public static UserSession Session { get; private set; } = null!;
+    public static SyncService Sync { get; private set; } = null!;
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -40,6 +44,12 @@ public partial class App : Application
         var http = new HttpClient(handler) { BaseAddress = baseUri };
         Api = new ApiClient(http, cookies, storage, baseUri);
         Session = new UserSession();
+        Sync = new SyncService(Api);
+
+        using (var db = new LocalDbContext())
+        {
+            db.Database.Migrate();
+        }
 
         _ = RestoreSessionAsync();
 
@@ -129,6 +139,7 @@ public partial class App : Application
             {
                 Session.SignIn(result.Data, Api);
                 Api.SaveSession(); // saves the renewd cookie
+                _ = App.Sync.SyncAsync();
             }
         }
         catch(Exception ex)

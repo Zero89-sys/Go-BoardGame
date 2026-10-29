@@ -42,6 +42,9 @@ namespace Gogame.Models
             public int ConsecutivePasses { get; private set; }
             public Stone CurrentPlayer { get; private set; } = Stone.Black;
 
+            public record MoveRecord(Stone Color, int X, int Y, bool IsPass);
+            public List<MoveRecord> Moves { get; } = new();
+
             // The board
             public GoBoard(int size = 19)
             {
@@ -146,6 +149,8 @@ namespace Gogame.Models
                     return false;
 
                 var oldHash = GetBoardHash();
+                var oldBlackCaputres = BlackCaptures;
+                var oldWhiteCaptures = WhiteCaptures;
 
                 Board[x, y] = stone;
                 bool capturedSomething = false;
@@ -184,10 +189,13 @@ namespace Gogame.Models
                 if (previousPosition != null && newHash == previousPosition)
                 {
                     RestoreBoardFromHash(oldHash);
+                    BlackCaptures = oldBlackCaputres;
+                    WhiteCaptures = oldWhiteCaptures;
                     return false;
                 }
 
                 previousPosition = oldHash;
+                Moves.Add(new MoveRecord(stone, x, y, false));
                 return true;
 
             }
@@ -267,6 +275,7 @@ namespace Gogame.Models
                 if (player != CurrentPlayer)
                     return false;
 
+                Moves.Add(new MoveRecord(player, -1, -1, true));
                 ConsecutivePasses++;
                 SwitchPlayer();
 

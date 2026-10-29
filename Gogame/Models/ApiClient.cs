@@ -99,6 +99,10 @@ namespace Gogame.Models
         public Task<ApiResult<object>> UpdateSecurityAsync(UpdateUserSecurityDto security)
             => SendAsync<object>("api/users/update-security", HttpMethod.Put, security);
 
+        // Upload game endpoint
+        public Task<ApiResult<UploadGameResponse>> UploadGameAsync(UploadGameDto entity)
+            => SendAsync<UploadGameResponse>("api/users/games", HttpMethod.Post, entity);
+
         // Sends an HTTP POST request
         private async Task<ApiResult<T>> PostAsync<T>(string url, object body)
         {
