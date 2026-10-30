@@ -231,7 +231,7 @@ public class BoardRenderer
         for (int i = 0; i < ownership.Length; i++)
         {
             double val = ownership[i];
-            if (Math.Abs(val) < 0.2) continue;
+            if (Math.Abs(val) < 0.5) continue;
 
             int x = i % dataSize;
             int y = i / dataSize;
