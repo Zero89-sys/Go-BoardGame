@@ -32,6 +32,7 @@ namespace Gogame.Models
 
         public async Task SignIn(UserProfileDto profile, ApiClient api)
         {
+            IsLoggedIn = true;
             UserId = profile.Id;
             Role = profile.Role;
             Username = profile.Username;

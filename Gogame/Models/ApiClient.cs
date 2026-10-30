@@ -22,7 +22,10 @@ namespace Gogame.Models
         public Dictionary<string, List<string>> Errors { get; init; } = new();
 
         public static ApiResult<T> Ok(T data) => new() { Success = true, Data = data };
-        public static ApiResult<T> Fail(Dictionary<string, List<string>> errors) => new() { Errors = errors };
+        public int StatusCode { get; init; }
+
+        public static ApiResult<T> Fail(Dictionary<string, List<string>> errors, int statusCode = 0)
+            => new() { Errors = errors, StatusCode = statusCode };
     }
     public class ApiClient
     {
@@ -153,7 +156,7 @@ namespace Gogame.Models
                     return ApiResult<T>.Ok(data!);
                 }
 
-                return ApiResult<T>.Fail(await ReadErrorsAsync(response));
+                return ApiResult<T>.Fail(await ReadErrorsAsync(response), (int)response.StatusCode);
             }
             catch(Exception ex) when (ex is HttpRequestException or OperationCanceledException)
             {

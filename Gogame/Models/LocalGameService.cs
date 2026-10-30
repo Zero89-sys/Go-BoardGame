@@ -14,7 +14,8 @@ namespace Gogame.Models
 {
     public class LocalGameService
     {
-        public async Task SaveFinishedGameAsync(string sgf, string result, int? userId)
+        // Game record save
+        public async Task SaveFinishedGameAsync(string sgf, string result, int? userId, string playerColor, bool vsBot)
         {
             await using var db = new LocalDbContext();
 
@@ -22,7 +23,9 @@ namespace Gogame.Models
             {
                 SgfContent = sgf,
                 Result = result,
-                UserId = userId
+                UserId = userId,
+                PlayerColor = playerColor,
+                VsBot = vsBot
             });
 
             await db.SaveChangesAsync();
@@ -35,15 +38,25 @@ namespace Gogame.Models
 
             public SyncService(ApiClient api) => _api = api;
 
+            // Sending saved game records to the server
             public async Task SyncAsync()
             {
-                if (!App.Session.IsLoggedIn) return;
-                if (!await _lock.WaitAsync(0)) return;
+                if (!App.Session.IsLoggedIn || App.Session.UserId is not int userId)
+                {
+                    Debug.WriteLine($"[SYNC] skipped: loggedIn={App.Session.IsLoggedIn}, userId={App.Session.UserId}");
+                    return;
+                }
+                if (!await _lock.WaitAsync(0))
+                {
+                    Debug.WriteLine("[SYNC] skipped: already running");
+                    return;
+                }
 
                 try
                 {
                     await using var db = new LocalDbContext();
 
+                    // Up to 50 locally stored games to sync
                     var pending = await db.Games
                         .Where(g => !g.IsSynced && (g.UserId == null || g.UserId == App.Session.UserId))
                         .OrderBy(g => g.PlayedAt)
@@ -61,13 +74,16 @@ namespace Gogame.Models
                             ClientId = game.ClientId,
                             Sgf = game.SgfContent,
                             Result = game.Result,
-                            PlayedAtUtc = game.PlayedAt
+                            PlayedAtUtc = DateTime.SpecifyKind(game.PlayedAt, DateTimeKind.Utc),
+                            PlayerColor = game.PlayerColor ?? "B",
+                            VsBot = game.VsBot,
                         });
 
                         if (!result.Success)
                         {
                             Debug.WriteLine("Sync stopped: " +
-                        string.Join("; ", result.Errors.SelectMany(e => e.Value)));
+                            string.Join("; ", result.Errors.SelectMany(e => e.Value)));
+                            if (result.StatusCode == 400) continue;
                             break;
                         }
 

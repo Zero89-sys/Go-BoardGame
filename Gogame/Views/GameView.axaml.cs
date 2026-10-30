@@ -460,7 +460,13 @@ public partial class GameView : UserControl
             var sgf = SgfBuilder.Build(board.Moves, board.Size, komi,
                 black, white, sgfResult, DateTime.UtcNow);
 
-            await new LocalGameService().SaveFinishedGameAsync(sgf, sgfResult, App.Session.UserId);
+            string? playerColor = _currentMode == GameMode.PlayerVsBot
+                ? (_playerColor == Stone.Black ? "B" : "W")
+                : "B";
+
+            bool vsBot = _currentMode == GameMode.PlayerVsBot;
+
+            await new LocalGameService().SaveFinishedGameAsync(sgf, sgfResult, App.Session.UserId, playerColor, vsBot);
             _ = App.Sync.SyncAsync();
         }
         catch(Exception ex)

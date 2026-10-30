@@ -29,7 +29,13 @@ namespace Gogame.Migrations
                     b.Property<bool>("IsSynced")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("OpponentRating")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("PlayedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlayerColor")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Result")
@@ -47,6 +53,9 @@ namespace Gogame.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("VsBot")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

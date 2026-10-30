@@ -10,6 +10,7 @@ using Gogame.ViewModels;
 using Gogame.Views;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -134,12 +135,11 @@ public partial class App : Application
         try
         {
             var result = await Api.GetProfileAsync();
-
             if (result.Success && result.Data != null)
             {
                 Session.SignIn(result.Data, Api);
                 Api.SaveSession(); // saves the renewd cookie
-                _ = App.Sync.SyncAsync();
+                _ = Sync.SyncAsync();
             }
         }
         catch(Exception ex)

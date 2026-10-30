@@ -12,6 +12,8 @@ namespace Gogame.Dto
         public Guid ClientId { get; set; } = Guid.NewGuid();
         public int? ServerId { get; set; }
         public int? UserId { get; set; }
+        public string? PlayerColor { get; set; } = "B";
+        public bool VsBot { get; set; }
         public string SgfContent { get; set; } = string.Empty;
         public string Result { get; set; } = string.Empty;
         public DateTime PlayedAt { get; set; } = DateTime.UtcNow;
