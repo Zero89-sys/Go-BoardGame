@@ -2,6 +2,7 @@
 using Gogame.Dto;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -193,6 +194,7 @@ namespace Gogame.Models
             try
             {
                 var raw = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine($"[API] {(int)response.StatusCode} body: {(raw.Length > 500 ? raw[..500] : raw)}");
                 using var doc = JsonDocument.Parse(raw);
                 var root = doc.RootElement;
 

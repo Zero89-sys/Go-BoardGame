@@ -36,7 +36,7 @@ public partial class App : Application
         // Without this line you will get duplicate validations from both Avalonia and CT
         BindingPlugins.DataValidators.RemoveAt(0);
 
-        var baseUri = new Uri("https://localhost:7109");
+        var baseUri = new Uri("https://goweb-api-3uws.onrender.com");
         var cookies = new CookieContainer();
         var storage = new CookieStorage();
         storage.Load(cookies, baseUri); // restore saved cookies
