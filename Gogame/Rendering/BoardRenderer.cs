@@ -96,7 +96,8 @@ public class BoardRenderer
         var whiteStoneBrush = new RadialGradientBrush
         {
             Center = new RelativePoint(0.4, 0.38, RelativeUnit.Relative),
-            Radius = 1.0,
+            RadiusX = new RelativeScalar(1.0, RelativeUnit.Relative),
+            RadiusY = new RelativeScalar(1.0, RelativeUnit.Relative),
             GradientStops =
             {
                 new GradientStop(Color.Parse("#FAFAFA"), 0),
@@ -113,7 +114,8 @@ public class BoardRenderer
             Fill = new RadialGradientBrush
             {
                 Center = new RelativePoint(0.45, 0.4, RelativeUnit.Relative),
-                Radius = 0.9,
+                RadiusX = new RelativeScalar(0.9, RelativeUnit.Relative),
+                RadiusY = new RelativeScalar(0.9, RelativeUnit.Relative),
                 GradientStops =
                 {
                     new GradientStop(Color.FromArgb(25, 255, 255, 255), 0),
@@ -129,7 +131,8 @@ public class BoardRenderer
         var blackStoneBrush = new RadialGradientBrush
         {
             Center = new RelativePoint(lightX, lightY, RelativeUnit.Relative),
-            Radius = 0.65,
+            RadiusX = new RelativeScalar(0.65, RelativeUnit.Relative),
+            RadiusY = new RelativeScalar(0.65, RelativeUnit.Relative),
             GradientStops =
             {
                 new GradientStop(Color.Parse("#3A3A3A"), 0),

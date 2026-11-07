@@ -131,23 +131,6 @@
         </Style.Animations>
     </Style>
 
-    <!-- Animation for putting stone -->
-    <Style Selector="Ellipse.ripple">
-		<Style.Animations>
-			<Animation Duration="0:0:3.5" IterationCount="Infinite" Easing="SineEaseOut">
-                <KeyFrame Cue="0%">
-					<Setter Property="Width" Value="16"/>
-                    <Setter Property="Height" Value="16"/>
-                    <Setter Property="Opacity" Value="0.5"/>
-                </KeyFrame>
-				<KeyFrame Cue="100%">
-					<Setter Property="Width" Value="140"/>
-                    <Setter Property="Height" Value="140"/>
-                    <Setter Property="Opacity" Value="0"/>
-                </KeyFrame>
-            </Animation>
-        </Style.Animations>
-    </Style>
     </UserControl.Styles>
 
     <Grid>
@@ -157,11 +140,10 @@
         </Grid.RowDefinitions>
 
         <Grid.Background>
-            <RadialGradientBrush Center="15%, 0%" GradientOrigin="85%, 100%" Radius="0.9">
-				<GradientStop Color="#2C2519" Offset="0"/>
-                <GradientStop Color="#1C1712" Offset="0.45"/>
-                <GradientStop Color="#120F0A" Offset="1"/>
-            </RadialGradientBrush>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#1F2221" Offset="0"/>
+                <GradientStop Color="#161817" Offset="1"/>
+            </LinearGradientBrush>
         </Grid.Background>
 
         <Viewbox Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0, -60, -60" MaxWidth="600" MaxHeight="600">

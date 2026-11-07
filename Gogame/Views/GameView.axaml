@@ -74,8 +74,8 @@
                         <Rectangle Height="1" Fill="#3A4149" Margin="0,4"/>
                         <TextBlock Text="Your Color" Foreground="#8B94A0" FontSize="13"/>
                         <StackPanel Orientation="Horizontal" Spacing="20" HorizontalAlignment="Center">
-                            <RadioButton Content="Black" IsChecked="True" Checked="OnColorChanged"/>
-                            <RadioButton Content="White" Checked="OnColorChanged"/>
+                            <RadioButton Content="Black" IsChecked="True" Click="OnColorChanged"/>
+                            <RadioButton Content="White" Click="OnColorChanged"/>
                         </StackPanel>
 
                         <TextBlock Text="Difficulty" FontSize="15" HorizontalAlignment="Center"
