@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:rendering="clr-namespace:Gogame.Rendering"
              xmlns:vm="using:Gogame.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="Gogame.Views.MenuView"
@@ -141,10 +142,11 @@
 
         <Grid.Background>
             <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                <GradientStop Color="#1F2221" Offset="0"/>
-                <GradientStop Color="#161817" Offset="1"/>
+                <GradientStop Color="#14171A" Offset="0"/>
+                <GradientStop Color="#0B0D0E" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
+        <rendering:ZenGridBackground Grid.RowSpan="2"/>
 
         <Viewbox Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0, -60, -60" MaxWidth="600" MaxHeight="600">
         

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Gogame.Models;
+using Gogame.Rendering;
 using Gogame.Views;
 using System;
 using System.ComponentModel;
