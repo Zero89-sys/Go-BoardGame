@@ -141,10 +141,7 @@
         </Grid.RowDefinitions>
                     
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%" >
-                <GradientStop Color="#14171A" Offset="0"/>
-                <GradientStop Color="#0B0D0E" Offset="1"/>
-            </LinearGradientBrush>
+            <ImageBrush Source="avares://Gogame/Assets/Wallpapers/menu.png" Stretch="UniformToFill"/>
        </Grid.Background>
 
 
