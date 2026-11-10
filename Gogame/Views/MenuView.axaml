@@ -139,13 +139,15 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+                    
         <Grid.Background>
-            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%" >
                 <GradientStop Color="#14171A" Offset="0"/>
                 <GradientStop Color="#0B0D0E" Offset="1"/>
             </LinearGradientBrush>
-        </Grid.Background>
+       </Grid.Background>
+
+
         <rendering:ZenGridBackground Grid.RowSpan="2"/>
 
         <Viewbox Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0, -60, -60" MaxWidth="600" MaxHeight="600">
