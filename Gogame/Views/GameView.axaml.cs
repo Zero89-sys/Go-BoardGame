@@ -465,8 +465,9 @@ public partial class GameView : UserControl
                 : "B";
 
             bool vsBot = _currentMode == GameMode.PlayerVsBot;
+            string? botRating = vsBot ? GetDifficultyName(_currentLevel) : null;
 
-            await new LocalGameService().SaveFinishedGameAsync(sgf, sgfResult, App.Session.UserId, playerColor, vsBot);
+            await new LocalGameService().SaveFinishedGameAsync(sgf, sgfResult, App.Session.UserId, playerColor, vsBot, botRating);
             _ = App.Sync.SyncAsync();
         }
         catch(Exception ex)

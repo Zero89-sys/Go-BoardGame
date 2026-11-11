@@ -14,6 +14,7 @@ namespace Gogame.Dto
         public DateTime PlayedAtUtc { get; set; }
         public string PlayerColor { get; set; } = "B";
         public bool VsBot { get; set; }
+        public string? BotRating { get; set; }
     }
 
     public class UploadGameResponse

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:Gogame.Dto"
              xmlns:vm="clr-namespace:Gogame.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
              x:Class="Gogame.ProfileView"
@@ -133,33 +134,38 @@
                 
                 <!-- List of recent games -->
                 <StackPanel>
-                    <Border BorderBrush="{DynamicResource muted-kaya}" BorderThickness="0,0,0,0.5" Padding="0,14">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <TextBlock Grid.Column="0" Text="vs. moss_walker" Foreground="{DynamicResource stone-white}" VerticalAlignment="Center"/>
-                
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
-                                <Border Background="{DynamicResource AccentBrush}" Padding="8,4" CornerRadius="3">
-                                    <TextBlock Text="B+R" FontSize="11" Foreground="{DynamicResource TextBrush}"/>
+                    <TextBlock Text="No games yet" IsVisible="{Binding HasNoGames}"
+                               Foreground="{DynamicResource MutedBrush}" Margin="0,14"/>
+                    
+                    <ItemsControl ItemsSource="{Binding RecentGames}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate x:DataType="models:GameHistoryRow">
+								<Border BorderBrush="{DynamicResource muted-kaya}" BorderThickness="0,0,0,0.5" Padding="0,14">
+                                    <Grid ColumnDefinitions="*, Auto">
+										<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+											<TextBlock Text="{Binding Opponent}" Foreground="{DynamicResource stone-white}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding RatingText}" IsVisible="{Binding HasRating}" Foreground="{DynamicResource MutedBrush}"
+                                                       FontSize="12" VerticalAlignment="Center"/>
+                                        </StackPanel>
+											<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+												<Border Classes="badge" Classes.win="{Binding IsWin}" Padding="8,4" CornerRadius="3">
+													<TextBlock Text="{Binding Result}" FontSize="11"/>
+                                                </Border>
+                                                <TextBlock Text="{Binding BoardText}" Foreground="{DynamicResource MutedBrush}"
+                                                           VerticalAlignment="Center" FontSize="12"/>
+                                                <TextBlock Text="{Binding DateText}" Foreground="{DynamicResource MutedBrush}"
+                                                           VerticalAlignment="Center" FontSize="12" Width="70" TextAlignment="Right"/>
+                                            </StackPanel>
+                                    </Grid>
                                 </Border>
-                                <TextBlock Text="19×19" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12"/>
-                                <TextBlock Text="Aug 9" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12" Width="40" TextAlignment="Right"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                    <Border BorderBrush="{DynamicResource muted-kaya}" BorderThickness="0,0,0,0.5" Padding="0,14">
-                        <Grid ColumnDefinitions="*, Auto">
-                            <TextBlock Grid.Column="0" Text="vs. KataBot (5d)" Foreground="{DynamicResource stone-white}" VerticalAlignment="Center"/>
-                
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
-                                <Border Background="{DynamicResource muted-kaya}" Padding="8,4" CornerRadius="3">
-                                    <TextBlock Text="W+12.5" FontSize="11" Foreground="{DynamicResource Void}"/>
-                                </Border>
-                                <TextBlock Text="9×9" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12"/>
-                                <TextBlock Text="Aug 7" Foreground="{DynamicResource MutedBrush}" VerticalAlignment="Center" FontSize="12" Width="40" TextAlignment="Right"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
+                    <Button Content="{Binding ShowAllText}" Command="{Binding ShowAllGamesCommand}"
+                            IsVisible="{Binding HasMoreGames}" HorizontalAlignment="Center" Margin="0,14,0,0"/>
+                    <Button Content="Hide" Command="{Binding HideAllGamesCommand}"
+                            IsVisible="{Binding !HasMoreGames}" HorizontalAlignment="Center" Margin="0,14,0,0"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

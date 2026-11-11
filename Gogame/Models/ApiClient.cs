@@ -59,11 +59,18 @@ namespace Gogame.Models
 
         // Login endpoint
         public Task<ApiResult<AuthResponse>> LoginAsync(LoginRequest req)
-            => PostAsync<AuthResponse>("api/users/login", req);
+        {
+            foreach (Cookie c in _cookies.GetCookies(_baseUri))
+                c.Expired = true;
+            return PostAsync<AuthResponse>("api/users/login", req);
+        }
 
         // Profile data endpoint
         public Task<ApiResult<UserProfileDto>> GetProfileAsync()
             => SendAsync<UserProfileDto>("api/users/profile-data", HttpMethod.Get, null);
+        // Game history endpoint
+        public Task<ApiResult<GameHistoryPage>> GetGameHistoryAsync(int skip, int take)
+            => SendAsync<GameHistoryPage>($"api/users/games?skip={skip}&take={take}", HttpMethod.Get, null);
 
         // Edit profile endpoint
         public async Task<ApiResult<UserProfileDto>> EditProfileAsync(UpdateUserDto update, string? filePath = null)

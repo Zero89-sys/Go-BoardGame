@@ -23,13 +23,13 @@ namespace Gogame.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BotRating")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("ClientId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsSynced")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("OpponentRating")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PlayedAt")

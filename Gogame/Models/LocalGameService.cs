@@ -15,7 +15,7 @@ namespace Gogame.Models
     public class LocalGameService
     {
         // Game record save
-        public async Task SaveFinishedGameAsync(string sgf, string result, int? userId, string playerColor, bool vsBot)
+        public async Task SaveFinishedGameAsync(string sgf, string result, int? userId, string playerColor, bool vsBot, string? botRating)
         {
             await using var db = new LocalDbContext();
 
@@ -25,7 +25,8 @@ namespace Gogame.Models
                 Result = result,
                 UserId = userId,
                 PlayerColor = playerColor,
-                VsBot = vsBot
+                VsBot = vsBot,
+                BotRating = botRating
             });
 
             await db.SaveChangesAsync();
@@ -77,6 +78,7 @@ namespace Gogame.Models
                             PlayedAtUtc = DateTime.SpecifyKind(game.PlayedAt, DateTimeKind.Utc),
                             PlayerColor = game.PlayerColor ?? "B",
                             VsBot = game.VsBot,
+                            BotRating = game.BotRating,
                         });
 
                         if (!result.Success)

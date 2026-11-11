@@ -11,7 +11,9 @@ using Gogame.Models;
 using Gogame.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,6 +48,7 @@ namespace Gogame.ViewModels
             AvatarPreview = Session.Avatar;
 
             Session.PropertyChanged += OnSessionChanged;
+            _ = LoadHistoryAsync();
         }
         // Session update
         private void OnSessionChanged(object? sender, PropertyChangedEventArgs e)
@@ -205,6 +208,81 @@ namespace Gogame.ViewModels
 
         private static string Join<T>(ApiResult<T> r, string key)
             => r.Errors.TryGetValue(key, out var list) ? string.Join("\n", list) : "";
+
+        // Games history
+        private const int PreviewCount = 5;
+        private const int PageSize = 50;
+
+        public ObservableCollection<GameHistoryRow> RecentGames { get; } = new();
+
+        [ObservableProperty]
+        private bool _hasMoreGames;
+        [ObservableProperty]
+        private bool _hasNoGames;
+        [ObservableProperty]
+        private bool _isLoadingGames;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShowAllText))]
+        private int _totalGames;
+
+        public string ShowAllText => $"Show all {TotalGames} games";
+
+        public async Task LoadHistoryAsync()
+        {
+            RecentGames.Clear();
+            await LoadGamesAsync(0, PreviewCount);
+        }
+
+        [RelayCommand]
+        private async Task ShowAllGamesAsync()
+        {
+            while (HasMoreGames)
+            {
+                if (!await LoadGamesAsync(RecentGames.Count, PageSize))
+                    break;
+            }
+        }
+
+        [RelayCommand]
+        private async Task HideAllGamesAsync()
+        {
+            RecentGames.Clear();
+            HasMoreGames = false;
+            await LoadHistoryAsync();
+        }
+
+        // Loading games
+        private async Task<bool> LoadGamesAsync(int skip, int take)
+        {
+            if (IsLoadingGames) return false;
+            IsLoadingGames = true;
+
+            try
+            {
+                var result = await _api.GetGameHistoryAsync(skip, take);
+                if(!result.Success || result.Data == null)
+                {
+                    Debug.WriteLine("[HISTORY] load failed: " +
+                string.Join("; ", result.Errors.SelectMany(e => e.Value)));
+                    return false;
+                }
+
+                foreach(var item in result.Data.Items)
+                {
+                    RecentGames.Add(GameHistoryRow.From(item));
+                }
+
+                TotalGames = result.Data.Total;
+                HasMoreGames = RecentGames.Count < TotalGames;
+                HasNoGames = TotalGames == 0;
+                return true;
+            }
+            finally
+            {
+                IsLoadingGames = false;
+            }
+        }
 
         // Log out
         [RelayCommand]
