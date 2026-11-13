@@ -263,7 +263,7 @@
                 </Grid>
         </Button>
 
-        <TextBlock Text="v0.4" FontSize="18" Foreground="{StaticResource muted-kaya}"
+        <TextBlock Text="v0.45" FontSize="18" Foreground="{StaticResource muted-kaya}"
                    Opacity="0.5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16"/>
     </Grid>
 </UserControl>
