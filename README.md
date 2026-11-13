@@ -1,6 +1,6 @@
 # Go Board Game
 This project is a desktop implementation of the traditional board game **Go** written in C# using the modern cross-platform framework **Avalonia UI**.
-The application is currently in **Alpha version (v0.4)**.
+The application is currently in **Alpha version (v0.45)**.
 
 ## 🚀 Main features
 * **Local game (1v1):** Ability to play on one device against another player.
