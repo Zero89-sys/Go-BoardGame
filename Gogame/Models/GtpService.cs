@@ -29,11 +29,14 @@ namespace Gogame.Models
             if (_process != null && !_process.HasExited && IsAvailable) return true;
 
             IsAvailable = false;
-            
-            if(!File.Exists(exePath) || !File.Exists(modelPath) || !File.Exists(configPath))
+
+            foreach (var (name, path) in new[] { ("EXE", exePath), ("Model", modelPath), ("Config", configPath) })
             {
-                Debug.WriteLine("[GTP] Bot files (EXE, Model, or Config) were not found!");
-                return false;
+                if (!File.Exists(path))
+                {
+                    Debug.WriteLine($"[GTP] {name} not found at: {path}");
+                    return false;
+                }
             }
 
             try
@@ -68,7 +71,7 @@ namespace Gogame.Models
                 _ = Task.Run(ReadOutputLoop);
 
                 var pingTask = SendCommand("name");
-                var completedTask = await Task.WhenAny(pingTask, Task.Delay(5000));
+                var completedTask = await Task.WhenAny(pingTask, Task.Delay(60000));
 
                 if(completedTask == pingTask && pingTask.Result != null)
                 {
@@ -106,7 +109,7 @@ namespace Gogame.Models
                 await _input!.WriteLineAsync(command);
                 await _input.FlushAsync();
 
-                var completedTask = await Task.WhenAny(_currentCommandTcs.Task, Task.Delay(5000));
+                var completedTask = await Task.WhenAny(_currentCommandTcs.Task, Task.Delay(60000));
                 if(completedTask == _currentCommandTcs.Task)
                 {
                     var result = await _currentCommandTcs.Task;
@@ -235,6 +238,28 @@ namespace Gogame.Models
                 _ioLock.Release();
             }
             Debug.WriteLine("GTP Service was reset");
+        }
+
+        // Finding engine files
+        public static bool TryResolveEngineFiles(out string exe, out string model, out string cfg, out string error)
+        {
+            exe = model = cfg = "";
+            error = "";
+
+            string dir = Path.Combine(AppContext.BaseDirectory, "Engine");
+            exe = Path.Combine(dir, "katago.exe");
+            model = Path.Combine(dir, "KataGo.txt.gz");
+            cfg = Path.Combine(dir, "default_gtp.cfg");
+
+            foreach (var (name, path) in new[] { ("EXE", exe), ("Model", model), ("Config", cfg) })
+            {
+                if (!File.Exists(path))
+                {
+                    error = $"{name} not found at: {path}";
+                    return false;
+                }
+            }
+            return true;
         }
 
         public void ClearAnalysisState()

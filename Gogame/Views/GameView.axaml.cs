@@ -750,11 +750,10 @@ public partial class GameView : UserControl
                 {
                     if (!_botService.IsAvailable)
                     {
-                        string exePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "katago.exe");
-                        string modelPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "model.bin.gz");
-                        string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Bot", "gtp_custom.cfg");
-
-                        await _botService.StartEngineAsync(exePath, modelPath, configPath);
+                        if (GtpService.TryResolveEngineFiles(out var exe, out var model, out var cfg, out var err))
+                            await _botService.StartEngineAsync(exe, model, cfg);
+                        else
+                            Debug.WriteLine($"[GTP] {err}");
                     }
                     if (_botService.IsAvailable)
                     {

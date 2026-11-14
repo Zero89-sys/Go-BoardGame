@@ -26,7 +26,7 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
-
+    private GtpService _botService = GtpService.Instance;
     public static ApiClient Api { get; private set; } = null!;
     public static UserSession Session { get; private set; } = null!;
     public static SyncService Sync { get; private set; } = null!;
@@ -101,18 +101,23 @@ public partial class App : Application
 
     private async Task StartBot()
     {
-        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        string exe = Path.Combine(baseDir, "Engine", "katago.exe");
-        string model = Path.Combine(baseDir, "Engine", "KataGo.txt.gz");
-        string cfg = Path.Combine(baseDir, "Engine", "default_gtp.cfg");
 
-        bool isStarted = await GtpService.Instance.StartEngineAsync(exe, model, cfg);
-
-        if (!isStarted)
+        if (GtpService.TryResolveEngineFiles(out var exe, out var model, out var cfg, out var err))
         {
-            System.Diagnostics.Debug.WriteLine("[App] The bot was not started; proceeding without it.");
+            bool isStarted = await GtpService.Instance.StartEngineAsync(exe, model, cfg);
+            if (!isStarted)
+            {
+                System.Diagnostics.Debug.WriteLine("[App] The bot was not started; proceeding without it.");
+                return;
+            }
+        }
+        else
+        {
+            Debug.WriteLine($"[GTP] {err}");
+            System.Diagnostics.Debug.WriteLine("[App] The bot files are missing; proceeding without it.");
             return;
         }
+
 
         for (int i = 0; i < 10; i++)
         {
